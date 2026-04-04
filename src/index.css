@@ -1,28 +1,161 @@
+/**
+ * ============================================================
+ * ESTILOS GLOBALES - Tailwind CSS + Theme Custom
+ * ============================================================
+ * Descripción: 
+ *   Archivo de estilos principal que configura Tailwind CSS v4
+ *   con el theme "Tactile Data-Sheet" del sistema de diseño.
+ * 
+ * Ubicación: src/index.css
+ * 
+ * CONTENIDO:
+ *   1. Import de Tailwind CSS
+ *   2. Definición de @theme con variables CSS personalizadas
+ *   3. Estilos base del body
+ *   4. Utility classes personalizadas
+ *   5. Estilos para elementos focus
+ * 
+ * DISEÑO SYSTEM - Variables CSS:
+ *   El theme sigue el sistema de diseño "Tactile Data-Sheet" con:
+ *   - Paleta monocromática (blanco/negro/grises)
+ *   - IBM Plex Sans para UI
+ *   - IBM Plex Mono para datos/técnico
+ *   - 0px border radius everywhere
+ *   - Bordes de 2px para elementos principales
+ * 
+ * Notas técnicas:
+ *   - Usa @import "tailwindcss" de Tailwind v4
+ *   - Las variables se definen en @theme block
+ *   - Las clases .font-* son utilities personalizadas
+ *   - El stippled-bg crea el patrón de puntos para fondos
+ * ============================================================
+ */
+
+/* ============================================================
+   SECCIÓN 1: IMPORT DE TAILWIND
+   Configuración base de Tailwind CSS v4
+   ============================================================ */
 @import "tailwindcss";
 
+/* ============================================================
+   SECCIÓN 2: THEME CONFIGURATION
+   Definición de variables CSS personalizadas para el sistema
+   ============================================================ */
 @theme {
-  --color-vintage-bg: #F4F0E6;
-  --color-vintage-cream: #FAF8F5;
-  --color-vintage-text: #3D3D3D;
-  --color-vintage-primary: #4A7C6F;
-  --color-vintage-accent: #7A9E8E;
-  --color-vintage-light: #E8E4DA;
-  --color-vintage-border: #D4CFC2;
+  /* --- COLORES: Superficie (Backgrounds) --- */
+  --color-surface: #f9f9f9;           /* Fondo principal - "paper stock" */
+  --color-surface-dim: #dadada;       /* Superficie atenuada */
+  --color-surface-variant: #e2e2e2;   /* Variante de superficie */
+  --color-surface-container: #eeeeee; /* Contenedor - nivel 1 */
+  --color-surface-container-high: #e8e8e8;    /* Contenedor - nivel 2 */
+  --color-surface-container-highest: #e2e2e2; /* Contenedor - nivel 3 */
+  --color-surface-container-low: #f3f3f3;      /* Contenedor - nivel 0 */
+  --color-surface-container-lowest: #ffffff;   /* Contenedor - más alto */
   
-  --font-family-serif: 'IBM Plex Serif', Georgia, serif;
+  /* --- COLORES: Primarios --- */
+  --color-primary: #000000;           /* Negro "ink" - principal */
+  --color-on-primary: #e2e2e2;       /* Texto sobre primario */
+  --color-primary-fixed: #5e5e5e;    /* Gris medio */
+  --color-primary-fixed-dim: #474747; /* Gris oscuro */
+  
+  /* --- COLORES: Secundarios --- */
+  --color-secondary: #5f5e5e;
+  --color-secondary-container: #d6d4d3;
+  --color-secondary-fixed: #c8c6c6;
+  
+  /* --- COLORES: Terciarios --- */
+  --color-tertiary: #3b3b3c;
+  --color-tertiary-fixed: #5e5e5e;
+  
+  /* --- COLORES: Bordes y outlines --- */
+  --color-outline: #777777;           /* Borde secundario */
+  --color-outline-variant: #c6c6c6;   /* Borde sutil */
+  
+  /* --- COLORES: Texto --- */
+  --color-on-surface: #1a1c1c;       /* Texto principal */
+  --color-on-surface-variant: #474747; /* Texto secundario */
+  --color-on-background: #1a1c1c;
+  
+  /* --- COLORES: Error --- */
+  --color-error: #ba1a1a;            /* Rojo error */
+  --color-error-container: #ffdad6;  /* Fondo error */
+  --color-on-error: #ffffff;        /* Texto sobre error */
+  --color-on-error-container: #410002;
+  
+  /* --- COLORES: Inversos (para temas oscuros si se implementa) --- */
+  --color-inverse-surface: #2f3131;
+  --color-inverse-primary: #c6c6c6;
+  --color-inverse-on-surface: #f1f1f1;
+
+  /* --- TIPOGRAFÍA --- */
   --font-family-sans: 'IBM Plex Sans', system-ui, sans-serif;
+  --font-family-mono: 'IBM Plex Mono', monospace;
+  
+  /* --- BORDES --- */
+  --radius-none: 0px;
 }
 
+/* ============================================================
+   SECCIÓN 3: ESTILOS BASE DEL BODY
+   Configuración global para el documento
+   ============================================================ */
 body {
   font-family: var(--font-family-sans);
-  background-color: var(--color-vintage-bg);
-  color: var(--color-vintage-text);
+  background-color: var(--color-surface);
+  color: var(--color-on-surface);
   margin: 0;
   min-height: 100vh;
+  -webkit-font-smoothing: antialiased; /* Suavizado de fuentes */
 }
 
 #root {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+}
+
+/* ============================================================
+   SECCIÓN 4: UTILITY CLASSES PERSONALIZADAS
+   Clases de utilidad adicionales para el sistema de diseño
+   ============================================================ */
+
+/* Font: Para headlines y títulos principales */
+.font-headline {
+  font-family: var(--font-family-sans);
+}
+
+/* Font: Para texto de cuerpo general */
+.font-body {
+  font-family: var(--font-family-sans);
+}
+
+/* Font: Para etiquetas y datos técnicos (IBM Plex Mono) */
+.font-label {
+  font-family: var(--font-family-mono);
+}
+
+/* Background: Patrón de stipple (puntos) para fondos técnicos
+   Uso: background con opacidad reducida para crear textura */
+.stippled-bg {
+  background-image: radial-gradient(#000 0.5px, transparent 0.5px);
+  background-size: 3px 3px;
+  opacity: 0.1;
+}
+
+/* ============================================================
+   SECCIÓN 5: ESTILOS DE FOCUS
+   Configuración visual para elementos enfocados
+   Cumple con accesibilidad y el estilo del sistema
+   ============================================================ */
+input:focus, button:focus, select:focus, textarea:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 0px;
+}
+
+/* ============================================================
+   SECCIÓN 6: RESET DE ENLACES
+   Estilos base para enlaces
+   ============================================================ */
+a {
+  text-decoration: none;
 }
