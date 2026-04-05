@@ -61,10 +61,10 @@ export default function Dashboard() {
   // Estadísticas del dashboard
   const [statsData, setStatsData] = useState({
     total: 0,
-    critical: 0,
     high: 0,
     open: 0,
     inProgress: 0,
+    resolved: 0,
   });
   
   // Modal: Ver detalles de incidencia
@@ -81,10 +81,10 @@ export default function Dashboard() {
         const { data } = await api.get('/metrics');
         setStatsData({
           total: data.data.total || 0,
-          critical: data.data.by_priority?.critical || 0,
           high: data.data.by_priority?.high || 0,
           open: data.data.by_status?.open || 0,
           inProgress: data.data.by_status?.in_progress || 0,
+          resolved: data.data.by_status?.resolved || 0,
         });
       } catch (err) {
         console.error('Error fetching stats:', err);
@@ -92,6 +92,13 @@ export default function Dashboard() {
     };
     fetchStats();
   }, []);
+
+  // ============================================================
+  // EFECTO: Resetear página cuando cambia el filtro
+  // ============================================================
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [activeFilter]);
 
   // ============================================================
   // EFECTO: Cargar incidencias al iniciar y cuando cambia la página
@@ -221,20 +228,6 @@ export default function Dashboard() {
               Estilo: Compacto, border-2 border-black, números grandes
            ============================================================ */}
            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 mb-6">
-              {/* Botón: CRITICAL */}
-              <button 
-                onClick={() => setActiveFilter(activeFilter === 'critical' ? null : 'critical')}
-                className={`block text-center p-6 border-2 border-black transition-colors ${
-                  activeFilter === 'critical' 
-                    ? 'bg-black text-white' 
-                    : 'bg-white hover:bg-surface-dim'
-                }`}
-              >
-                <div className="text-xs uppercase tracking-wide mb-3">Critical</div>
-                <div className="text-5xl font-light mb-2">{statsData.critical}</div>
-                <div className="text-xs">Critical priority incidents</div>
-              </button>
-
               {/* Botón: HIGH */}
               <button 
                 onClick={() => setActiveFilter(activeFilter === 'high' ? null : 'high')}
@@ -275,6 +268,20 @@ export default function Dashboard() {
                 <div className="text-xs uppercase tracking-wide mb-3">In Progress</div>
                 <div className="text-5xl font-light mb-2">{statsData.inProgress}</div>
                 <div className="text-xs">In progress incidents</div>
+              </button>
+
+              {/* Botón: RESOLVED */}
+              <button 
+                onClick={() => setActiveFilter(activeFilter === 'resolved' ? null : 'resolved')}
+                className={`block text-center p-6 border-2 border-black transition-colors ${
+                  activeFilter === 'resolved' 
+                    ? 'bg-black text-white' 
+                    : 'bg-white hover:bg-surface-dim'
+                }`}
+              >
+                <div className="text-xs uppercase tracking-wide mb-3">Resolved</div>
+                <div className="text-5xl font-light mb-2">{statsData.resolved}</div>
+                <div className="text-xs">Resolved incidents</div>
               </button>
             </div>
 
