@@ -176,7 +176,7 @@ export default function Landing() {
           Descripción: Pie de página con links legales
           Layout: Flex row (responsive) | Borde superior: 2px black
       ============================================================ */}
-      <footer className="flex flex-col md:flex-row justify-between items-center px-6 py-8 w-full border-t-2 border-black bg-surface-container">
+      <footer className="flex flex-col md:flex-row justify-between items-center px-6 py-8 w-full bg-surface-container">
         <div className="mb-4 md:mb-0">
           <span className="font-mono text-xs uppercase tracking-widest text-black">© 𝓁.2077</span>
         </div>
