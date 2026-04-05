@@ -31,7 +31,7 @@
  * ============================================================
  */
 
-import { useEffect, useState, useMemo, useCallback } from 'react';
+import { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
@@ -56,7 +56,16 @@ export default function Dashboard() {
   
   // Paginación
   const [currentPage, setCurrentPage] = useState(1);
-  const [meta, setMeta] = useState({ current_page: 1, last_page: 1, per_page: 15, total: 0 });
+  const [meta, setMeta] = useState({ current_page: 1, last_page: 1, per_page: 10, total: 0 });
+
+  // Estadísticas del dashboard
+  const [statsData, setStatsData] = useState({
+    total: 0,
+    critical: 0,
+    high: 0,
+    open: 0,
+    inProgress: 0,
+  });
   
   // Modal: Ver detalles de incidencia
   const [selectedIncidence, setSelectedIncidence] = useState(null);
@@ -64,14 +73,51 @@ export default function Dashboard() {
   const [loadingDetail, setLoadingDetail] = useState(false);
 
   // ============================================================
+  // EFECTO: Cargar estadísticas del dashboard
+  // ============================================================
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const { data } = await api.get('/metrics');
+        setStatsData({
+          total: data.data.total || 0,
+          critical: data.data.by_priority?.critical || 0,
+          high: data.data.by_priority?.high || 0,
+          open: data.data.by_status?.open || 0,
+          inProgress: data.data.by_status?.in_progress || 0,
+        });
+      } catch (err) {
+        console.error('Error fetching stats:', err);
+      }
+    };
+    fetchStats();
+  }, []);
+
+  // ============================================================
   // EFECTO: Cargar incidencias al iniciar y cuando cambia la página
   // ============================================================
   useEffect(() => {
     setLoading(true);
-    api.get(`/incidences?page=${currentPage}`)
+    
+    let url = `/incidences?page=${currentPage}`;
+    
+    if (activeFilter) {
+      if (activeFilter === 'critical') {
+        url += '&priority=critical';
+      } else if (activeFilter === 'high') {
+        url += '&priority=high';
+      } else {
+        url += `&status=${activeFilter}`;
+      }
+    }
+    
+    if (searchTag.trim()) {
+      url += `&search=${encodeURIComponent(searchTag.trim())}`;
+    }
+    
+    api.get(url)
       .then(({ data }) => {
         const incidenceData = data.data || data;
-        console.log('Incidences loaded:', incidenceData);
         setIncidences(Array.isArray(incidenceData) ? incidenceData : []);
         if (data.meta) {
           setMeta(data.meta);
@@ -82,50 +128,7 @@ export default function Dashboard() {
         setIncidences([]);
       })
       .finally(() => setLoading(false));
-  }, [currentPage]);
-
-  // ============================================================
-  // COMPUTED: filteredIncidences
-  // Descripción: Aplica filtros de estado/prioridad y búsqueda por tags
-  // ============================================================
-  const filteredIncidences = useMemo(() => {
-    let result = incidences;
-    
-    // Filtro 1: Por estado o prioridad
-    if (activeFilter === 'critical') {
-      result = result.filter(inc => inc.priority === 'high' || inc.priority === 'ALTA');
-    } else if (activeFilter === 'open') {
-      result = result.filter(inc => inc.status === 'open' || inc.status === 'ABIERTA');
-    } else if (activeFilter === 'in_progress') {
-      result = result.filter(inc => inc.status === 'in_progress' || inc.status === 'EN_PROCESO');
-    } else if (activeFilter === 'closed') {
-      result = result.filter(inc => inc.status === 'closed' || inc.status === 'CERRADA');
-    }
-    
-    // Filtro 2: Por tags (si hay búsqueda)
-    if (searchTag.trim()) {
-      const tagSearch = searchTag.toLowerCase();
-      result = result.filter(inc => {
-        const tagNames = inc.tags?.map(t => t.name.toLowerCase()) || [];
-        return tagNames.some(tag => tag.includes(tagSearch));
-      });
-    }
-    
-    return result;
-  }, [incidences, activeFilter, searchTag]);
-
-  // ============================================================
-  // COMPUTED: Estadísticas para los botones
-  // ============================================================
-  const stats = useMemo(() => {
-    const total = meta.total || incidences.length;
-    const critical = incidences.filter(i => i.priority === 'high' || i.priority === 'ALTA').length;
-    const open = incidences.filter(i => i.status === 'open' || i.status === 'ABIERTA').length;
-    const inProgress = incidences.filter(i => i.status === 'in_progress' || i.status === 'EN_PROCESO').length;
-    const closed = incidences.filter(i => i.status === 'closed' || i.status === 'CERRADA').length;
-    
-    return { total, critical, open, inProgress, closed };
-  }, [incidences, meta.total]);
+  }, [currentPage, activeFilter, searchTag]);
 
   // ============================================================
   // HANDLER: handleLogout
@@ -144,7 +147,6 @@ export default function Dashboard() {
     setSelectedIncidence(incidence);
     setShowDetailModal(true);
     
-    // Cargar datos frescos de la API
     try {
       const { data } = await api.get(`/incidences/${incidence.id}`);
       setSelectedIncidence(data.data || data);
@@ -153,6 +155,28 @@ export default function Dashboard() {
     } finally {
       setLoadingDetail(false);
     }
+  };
+
+  // ============================================================
+  // HANDLER: handleCommentAdded
+  // Descripción: Actualiza selectedIncidence cuando se añade comentario
+  // ============================================================
+  const handleCommentAdded = (updatedIncidence) => {
+    setSelectedIncidence(updatedIncidence);
+    setIncidences(prev => prev.map(inc => 
+      inc.id === updatedIncidence.id ? updatedIncidence : inc
+    ));
+  };
+
+  // ============================================================
+  // HANDLER: handleCommentDeleted
+  // Descripción: Actualiza selectedIncidence cuando se elimina comentario
+  // ============================================================
+  const handleCommentDeleted = (updatedIncidence) => {
+    setSelectedIncidence(updatedIncidence);
+    setIncidences(prev => prev.map(inc => 
+      inc.id === updatedIncidence.id ? updatedIncidence : inc
+    ));
   };
 
   // ============================================================
@@ -196,63 +220,63 @@ export default function Dashboard() {
               SECCIÓN: FILTER BUTTONS (Botones de filtro) - Estilo S4
               Estilo: Compacto, border-2 border-black, números grandes
            ============================================================ */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 mb-6">
-            {/* Botón: CRITICAL (Alta prioridad) */}
-            <button 
-              onClick={() => setActiveFilter(activeFilter === 'critical' ? null : 'critical')}
-              className={`block text-center p-6 border-2 border-black transition-colors ${
-                activeFilter === 'critical' 
-                  ? 'bg-black text-white' 
-                  : 'bg-white hover:bg-surface-dim'
-              }`}
-            >
-              <div className="text-xs uppercase tracking-wide mb-3">Critical</div>
-              <div className="text-5xl font-light mb-2">{stats.critical}</div>
-              <div className="text-xs">High priority incidents</div>
-            </button>
+           <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 mb-6">
+              {/* Botón: CRITICAL */}
+              <button 
+                onClick={() => setActiveFilter(activeFilter === 'critical' ? null : 'critical')}
+                className={`block text-center p-6 border-2 border-black transition-colors ${
+                  activeFilter === 'critical' 
+                    ? 'bg-black text-white' 
+                    : 'bg-white hover:bg-surface-dim'
+                }`}
+              >
+                <div className="text-xs uppercase tracking-wide mb-3">Critical</div>
+                <div className="text-5xl font-light mb-2">{statsData.critical}</div>
+                <div className="text-xs">Critical priority incidents</div>
+              </button>
 
-            {/* Botón: OPEN */}
-            <button 
-              onClick={() => setActiveFilter(activeFilter === 'open' ? null : 'open')}
-              className={`block text-center p-6 border-2 border-black transition-colors ${
-                activeFilter === 'open' 
-                  ? 'bg-black text-white' 
-                  : 'bg-white hover:bg-surface-dim'
-              }`}
-            >
-              <div className="text-xs uppercase tracking-wide mb-3">Open</div>
-              <div className="text-5xl font-light mb-2">{stats.open}</div>
-              <div className="text-xs">Open incidents</div>
-            </button>
+              {/* Botón: HIGH */}
+              <button 
+                onClick={() => setActiveFilter(activeFilter === 'high' ? null : 'high')}
+                className={`block text-center p-6 border-2 border-black transition-colors ${
+                  activeFilter === 'high' 
+                    ? 'bg-black text-white' 
+                    : 'bg-white hover:bg-surface-dim'
+                }`}
+              >
+                <div className="text-xs uppercase tracking-wide mb-3">High</div>
+                <div className="text-5xl font-light mb-2">{statsData.high}</div>
+                <div className="text-xs">High priority incidents</div>
+              </button>
 
-            {/* Botón: IN PROCESS */}
-            <button 
-              onClick={() => setActiveFilter(activeFilter === 'in_progress' ? null : 'in_progress')}
-              className={`block text-center p-6 border-2 border-black transition-colors ${
-                activeFilter === 'in_progress' 
-                  ? 'bg-black text-white' 
-                  : 'bg-white hover:bg-surface-dim'
-              }`}
-            >
-              <div className="text-xs uppercase tracking-wide mb-3">In Process</div>
-              <div className="text-5xl font-light mb-2">{stats.inProgress}</div>
-              <div className="text-xs">In process incidents</div>
-            </button>
+              {/* Botón: OPEN */}
+              <button 
+                onClick={() => setActiveFilter(activeFilter === 'open' ? null : 'open')}
+                className={`block text-center p-6 border-2 border-black transition-colors ${
+                  activeFilter === 'open' 
+                    ? 'bg-black text-white' 
+                    : 'bg-white hover:bg-surface-dim'
+                }`}
+              >
+                <div className="text-xs uppercase tracking-wide mb-3">Open</div>
+                <div className="text-5xl font-light mb-2">{statsData.open}</div>
+                <div className="text-xs">Open incidents</div>
+              </button>
 
-            {/* Botón: CLOSED */}
-            <button 
-              onClick={() => setActiveFilter(activeFilter === 'closed' ? null : 'closed')}
-              className={`block text-center p-6 border-2 border-black transition-colors ${
-                activeFilter === 'closed' 
-                  ? 'bg-black text-white' 
-                  : 'bg-white hover:bg-surface-dim'
-              }`}
-            >
-              <div className="text-xs uppercase tracking-wide mb-3">Closed</div>
-              <div className="text-5xl font-light mb-2">{stats.closed}</div>
-              <div className="text-xs">Closed incidents</div>
-            </button>
-          </div>
+              {/* Botón: IN PROGRESS */}
+              <button 
+                onClick={() => setActiveFilter(activeFilter === 'in_progress' ? null : 'in_progress')}
+                className={`block text-center p-6 border-2 border-black transition-colors ${
+                  activeFilter === 'in_progress' 
+                    ? 'bg-black text-white' 
+                    : 'bg-white hover:bg-surface-dim'
+                }`}
+              >
+                <div className="text-xs uppercase tracking-wide mb-3">In Progress</div>
+                <div className="text-5xl font-light mb-2">{statsData.inProgress}</div>
+                <div className="text-xs">In progress incidents</div>
+              </button>
+            </div>
 
           {/* SEARCH BAR - Buscar por tags - Estilo S4 */}
           <div className="mb-6 bg-white p-4">
@@ -272,7 +296,7 @@ export default function Dashboard() {
 
           {/* INCIDENTS TABLE - Pasar incidencias filtradas */}
           <IncidentsTable 
-            incidences={filteredIncidences} 
+            incidences={incidences} 
             loading={loading}
             onRowClick={handleRowClick}
             currentPage={currentPage}
@@ -295,6 +319,8 @@ export default function Dashboard() {
           onDelete={() => alert('Para eliminar incidencias, use la página "My Incidences"')}
           onClose={() => setShowDetailModal(false)}
           showCommentForm={true}
+          onCommentAdded={handleCommentAdded}
+          onCommentDeleted={handleCommentDeleted}
         />
       </Modal>
     </div>
