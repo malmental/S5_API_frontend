@@ -28,12 +28,50 @@
  * ============================================================
  */
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useAuth } from '../../context/AuthContext';
 import api from '../../services/api';
 
-export default function IncidenceDetail({ incidence, onClose, showCommentForm = true }) {
+export default function IncidenceDetail({ incidence, onClose, showCommentForm = true, isOwner = false, onEdit = null, onCommentAdded = null, onCommentDeleted = null }) {
+  const { user } = useAuth();
   const [commentText, setCommentText] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [localIncidence, setLocalIncidence] = useState(incidence);
+
+  useEffect(() => {
+    setLocalIncidence(incidence);
+  }, [incidence]);
+
+  // ============================================================
+  // HELPER: canDeleteComment
+  // Verifica si el usuario actual puede eliminar un comentario
+  // ============================================================
+  const canDeleteComment = (comment) => {
+    if (!comment || !user) return false;
+    return Number(comment.user_id ?? comment.user?.id) === Number(user.id);
+  };
+
+  // ============================================================
+  // HANDLER: Eliminar comentario
+  // ============================================================
+  const handleDeleteComment = async (commentId) => {
+    if (!window.confirm('¿Está seguro de eliminar este comentario?')) return;
+
+    try {
+      await api.delete(`/comments/${commentId}`);
+      const updatedIncidence = {
+        ...localIncidence,
+        comments: localIncidence.comments.filter(c => c.id !== commentId)
+      };
+      setLocalIncidence(updatedIncidence);
+      if (onCommentDeleted) {
+        onCommentDeleted(updatedIncidence);
+      }
+    } catch (err) {
+      console.error('Error deleting comment:', err);
+      alert('Error al eliminar el comentario');
+    }
+  };
 
   // ============================================================
   // HELPERS: Obtener clase CSS según prioridad
@@ -74,24 +112,33 @@ export default function IncidenceDetail({ incidence, onClose, showCommentForm = 
   // ============================================================
   const handleCommentSubmit = async (e) => {
     e.preventDefault();
-    if (!commentText.trim() || !incidence) return;
+    if (!commentText.trim() || !localIncidence) return;
 
     setSubmitting(true);
     try {
-      const { data } = await api.post(`/incidences/${incidence.id}/comments`, {
+      const { data } = await api.post(`/incidences/${localIncidence.id}/comments`, {
         body: commentText.trim()
       });
+      const newComment = data.data || data;
+      const updatedIncidence = {
+        ...localIncidence,
+        comments: [...(localIncidence.comments || []), newComment]
+      };
+      setLocalIncidence(updatedIncidence);
       setCommentText('');
-      setSubmitting(false);
+      if (onCommentAdded) {
+        onCommentAdded(updatedIncidence);
+      }
     } catch (err) {
       console.error('Error posting comment:', err);
       alert('Error al publicar el comentario');
+    } finally {
       setSubmitting(false);
     }
   };
 
   // Si no hay incidencia, mostrar cargando
-  if (!incidence) {
+  if (!localIncidence) {
     return (
       <div className="flex items-center justify-center p-8">
         <p className="font-mono text-sm text-gray-500">CARGANDO DATOS...</p>
@@ -111,10 +158,10 @@ export default function IncidenceDetail({ incidence, onClose, showCommentForm = 
        ============================================================ */}
       <div>
         <h3 className="font-mono font-bold text-xl mb-2">
-          {incidence.title || 'Sin título'}
+          {localIncidence.title || 'Sin título'}
         </h3>
         <p className="font-mono text-sm text-gray-600 whitespace-pre-wrap">
-          {incidence.description || 'Sin descripción'}
+          {localIncidence.description || 'Sin descripción'}
         </p>
       </div>
 
@@ -123,11 +170,11 @@ export default function IncidenceDetail({ incidence, onClose, showCommentForm = 
           Badges visuales
        ============================================================ */}
       <div className="flex gap-4">
-        <span className={getStatusClass(incidence.status)}>
-          {incidence.status || 'open'}
+        <span className={getStatusClass(localIncidence.status)}>
+          {localIncidence.status || 'open'}
         </span>
-        <span className={getPriorityClass(incidence.priority)}>
-          {incidence.priority || 'medium'}
+        <span className={getPriorityClass(localIncidence.priority)}>
+          {localIncidence.priority || 'medium'}
         </span>
       </div>
 
@@ -140,14 +187,14 @@ export default function IncidenceDetail({ incidence, onClose, showCommentForm = 
         <div>
           <p className="font-mono text-[10px] uppercase text-gray-500">Creador</p>
           <p className="font-mono text-sm">
-            {incidence.user?.name || 'Usuario desconocido'}
+            {localIncidence.user?.name || 'Usuario desconocido'}
           </p>
         </div>
 
         <div>
           <p className="font-mono text-[10px] uppercase text-gray-500">Fecha creación</p>
           <p className="font-mono text-xs">
-            {formatDate(incidence.created_at)}
+            {formatDate(localIncidence.created_at)}
           </p>
         </div>
 
@@ -157,7 +204,7 @@ export default function IncidenceDetail({ incidence, onClose, showCommentForm = 
         <div>
           <p className="font-mono text-[10px] uppercase text-gray-500">Última actualización</p>
           <p className="font-mono text-xs">
-            {formatDate(incidence.updated_at)}
+            {formatDate(localIncidence.updated_at)}
           </p>
         </div>
       </div>
@@ -166,11 +213,11 @@ export default function IncidenceDetail({ incidence, onClose, showCommentForm = 
           SECCIÓN 4: ETIQUETAS
           Lista de etiquetas asociadas
        ============================================================ */}
-      {incidence.tags && incidence.tags.length > 0 && (
+      {localIncidence.tags && localIncidence.tags.length > 0 && (
         <div>
           <p className="font-mono text-xs uppercase text-gray-500 mb-2">Tags</p>
           <div className="flex flex-wrap gap-2">
-            {incidence.tags.map((tag, index) => (
+            {localIncidence.tags.map((tag, index) => (
               <span 
                 key={tag.id || index}
                 className="px-2 py-1 text-xs bg-surface-dim text-gray-700"
@@ -190,13 +237,22 @@ export default function IncidenceDetail({ incidence, onClose, showCommentForm = 
         
         {/* Lista de comentarios */}
         <div className="space-y-3 max-h-48 overflow-y-auto mb-4">
-          {incidence.comments && incidence.comments.length > 0 ? (
-            incidence.comments.map((comment) => (
+          {localIncidence.comments && localIncidence.comments.length > 0 ? (
+            localIncidence.comments.map((comment) => (
               <div key={comment.id} className="border border-gray-300 p-3 bg-surface-container-low relative">
+                {canDeleteComment(comment) && (
+                  <button
+                    onClick={() => handleDeleteComment(comment.id)}
+                    className="absolute top-2 right-2 text-xs font-bold text-gray-600 hover:text-red-700"
+                    title="Eliminar comentario"
+                  >
+                    &times;
+                  </button>
+                )}
                 <div className="font-mono text-[10px] font-bold text-gray-600">
                   {comment.user?.name || 'Usuario'}
                 </div>
-                <div className="font-mono text-sm mt-1">
+                <div className="font-mono text-sm mt-1 pr-6">
                   {comment.body || comment.content || comment.contenido}
                 </div>
               </div>
@@ -226,6 +282,20 @@ export default function IncidenceDetail({ incidence, onClose, showCommentForm = 
           </form>
         )}
       </div>
+
+      {/* ============================================================
+          SECCIÓN 6: BOTÓN EDITAR (solo para dueño)
+       ============================================================ */}
+      {isOwner && onEdit && (
+        <div className="pt-4 flex justify-center">
+          <button
+            onClick={() => onEdit(localIncidence)}
+            className="px-12 py-3 border-2 border-black bg-black text-white font-mono font-bold uppercase text-sm hover:bg-gray-800 transition-colors"
+          >
+            EDITAR INCIDENCIA
+          </button>
+        </div>
+      )}
 
     </div>
   );

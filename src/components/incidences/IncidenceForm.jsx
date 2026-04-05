@@ -147,9 +147,10 @@ export default function IncidenceForm({ initialData = null, onSubmit, onCancel, 
               onChange={(e) => setPriority(e.target.value)}
               className="w-full px-4 py-3 bg-surface focus:outline-none focus:border-1 focus:border-primary transition-all font-mono text-sm"
             >
-              <option value="low">BAJA</option>
-              <option value="medium">MEDIA</option>
+              <option value="critical">CRITICA</option>
               <option value="high">ALTA</option>
+              <option value="medium">MEDIA</option>
+              <option value="low">BAJA</option>
             </select>
           </div>
 
