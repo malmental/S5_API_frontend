@@ -1,145 +1,302 @@
-import { useEffect, useState } from 'react';
+/**
+ * ============================================================
+ * PÁGINA: Dashboard (Panel Principal)
+ * ============================================================
+ * Descripción: 
+ *   Página principal del dashboard que muestra una visión general
+ *   de todas las incidencias del sistema. Incluye filtros por
+ *   estado/prioridad, búsqueda por tags, y detalles al hacer click.
+ * 
+ * Ubicación: src/pages/Dashboard.jsx
+ * 
+ * Routing:
+ *   - Accesible desde /dashboard
+ *   - Requiere autenticación (protegida)
+ * 
+ * Características:
+ *   1. Filtros: Critical, Open, In Process, Closed (clickables)
+ *   2. Buscador: Filtra por tags de las incidencias
+ *   3. IncidentsTable: Tabla con incidencias filtradas
+ *   4. Click en fila abre modal de detalles
+ * 
+ * Estados de filtro:
+ *   - filter: null (todas) | 'critical' | 'open' | 'in_progress' | 'closed'
+ *   - searchTag: string para buscar en tags
+ * 
+ * Componentes utilizados:
+ *   - TopNavBar, SideNavBar, Footer (layout)
+ *   - IncidentsTable (tabla interactiva)
+ *   - CreateIncidentFAB (botón flotante)
+ *   - Modal, IncidenceDetail (ui para ver detalles)
+ * ============================================================
+ */
+
+import { useEffect, useState, useMemo, useCallback } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import TopNavBar from '../components/layout/TopNavBar';
 import SideNavBar from '../components/layout/SideNavBar';
-import Footer from '../components/layout/Footer';
-import QuickStats from '../components/dashboard/QuickStats';
 import IncidentsTable from '../components/dashboard/IncidentsTable';
-import CreateIncidentFAB from '../components/dashboard/CreateIncidentFAB';
+import Modal from '../components/ui/Modal';
+import IncidenceDetail from '../components/incidences/IncidenceDetail';
 
 export default function Dashboard() {
+  // ============================================================
+  // ESTADOS DEL COMPONENTE
+  // ============================================================
   const { user, logout } = useAuth();
   const [incidences, setIncidences] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  
+  // Filtros
+  const [activeFilter, setActiveFilter] = useState(null);
+  const [searchTag, setSearchTag] = useState('');
+  
+  // Paginación
+  const [currentPage, setCurrentPage] = useState(1);
+  const [meta, setMeta] = useState({ current_page: 1, last_page: 1, per_page: 15, total: 0 });
+  
+  // Modal: Ver detalles de incidencia
+  const [selectedIncidence, setSelectedIncidence] = useState(null);
+  const [showDetailModal, setShowDetailModal] = useState(false);
+  const [loadingDetail, setLoadingDetail] = useState(false);
 
+  // ============================================================
+  // EFECTO: Cargar incidencias al iniciar y cuando cambia la página
+  // ============================================================
   useEffect(() => {
-    api.get('/incidences')
-      .then(({ data }) => setIncidences(data.data || data))
-      .catch(err => console.error(err))
+    setLoading(true);
+    api.get(`/incidences?page=${currentPage}`)
+      .then(({ data }) => {
+        const incidenceData = data.data || data;
+        console.log('Incidences loaded:', incidenceData);
+        setIncidences(Array.isArray(incidenceData) ? incidenceData : []);
+        if (data.meta) {
+          setMeta(data.meta);
+        }
+      })
+      .catch(err => {
+        console.error('Error fetching incidences:', err);
+        setIncidences([]);
+      })
       .finally(() => setLoading(false));
-  }, []);
+  }, [currentPage]);
 
+  // ============================================================
+  // COMPUTED: filteredIncidences
+  // Descripción: Aplica filtros de estado/prioridad y búsqueda por tags
+  // ============================================================
+  const filteredIncidences = useMemo(() => {
+    let result = incidences;
+    
+    // Filtro 1: Por estado o prioridad
+    if (activeFilter === 'critical') {
+      result = result.filter(inc => inc.priority === 'high' || inc.priority === 'ALTA');
+    } else if (activeFilter === 'open') {
+      result = result.filter(inc => inc.status === 'open' || inc.status === 'ABIERTA');
+    } else if (activeFilter === 'in_progress') {
+      result = result.filter(inc => inc.status === 'in_progress' || inc.status === 'EN_PROCESO');
+    } else if (activeFilter === 'closed') {
+      result = result.filter(inc => inc.status === 'closed' || inc.status === 'CERRADA');
+    }
+    
+    // Filtro 2: Por tags (si hay búsqueda)
+    if (searchTag.trim()) {
+      const tagSearch = searchTag.toLowerCase();
+      result = result.filter(inc => {
+        const tagNames = inc.tags?.map(t => t.name.toLowerCase()) || [];
+        return tagNames.some(tag => tag.includes(tagSearch));
+      });
+    }
+    
+    return result;
+  }, [incidences, activeFilter, searchTag]);
+
+  // ============================================================
+  // COMPUTED: Estadísticas para los botones
+  // ============================================================
+  const stats = useMemo(() => {
+    const total = meta.total || incidences.length;
+    const critical = incidences.filter(i => i.priority === 'high' || i.priority === 'ALTA').length;
+    const open = incidences.filter(i => i.status === 'open' || i.status === 'ABIERTA').length;
+    const inProgress = incidences.filter(i => i.status === 'in_progress' || i.status === 'EN_PROCESO').length;
+    const closed = incidences.filter(i => i.status === 'closed' || i.status === 'CERRADA').length;
+    
+    return { total, critical, open, inProgress, closed };
+  }, [incidences, meta.total]);
+
+  // ============================================================
+  // HANDLER: handleLogout
+  // ============================================================
   const handleLogout = async () => {
     await logout();
     navigate('/login');
   };
 
-  const handleCreateIncident = () => {
-    console.log('Create new incident');
+  // ============================================================
+  // HANDLER: handleRowClick
+  // Descripción: Abre modal con detalles al hacer click en fila
+  // ============================================================
+  const handleRowClick = async (incidence) => {
+    setLoadingDetail(true);
+    setSelectedIncidence(incidence);
+    setShowDetailModal(true);
+    
+    // Cargar datos frescos de la API
+    try {
+      const { data } = await api.get(`/incidences/${incidence.id}`);
+      setSelectedIncidence(data.data || data);
+    } catch (err) {
+      console.error('Error fetching incidence details:', err);
+    } finally {
+      setLoadingDetail(false);
+    }
   };
 
+  // ============================================================
+  // HANDLER: handlePageChange
+  // Descripción: Cambia la página de la paginación
+  // ============================================================
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
+  // ============================================================
+  // RENDER
+  // ============================================================
   return (
-    <div className="flex flex-col min-h-screen bg-surface">
-      {/* ============================================
-          SECCIÓN 1: TOP NAVIGATION BAR (Header fijo)
-          Descripción: Barra de navegación superior con logo, menú de navegación principal, estado del sistema y perfil de usuario
-          Componente: src/components/layout/TopNavBar.jsx
-          ============================================ */}
+    <div className="flex flex-col min-h-screen">
+      
+      {/* TOP NAV BAR */}
       <TopNavBar user={user} onLogout={handleLogout} />
       
-      {/* ============================================
-          SECCIÓN 2: SIDEBAR NAVIGATION (Menú lateral)
-          Descripción: Barra lateral fija con menú de operaciones (Dashboard, Incidents, Reports, Logs)
-          Componente: src/components/layout/SideNavBar.jsx
-          ============================================ */}
+      {/* SIDEBAR NAVIGATION */}
       <SideNavBar />
       
-      {/* ============================================
-          SECCIÓN 3: MAIN CONTENT AREA (Área principal)
-          Descripción: Contenedor principal con márgenes para el sidebar
-          ============================================ */}
-      <main className="ml-64 pt-14 min-h-screen bg-surface">
-        <div className="p-8 max-w-6xl">
+      {/* MAIN CONTENT AREA */}
+      <main className="ml-64 pt-14 min-h-screen relative">
+        {/* Background pattern */}
+        <div className="absolute inset-0 stippled-bg"></div>
+        
+        {/* Content */}
+        <div className="relative p-8 max-w-6xl">
           
-          {/* ============================================
-              SECCIÓN 3.1: PAGE HEADER (Encabezado de página)
-              Descripción: Título principal de la página con ID de sesión y timestamp de última sincronización
-              ============================================ */}
-          <header className="mb-10 flex justify-between items-end border-b-4 border-primary pb-4">
-            <div>
-              <h1 className="text-4xl font-bold tracking-tighter font-sans uppercase">Incident Overview</h1>
-              <p className="font-mono text-sm text-gray-600 mt-2">ACTIVE_SESSION_ID: {user?.id || '---'}</p>
-            </div>
-            <div className="text-right">
-              <p className="font-mono text-xs uppercase text-gray-500">Last Synced</p>
-              <p className="font-mono text-lg font-bold">{new Date().toISOString().slice(0, 19).replace('T', ' // ')}</p>
-            </div>
-          </header>
+          {/* ============================================================
+              HEADER: Título + Subtítulo
+           ============================================================ */}
+          <div className="mb-8">
+            <span className="font-label text-xs uppercase border border-black px-2 py-0.5 bg-white">MÓDULO DE DASHBOARD</span>
+            <h1 className="font-sans font-bold text-4xl mt-2">DASHBOARD PRINCIPAL</h1>
+            <p className="font-label text-sm text-on-surface-variant mt-1">Resumen de incidencias del sistema</p>
+          </div>
 
-          {/* ============================================
-              SECCIÓN 3.2: QUICK STATS (Estadísticas rápidas)
-              Descripción: Grid de 4 tarjetas con métricas clave: Total Activas, Alta Prioridad, Resolución Promedio, Nodos Online
-              Componente: src/components/dashboard/QuickStats.jsx
-              NOTA: "Nodes Online" es un valor estático de ejemplo - necesita integración con API real
-              ============================================ */}
-          <QuickStats incidences={incidences} />
+          {/* ============================================================
+              SECCIÓN: FILTER BUTTONS (Botones de filtro) - Estilo S4
+              Estilo: Compacto, border-2 border-black, números grandes
+           ============================================================ */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 mb-6">
+            {/* Botón: CRITICAL (Alta prioridad) */}
+            <button 
+              onClick={() => setActiveFilter(activeFilter === 'critical' ? null : 'critical')}
+              className={`block text-center p-6 border-2 border-black transition-colors ${
+                activeFilter === 'critical' 
+                  ? 'bg-black text-white' 
+                  : 'bg-white hover:bg-surface-dim'
+              }`}
+            >
+              <div className="text-xs uppercase tracking-wide mb-3">Critical</div>
+              <div className="text-5xl font-light mb-2">{stats.critical}</div>
+              <div className="text-xs">High priority incidents</div>
+            </button>
 
-          {/* ============================================
-              SECCIÓN 3.3: INCIDENTS TABLE (Tabla de incidencias)
-              Descripción: Tabla con buscador, filtrado en tiempo real, estados visuales y paginación
-              Componente: src/components/dashboard/IncidentsTable.jsx
-              ============================================ */}
-          <IncidentsTable incidences={incidences} loading={loading} />
+            {/* Botón: OPEN */}
+            <button 
+              onClick={() => setActiveFilter(activeFilter === 'open' ? null : 'open')}
+              className={`block text-center p-6 border-2 border-black transition-colors ${
+                activeFilter === 'open' 
+                  ? 'bg-black text-white' 
+                  : 'bg-white hover:bg-surface-dim'
+              }`}
+            >
+              <div className="text-xs uppercase tracking-wide mb-3">Open</div>
+              <div className="text-5xl font-light mb-2">{stats.open}</div>
+              <div className="text-xs">Open incidents</div>
+            </button>
 
-          {/* ============================================
-              SECCIÓN 3.4: TECHNICAL DETAILS (Detalles técnicos)
-              Descripción: Panel de logs del sistema y información adicional del usuario
-              NOTA: Esta sección puede eliminarse si se prefiere un diseño más limpio
-              ============================================ */}
-          <div className="mt-12 flex gap-8">
-            
-            {/* Sub-sección 3.4.1: SYSTEM LOGS (Logs del sistema) */}
-            <div className="w-2/3 border-2 border-black p-6 relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-32 h-32 stippled-bg pointer-events-none"></div>
-              <h3 className="font-sans font-black text-xl mb-4">SYSTEM_LOG_EXTRACT: RECENT</h3>
-              <div className="bg-surface-container-high p-4 border border-gray-400">
-                <code className="font-mono text-xs leading-relaxed text-gray-700">
-                  [{new Date().toISOString().slice(11, 19)}] SYSTEM: All services operational<br/>
-                  [{new Date().toISOString().slice(11, 19)}] DATABASE: Connection pool active<br/>
-                  [{new Date().toISOString().slice(11, 19)}] AUTH: Token validation successful<br/>
-                  [{new Date().toISOString().slice(11, 19)}] API: All endpoints responsive
-                </code>
-              </div>
-              <div className="mt-4 flex gap-4">
-                <button className="border-2 border-black px-6 py-2 font-sans font-bold text-xs uppercase hover:bg-black hover:text-white transition-colors">Refresh Logs</button>
-                <button className="border-2 border-gray-400 px-6 py-2 font-sans font-bold text-xs uppercase text-gray-500 hover:bg-gray-100 transition-colors">Export Trace</button>
-              </div>
-            </div>
-            
-            {/* Sub-sección 3.4.2: SIDEBAR INFO (Información adicional) */}
-            <div className="w-1/3 flex flex-col gap-4">
-              <div className="flex-grow border-2 border-gray-300 p-4 bg-surface-container-low grayscale opacity-70">
-                <p className="font-mono text-[10px] mb-2">NETWORK_TOPOLOGY_MAP</p>
-                <div className="h-32 w-full bg-gray-200 flex items-center justify-center">
-                  <span className="material-symbols-outlined text-4xl text-gray-400">hub</span>
-                </div>
-              </div>
-              <div className="border-2 border-black p-4 bg-surface">
-                <p className="font-mono text-[10px] uppercase font-bold mb-1">Current User</p>
-                <p className="font-sans font-bold text-sm">{user?.name || 'Guest User'}</p>
-                <p className="font-mono text-xs text-gray-500 mt-1">{user?.email || 'N/A'}</p>
-              </div>
+            {/* Botón: IN PROCESS */}
+            <button 
+              onClick={() => setActiveFilter(activeFilter === 'in_progress' ? null : 'in_progress')}
+              className={`block text-center p-6 border-2 border-black transition-colors ${
+                activeFilter === 'in_progress' 
+                  ? 'bg-black text-white' 
+                  : 'bg-white hover:bg-surface-dim'
+              }`}
+            >
+              <div className="text-xs uppercase tracking-wide mb-3">In Process</div>
+              <div className="text-5xl font-light mb-2">{stats.inProgress}</div>
+              <div className="text-xs">In process incidents</div>
+            </button>
+
+            {/* Botón: CLOSED */}
+            <button 
+              onClick={() => setActiveFilter(activeFilter === 'closed' ? null : 'closed')}
+              className={`block text-center p-6 border-2 border-black transition-colors ${
+                activeFilter === 'closed' 
+                  ? 'bg-black text-white' 
+                  : 'bg-white hover:bg-surface-dim'
+              }`}
+            >
+              <div className="text-xs uppercase tracking-wide mb-3">Closed</div>
+              <div className="text-5xl font-light mb-2">{stats.closed}</div>
+              <div className="text-xs">Closed incidents</div>
+            </button>
+          </div>
+
+          {/* SEARCH BAR - Buscar por tags - Estilo S4 */}
+          <div className="mb-6 bg-white p-4">
+            <div className="flex gap-4 items-center">
+              <input 
+                type="text"
+                value={searchTag}
+                onChange={(e) => setSearchTag(e.target.value)}
+                className="border-2 border-black p-2 text-xs flex-1" 
+                placeholder="Buscar por hashtag..."
+              />
+              <button className="px-16 py-2 border-2 border-black bg-black text-white text-xs uppercase">
+                Search
+              </button>
             </div>
           </div>
+
+          {/* INCIDENTS TABLE - Pasar incidencias filtradas */}
+          <IncidentsTable 
+            incidences={filteredIncidences} 
+            loading={loading}
+            onRowClick={handleRowClick}
+            currentPage={currentPage}
+            totalPages={meta.last_page}
+            onPageChange={handlePageChange}
+          />
         </div>
       </main>
 
-      {/* ============================================
-          SECCIÓN 4: FOOTER (Pie de página)
-          Descripción: Footer fijo con versión de la aplicación y timestamp
-          Componente: src/components/layout/Footer.jsx
-          ============================================ */}
-      <Footer />
-
-      {/* ============================================
-          SECCIÓN 5: FAB (Floating Action Button)
-          Descripción: Botón flotante para crear nueva incidencia
-          Componente: src/components/dashboard/CreateIncidentFAB.jsx
-          ============================================ */}
-      <CreateIncidentFAB onClick={handleCreateIncident} />
+      {/* MODAL: DETALLES DE INCIDENCIA */}
+      <Modal
+        isOpen={showDetailModal}
+        onClose={() => setShowDetailModal(false)}
+        title="DETALLES DE INCIDENCIA"
+        size="lg"
+      >
+        <IncidenceDetail
+          incidence={selectedIncidence}
+          onEdit={() => navigate('/my-incidences')}
+          onDelete={() => alert('Para eliminar incidencias, use la página "My Incidences"')}
+          onClose={() => setShowDetailModal(false)}
+          showCommentForm={true}
+        />
+      </Modal>
     </div>
   );
 }

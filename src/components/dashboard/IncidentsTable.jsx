@@ -3,172 +3,148 @@
  * COMPONENTE: IncidentsTable (Tabla de Incidencias)
  * ============================================================
  * Descripción: 
- *   Componente de tabla interactiva con búsqueda en tiempo real,
- *   filtrado por texto, estados visuales y paginación.
- *   Cumple con el patrón "Data Sheet" del sistema de diseño.
+ *   Componente de tabla interactiva que muestra incidencias con
+ *   paginación. Los filtros vienen del componente padre (Dashboard).
  * 
  * Ubicación: src/components/dashboard/IncidentsTable.jsx
  * 
  * Props:
- *   - incidences: Array de incidencias (desde API)
+ *   - incidences: Array de incidencias ya filtradas (desde padre)
  *   - loading: Booleano que indica estado de carga
+ *   - onRowClick: Función callback al hacer click en una fila (opcional)
  * 
  * Características:
- *   1. Search Bar con filtrado en tiempo real (client-side)
- *   2. Tabla con columnas: ID, Título, Prioridad, Estado
- *   3. Estados visuales para prioridad (ALTA/MEDIA/BAJA)
- *   4. Estados visuales para estado (ABIERT/EN_PROCESO/CERRADA)
- *   5. Paginación (botones - no funcional aún)
+ *   1. Tabla con columnas: ID, Título, Prioridad, Estado, Tags
+ *   2. Estados visuales para prioridad y estado
+ *   3. Paginación funcional (client-side)
+ *   4. Click en fila para ver detalles (si onRowClick proveído)
  * 
  * Notas técnicas:
- *   - El filtrado es client-side (filtra el array localmente)
- *   - Para filtrado server-side, modificar props y API call
- *   - La paginación es visual únicamente (botones sin función)
- *   - Los estados de prioridad/estado soportan múltiples formatos
- *     (inglés, español, mayúsculas, minúsculas)
+ *   - Los filtros vienen del padre (Dashboard)
+ *   - Paginación: client-side con 10 items por página
+ *   - Los tags deben venir en la respuesta de la API
  * ============================================================
  */
 
-import { useState } from 'react';
+import { useMemo } from 'react';
 
-export default function IncidentsTable({ incidences, loading }) {
-  // ============================================================
-  // ESTADO: searchTerm (Término de búsqueda)
-  // Función: Almacena el texto introducido en el buscador
-  // ============================================================
-  const [searchTerm, setSearchTerm] = useState('');
-
-  // ============================================================
-  // FILTER LOGIC: Filtrado client-side
-  // Descripción: Filtra las incidencias por ID, título o descripción
-  // NOTA: Este filtrado es temporal - para grandes volúmenes,
-  //       debería moverse al backend mediante query params
-  // ============================================================
-  const filteredIncidences = incidences.filter(inc => {
-    const search = searchTerm.toLowerCase();
-    return (
-      inc.title?.toLowerCase().includes(search) ||
-      inc.id?.toString().includes(search) ||
-      inc.description?.toLowerCase().includes(search)
-    );
-  });
+export default function IncidentsTable({ 
+  incidences, 
+  loading, 
+  onRowClick = null,
+  currentPage = 1,
+  totalPages = 1,
+  onPageChange = null
+}) {
 
   // ============================================================
-  // HELPER: getPriorityClass (Clase CSS según prioridad)
-  // Descripción: Retorna clase CSS según el nivel de prioridad
-  // Estados soportados: high/ALTA/alta, medium/MEDIA/media, low/BAJA/baja
+  // HELPER: getPriorityClass
+  // Retorna clase CSS según prioridad
   // ============================================================
   const getPriorityClass = (priority) => {
     if (priority === 'high' || priority === 'ALTA' || priority === 'alta') {
-      return 'bg-primary text-on-primary font-mono text-[10px] px-3 py-1 font-bold';
+      return 'border-2 border-black px-2 py-1 text-xs uppercase bg-black text-white';
     }
     if (priority === 'medium' || priority === 'MEDIA' || priority === 'media') {
-      return 'border border-gray-400 text-gray-500 font-mono text-[10px] px-3 py-1';
+      return 'border-2 border-gray-400 px-2 py-1 text-xs uppercase bg-white';
     }
-    return 'border border-gray-300 text-gray-400 font-mono text-[10px] px-3 py-1';
+    return 'border-2 border-gray-300 px-2 py-1 text-xs uppercase bg-white';
   };
 
   // ============================================================
-  // HELPER: getStatusClass (Clase CSS según estado)
-  // Descripción: Retorna clase CSS según el estado de la incidencia
-  // Estados soportados: open/ABIERTA, in_progress/EN_PROCESO, closed/CERRADA
+  // HELPER: getStatusClass
+  // Retorna clase CSS según estado
   // ============================================================
   const getStatusClass = (status) => {
     if (status === 'open' || status === 'ABIERTA') {
-      return 'border-2 border-black px-3 py-1 font-mono text-[10px] font-bold bg-primary text-white';
+      return 'border-2 border-black px-2 py-1 text-xs uppercase bg-white';
     }
     if (status === 'in_progress' || status === 'EN_PROCESO') {
-      return 'border-2 border-black px-3 py-1 font-mono text-[10px] font-bold bg-surface-container-high';
+      return 'border-2 border-black px-2 py-1 text-xs uppercase bg-white';
     }
-    return 'border-2 border-gray-300 px-3 py-1 font-mono text-[10px] font-bold text-gray-400';
+    return 'border-2 border-gray-300 px-2 py-1 text-xs uppercase bg-white';
+  };
+
+  // ============================================================
+  // HANDLER: Cambiar página
+  // ============================================================
+  const goToPage = (page) => {
+    if (page >= 1 && page <= totalPages && onPageChange) {
+      onPageChange(page);
+    }
   };
 
   return (
     <div>
       {/* ============================================================
-          SECCIÓN 1: SEARCH BAR (Barra de búsqueda)
-          Descripción: Input de texto con icono de búsqueda
-          Funcionalidad: Filtra la tabla en tiempo real
-          Estilo: Borde 2px black, fondo surface-container-lowest
-          NOTA: El botón SEARCH es visual - la búsqueda es automática
-          ============================================================ */}
-      <div className="flex items-stretch border-2 border-black mb-8">
-        <div className="flex-grow flex items-center px-4 bg-surface-container-lowest">
-          <span className="material-symbols-outlined text-gray-400 mr-3">search</span>
-          <input 
-            type="text"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full py-3 bg-transparent border-none focus:ring-0 font-mono text-sm uppercase placeholder:text-gray-300" 
-            placeholder="FILTER BY ID, TITLE, OR ASSIGNEE..."
-          />
-        </div>
-        <button className="bg-primary text-on-primary px-8 font-sans font-bold uppercase text-sm hover:bg-neutral-800 transition-colors">
-          SEARCH
-        </button>
-      </div>
-
-      {/* ============================================================
-          SECCIÓN 2: DATA TABLE (Tabla de datos)
-          Descripción: Grid con encabezado y filas de incidencias
-          Estructura: Grid de 12 columnas
-          Columnas: ID (2) | Título (5) | Prioridad (2) | Estado (3)
-          ============================================================ */}
-      <section className="border-2 border-black overflow-hidden">
+          DATA TABLE (Tabla de datos) - Estilo S4
+       ============================================================ */}
+      <section className="bg-white">
         
-        {/* ENCABEZADO DE TABLA */}
-        {/* Fondo: primary (black) | Texto: on-primary (white) */}
-        <div className="bg-primary text-on-primary grid grid-cols-12 font-mono text-[10px] font-bold uppercase tracking-widest px-4 py-2">
-          <div className="col-span-2">ID_REF</div>
-          <div className="col-span-5">INCIDENT_TITLE</div>
-          <div className="col-span-2">PRIORITY</div>
-          <div className="col-span-3">STATUS_STATE</div>
+        {/* ENCABEZADO */}
+        <div className="grid grid-cols-12 gap-4 px-6 py-4 bg-surface-dim border-b-2 border-black text-xs uppercase tracking-wide font-semibold">
+          <div className="col-span-1">ID</div>
+          <div className="col-span-4">Title</div>
+          <div className="col-span-2 text-center">Tags</div>
+          <div className="col-span-2 text-center">Priority</div>
+          <div className="col-span-3 text-center">Status</div>
         </div>
 
         {/* FILAS DE DATOS */}
         {loading ? (
-          // ESTADO 1: Cargando
-          <div className="grid grid-cols-12 items-center px-4 py-8 border-b-2 border-gray-200 bg-surface-container-lowest">
-            <div className="col-span-12 text-center">
-              <p className="font-mono text-sm">CARGANDO DATOS...</p>
-            </div>
+          <div className="px-6 py-8 text-center">
+            <p className="font-mono text-sm">CARGANDO DATOS...</p>
           </div>
-        ) : filteredIncidences.length === 0 ? (
-          // ESTADO 2: Sin resultados
-          <div className="grid grid-cols-12 items-center px-4 py-8 border-b-2 border-gray-200 bg-surface-container-lowest">
-            <div className="col-span-12 text-center">
-              <p className="font-mono text-sm text-gray-500">NO HAY INCIDENCIAS REGISTRADAS</p>
-            </div>
+        ) : incidences.length === 0 ? (
+          <div className="px-6 py-8 text-center">
+            <p className="font-mono text-sm text-gray-500">NO HAY INCIDENCIAS REGISTRADAS</p>
           </div>
         ) : (
-          // ESTADO 3: Datos visibles
-          filteredIncidences.map((incidence, index) => (
+          incidences.map((incidence, index) => (
             <div 
               key={incidence.id || index} 
-              className={`grid grid-cols-12 items-center px-4 py-4 ${index !== filteredIncidences.length - 1 ? 'border-b-2 border-gray-200' : ''} bg-surface-container-lowest hover:bg-gray-50 transition-colors`}
+              onClick={() => onRowClick && onRowClick(incidence)}
+              className={`grid grid-cols-12 gap-4 px-6 py-4 hover:bg-surface-dim transition-colors items-center ${index !== incidences.length - 1 ? 'border-b border-gray-300' : ''} ${onRowClick ? 'cursor-pointer' : ''}`}
             >
-              {/* Columna 1: ID */}
-              <div className="col-span-2 font-mono text-sm font-bold">
-                #{incidence.id || `INC-${1000 + index}`}
+              {/* ID */}
+              <div className="col-span-1 font-semibold">
+                INC-{String(incidence.id).padStart(3, '0')}
               </div>
               
-              {/* Columna 2: Título */}
-              <div className="col-span-5 font-sans font-semibold text-sm">
-                {incidence.title || 'Sin título'}
+              {/* Título con descripción */}
+              <div className="col-span-4">
+                <div className="font-medium">{incidence.title || 'Sin título'}</div>
+                <div className="text-xs text-gray-500 truncate">{incidence.description?.slice(0, 50) || ''}</div>
               </div>
               
-              {/* Columna 3: Prioridad */}
-              <div className="col-span-2">
+              {/* Tags */}
+              <div className="col-span-2 flex flex-wrap gap-1 justify-center">
+                {incidence.tags && incidence.tags.length > 0 ? (
+                  incidence.tags.slice(0, 3).map((tag, tagIdx) => (
+                    <span 
+                      key={tagIdx}
+                      className="px-2 py-1 text-xs bg-surface-dim text-gray-700"
+                    >
+                      #{tag.name || tag}
+                    </span>
+                  ))
+                ) : (
+                  <span className="text-xs font-mono text-gray-400">—</span>
+                )}
+              </div>
+              
+              {/* Priority */}
+              <div className="col-span-2 text-center">
                 <span className={getPriorityClass(incidence.priority)}>
-                  {(incidence.priority || 'MEDIUM').toUpperCase()}
+                  {incidence.priority || 'medium'}
                 </span>
               </div>
               
-              {/* Columna 4: Estado */}
-              <div className="col-span-3">
-                <div className={getStatusClass(incidence.status)}>
-                  {(incidence.status || 'OPEN').toUpperCase()}
-                </div>
+              {/* Status */}
+              <div className="col-span-3 text-center">
+                <span className={getStatusClass(incidence.status)}>
+                  {incidence.status || 'open'}
+                </span>
               </div>
             </div>
           ))
@@ -176,20 +152,50 @@ export default function IncidentsTable({ incidences, loading }) {
       </section>
 
       {/* ============================================================
-          SECCIÓN 3: PAGINATION (Paginación)
-          Descripción: Botones de navegación y contador de resultados
-          Funcionalidad: Solo visual - necesita implementación
-          NOTA: Eliminar esta sección si no se necesita paginación
-          ============================================================ */}
-      <div className="mt-6 flex justify-between items-center font-mono text-[10px] uppercase">
-        <div className="flex gap-4">
-          <button className="border-2 border-black px-4 py-1 font-bold hover:bg-gray-200">PREV_PAGE</button>
-          <button className="border-2 border-black px-4 py-1 font-bold hover:bg-gray-200">NEXT_PAGE</button>
+          PAGINATION (Paginación) - Estilo S4
+       ============================================================ */}
+      {incidences.length > 0 && (
+        <div className="px-6 py-4 bg-surface-dim border-t-2 border-black">
+          <div className="flex items-center justify-between">
+            {/* Info */}
+            <div className="text-xs text-gray-600">
+              Mostrando página {currentPage} de {totalPages}
+            </div>
+            
+            {/* Botones */}
+            <div className="flex gap-2">
+              <button 
+                onClick={() => goToPage(1)}
+                disabled={currentPage === 1}
+                className="px-3 py-1 border border-black hover:bg-white disabled:opacity-30 disabled:cursor-not-allowed text-xs"
+              >
+                ««
+              </button>
+              <button 
+                onClick={() => goToPage(currentPage - 1)}
+                disabled={currentPage === 1}
+                className="px-3 py-1 border border-black hover:bg-white disabled:opacity-30 disabled:cursor-not-allowed text-xs"
+              >
+                «
+              </button>
+              <button 
+                onClick={() => goToPage(currentPage + 1)}
+                disabled={currentPage === totalPages}
+                className="px-3 py-1 border border-black hover:bg-white disabled:opacity-30 disabled:cursor-not-allowed text-xs"
+              >
+                »
+              </button>
+              <button 
+                onClick={() => goToPage(totalPages)}
+                disabled={currentPage === totalPages}
+                className="px-3 py-1 border border-black hover:bg-white disabled:opacity-30 disabled:cursor-not-allowed text-xs"
+              >
+                »»
+              </button>
+            </div>
+          </div>
         </div>
-        <div className="text-gray-500">
-          DISPLAYING {filteredIncidences.length} OF {incidences.length} ENTRIES
-        </div>
-      </div>
+      )}
     </div>
   );
 }
