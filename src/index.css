@@ -42,25 +42,25 @@
    Definición de variables CSS personalizadas para el sistema
    ============================================================ */
 @theme {
-  /* --- COLORES: Superficie (Backgrounds) --- */
-  --color-surface: #f9f9f9;           /* Fondo principal - "paper stock" */
-  --color-surface-dim: #dadada;       /* Superficie atenuada */
-  --color-surface-variant: #e2e2e2;   /* Variante de superficie */
-  --color-surface-container: #eeeeee; /* Contenedor - nivel 1 */
-  --color-surface-container-high: #e8e8e8;    /* Contenedor - nivel 2 */
-  --color-surface-container-highest: #e2e2e2; /* Contenedor - nivel 3 */
-  --color-surface-container-low: #f3f3f3;      /* Contenedor - nivel 0 */
-  --color-surface-container-lowest: #ffffff;   /* Contenedor - más alto */
+  /* --- COLORES: Superficie (Backgrounds) - Vintage Cream --- */
+  --color-surface: #e8e6e3;           /* Fondo principal - cream vintage */
+  --color-surface-dim: #d4d2cf;       /* Superficie atenuada */
+  --color-surface-variant: #d9d7d4;   /* Variante de superficie */
+  --color-surface-container: #d9d7d4; /* Contenedor - nivel 1 */
+  --color-surface-container-high: #cdcbc8;    /* Contenedor - nivel 2 */
+  --color-surface-container-highest: #c1bfbc; /* Contenedor - nivel 3 */
+  --color-surface-container-low: #e8e6e3;      /* Contenedor - nivel 0 */
+  --color-surface-container-lowest: #f2f0ed;   /* Contenedor - más alto - cream claro */
   
   /* --- COLORES: Primarios --- */
-  --color-primary: #000000;           /* Negro "ink" - principal */
-  --color-on-primary: #e2e2e2;       /* Texto sobre primario */
+  --color-primary: #2c2c2c;           /* Negro "ink" - principal (menos harsh) */
+  --color-on-primary: #f2f0ed;       /* Texto sobre primario */
   --color-primary-fixed: #5e5e5e;    /* Gris medio */
   --color-primary-fixed-dim: #474747; /* Gris oscuro */
   
   /* --- COLORES: Secundarios --- */
   --color-secondary: #5f5e5e;
-  --color-secondary-container: #d6d4d3;
+  --color-secondary-container: #d4d2cf;
   --color-secondary-fixed: #c8c6c6;
   
   /* --- COLORES: Terciarios --- */
@@ -69,12 +69,12 @@
   
   /* --- COLORES: Bordes y outlines --- */
   --color-outline: #777777;           /* Borde secundario */
-  --color-outline-variant: #c6c6c6;   /* Borde sutil */
+  --color-outline-variant: #b8b6b3;   /* Borde sutil - más cálido */
   
   /* --- COLORES: Texto --- */
-  --color-on-surface: #1a1c1c;       /* Texto principal */
-  --color-on-surface-variant: #474747; /* Texto secundario */
-  --color-on-background: #1a1c1c;
+  --color-on-surface: #2c2c2c;       /* Texto principal */
+  --color-on-surface-variant: #4a4a4a; /* Texto secundario */
+  --color-on-background: #2c2c2c;
   
   /* --- COLORES: Error --- */
   --color-error: #ba1a1a;            /* Rojo error */
@@ -88,7 +88,7 @@
   --color-inverse-on-surface: #f1f1f1;
 
   /* --- TIPOGRAFÍA --- */
-  --font-family-sans: 'IBM Plex Sans', system-ui, sans-serif;
+  --font-family-sans: 'IBM Plex Mono', monospace;
   --font-family-mono: 'IBM Plex Mono', monospace;
   
   /* --- BORDES --- */
@@ -100,7 +100,7 @@
    Configuración global para el documento
    ============================================================ */
 body {
-  font-family: var(--font-family-sans);
+  font-family: 'IBM Plex Mono', monospace;
   background-color: var(--color-surface);
   color: var(--color-on-surface);
   margin: 0;
@@ -119,27 +119,20 @@ body {
    Clases de utilidad adicionales para el sistema de diseño
    ============================================================ */
 
-/* Font: Para headlines y títulos principales */
-.font-headline {
-  font-family: var(--font-family-sans);
+/* Font: Todas las clases de fuente usan IBM Plex Mono */
+.font-headline,
+.font-body,
+.font-label,
+.font-sans {
+  font-family: 'IBM Plex Mono', monospace;
 }
 
-/* Font: Para texto de cuerpo general */
-.font-body {
-  font-family: var(--font-family-sans);
-}
-
-/* Font: Para etiquetas y datos técnicos (IBM Plex Mono) */
-.font-label {
-  font-family: var(--font-family-mono);
-}
-
-/* Background: Patrón de stipple (puntos) para fondos técnicos
+/* Background: Patrón de stipple (puntos) para fondos técnicos - Vintage
    Uso: background con opacidad reducida para crear textura */
 .stippled-bg {
-  background-image: radial-gradient(#000 0.5px, transparent 0.5px);
+  background-image: radial-gradient(#8b8680 0.5px, transparent 0.5px);
   background-size: 3px 3px;
-  opacity: 0.1;
+  opacity: 0.15;
 }
 
 /* ============================================================
