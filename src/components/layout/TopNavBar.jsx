@@ -47,38 +47,21 @@ export default function TopNavBar({ user, onLogout }) {
           Menú: Links de navegación
        ============================================================ */}
       <div className="flex items-center gap-8">
-        <span className="text-xl font-bold text-black uppercase tracking-tighter">SYSTEM MONITOR</span>
-        <div className="hidden md:flex gap-6 font-sans uppercase tracking-wider text-sm">
-          <Link to="/dashboard" className="text-black font-bold underline decoration-2 underline-offset-4">DASHBOARD</Link>
-          <Link to="/dashboard" className="text-gray-500 hover:bg-gray-200 transition-colors px-2">MY INCIDENTS</Link>
-          <button onClick={onLogout} className="text-gray-500 hover:bg-gray-200 transition-colors px-2">LOGOUT</button>
-        </div>
+        <span className="font-mono font-bold text-xl border-2 border-black px-2 py-1">INCIDENsly 𝒘ebApp</span>
       </div>
 
       {/* ============================================================
-          SECCIÓN 2: SYSTEM STATUS + USER PROFILE (Derecha)
-          Status: Indicador visual de sistema online
+          SECCIÓN 2: USER PROFILE (Derecha)
           User: Nombre del usuario + icono
-          Icons: Notifications, Settings (visuales)
        ============================================================ */}
       <div className="flex items-center gap-4">
         
-        {/* Indicador de estado del sistema */}
-        {/* NOTA: El estado ONLINE está hardcodeado - podría dynamizarse */}
-        <div className="flex items-center gap-2 px-3 py-1 border-2 border-primary bg-surface-container">
-          <span className="w-2 h-2 bg-green-600"></span>
-          <span className="font-mono text-xs font-bold">SYSTEM STATUS: ONLINE</span>
-        </div>
-        
         {/* Perfil de usuario */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 px-3 py-1 border-2 border-black bg-surface-container">
+          <span className="w-2 h-2 bg-green-600"></span>
           <span className="font-mono text-xs font-bold text-black">USER: {user?.name?.toUpperCase() || 'GUEST'}</span>
           <span className="material-symbols-outlined text-black">account_circle</span>
         </div>
-        
-        {/* Iconos de acción - NOTA: Solo visuales, sin funcionalidad */}
-        <span className="material-symbols-outlined text-gray-500 cursor-pointer">notifications</span>
-        <span className="material-symbols-outlined text-gray-500 cursor-pointer">settings</span>
       </div>
     </nav>
   );
