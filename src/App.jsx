@@ -45,6 +45,9 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import Landing from './pages/Landing';
+import MyIncidences from './pages/MyIncidences';
+import Admin from './pages/Admin';
+import NotFound from './pages/NotFound';
 
 /**
  * ============================================================
@@ -125,9 +128,11 @@ function AppRoutes() {
       
       {/* Rutas protegidas - requieren autenticación */}
       <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+      <Route path="/my-incidences" element={<ProtectedRoute><MyIncidences /></ProtectedRoute>} />
+      <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
       
       {/* Catch-all - cualquier ruta no definida */}
-      <Route path="*" element={<Navigate to="/" />} />
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }

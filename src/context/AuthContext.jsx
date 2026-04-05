@@ -76,7 +76,7 @@ export function AuthProvider({ children }) {
     if (token) {
       // Hay token guardado - verificar con el backend
       api.get('/me')
-        .then(({ data }) => setUser(data))
+        .then(({ data }) => setUser(data.data))
         .catch(() => {
           // Token inválido o expirado - limpiar
           localStorage.removeItem('token');
@@ -113,7 +113,8 @@ export function AuthProvider({ children }) {
     }
     
     localStorage.setItem('token', token);
-    const { data: userData } = await api.get('/me');
+    const { data } = await api.get('/me');
+    const userData = data.data;
     setUser(userData);
     return userData;
   };
@@ -165,7 +166,8 @@ export function AuthProvider({ children }) {
     }
     
     localStorage.setItem('token', token);
-    const { data: userData } = await api.get('/me');
+    const { data } = await api.get('/me');
+    const userData = data.data;
     setUser(userData);
     return userData;
   };
