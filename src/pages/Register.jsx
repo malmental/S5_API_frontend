@@ -98,11 +98,7 @@ export default function Register() {
        ============================================================ */}
       <header className="flex justify-between items-center px-6 h-16 w-full border-b-2 border-black bg-surface">
         <div className="flex items-center gap-4">
-          <Link to="/" className="font-mono font-bold text-xl border-2 border-black px-2 py-1">INCIDENT_LOG_v1.0</Link>
-          <span className="font-label text-[10px] bg-primary text-on-primary px-1">SYSTEM_READY</span>
-        </div>
-        <div className="flex items-center gap-4">
-          <Link to="/login" className="font-sans uppercase tracking-tighter text-black hover:bg-gray-200 transition-colors px-4 py-1 border border-black">LOGIN</Link>
+          <Link to="/" className="font-mono font-bold text-xl border-2 border-black px-2 py-1">INCIDENsly 𝒘ebApp</Link>
         </div>
       </header>
 
@@ -111,8 +107,11 @@ export default function Register() {
           Descripción: Área central con formulario de creación de cuenta
           Layout: Centrado con max-width 512px
        ============================================================ */}
-      <main className="flex-grow flex items-center justify-center p-8">
-        <div className="w-full max-w-md">
+      <main className="flex-grow flex items-center justify-center p-8 relative">
+        {/* Background pattern */}
+        <div className="absolute inset-0 stippled-bg"></div>
+        
+        <div className="relative w-full max-w-md">
           
           {/* Badge y título */}
           <div className="mb-6">
@@ -120,10 +119,10 @@ export default function Register() {
           </div>
           
           <h1 className="font-sans font-bold text-4xl mb-2">CREAR CUENTA</h1>
-          <p className="font-label text-sm text-on-surface-variant mb-8">Nuevo usuario. Complete todos los campos.</p>
+          <p className="font-label text-sm text-on-surface-variant mb-8">Complete todos los campos</p>
 
           {/* Formulario */}
-          <form onSubmit={handleSubmit} className="border-2 border-black p-6 bg-white">
+          <form onSubmit={handleSubmit} className="p-6 bg-white">
             {/* Mensaje de error */}
             {error && (
               <div className="mb-4 p-3 bg-error-container border border-error text-error text-sm font-label">
@@ -142,7 +141,7 @@ export default function Register() {
                   id="name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full px-4 py-3 border border-black bg-surface focus:outline-none focus:border-4 focus:border-primary transition-all font-mono text-sm"
+                  className="w-full px-4 py-3 bg-surface focus:outline-none focus:border-1 focus:border-primary transition-all font-mono text-sm"
                   placeholder="NOMBRE APELLIDO"
                   required
                 />
@@ -158,7 +157,7 @@ export default function Register() {
                   id="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-3 border border-black bg-surface focus:outline-none focus:border-4 focus:border-primary transition-all font-mono text-sm"
+                  className="w-full px-4 py-3 bg-surface focus:outline-none focus:border-1 focus:border-primary transition-all font-mono text-sm"
                   placeholder="user@domain.ext"
                   required
                 />
@@ -174,7 +173,7 @@ export default function Register() {
                   id="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-3 border border-black bg-surface focus:outline-none focus:border-4 focus:border-primary transition-all font-mono text-sm"
+                  className="w-full px-4 py-3 bg-surface focus:outline-none focus:border-1 focus:border-primary transition-all font-mono text-sm"
                   placeholder="••••••••••••"
                   required
                 />
@@ -190,7 +189,7 @@ export default function Register() {
                   id="passwordConfirmation"
                   value={passwordConfirmation}
                   onChange={(e) => setPasswordConfirmation(e.target.value)}
-                  className="w-full px-4 py-3 border border-black bg-surface focus:outline-none focus:border-4 focus:border-primary transition-all font-mono text-sm"
+                  className="w-full px-4 py-3 bg-surface focus:outline-none focus:border-1 focus:border-primary transition-all font-mono text-sm"
                   placeholder="••••••••••••"
                   required
                 />
@@ -223,12 +222,12 @@ export default function Register() {
           SECCIÓN 3: FOOTER
           Descripción: Pie de página con versión y timestamp
        ============================================================ */}
-      <footer className="flex justify-between items-center px-6 py-4 w-full border-t-2 border-black bg-surface-container">
-        <div className="font-label text-[10px]">
-          INCIDENSly_v1.0.4_REG_MODULE
+      <footer className="flex justify-between items-center px-6 py-4 w-full border-t-2 border-black bg-surface-dim">
+        <div className="mb-4 md:mb-0">
+          <span className="font-mono text-xs uppercase tracking-widest text-black">© 𝓁.2077</span>
         </div>
-        <div className="font-label text-[10px]">
-          {new Date().toISOString().slice(0, 19).replace('T', ' ')} UTC
+        <div className="mt-4 md:mt-0 font-label text-[10px]">
+          INCIDENsly 𝒘ebApp v._STABLE_BUILD
         </div>
       </footer>
     </div>

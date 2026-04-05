@@ -48,17 +48,7 @@ export default function Landing() {
        ============================================================ */}
       <header className="flex justify-between items-center px-6 h-16 w-full border-b-2 border-black bg-surface sticky top-0 z-50">
         <div className="flex items-center gap-4">
-          <span className="font-mono font-bold text-xl border-2 border-black px-2 py-1">INCIDENT_LOG_v1.0</span>
-          <span className="font-label text-[10px] bg-primary text-on-primary px-1">SYSTEM_READY</span>
-        </div>
-        <nav className="hidden md:flex gap-8 items-center">
-          <a className="font-sans uppercase tracking-tighter text-gray-600 hover:bg-gray-200 transition-colors px-2" href="#">RESOURCES</a>
-          <a className="font-sans uppercase tracking-tighter text-gray-600 hover:bg-gray-200 transition-colors px-2" href="#">DOCS</a>
-          <a className="font-sans uppercase tracking-tighter text-gray-600 hover:bg-gray-200 transition-colors px-2" href="#">STATUS</a>
-        </nav>
-        <div className="flex items-center gap-4">
-          <Link to="/login" className="font-sans uppercase tracking-tighter text-black hover:bg-gray-200 transition-colors px-4 py-1 border border-black">LOGIN</Link>
-          <Link to="/register" className="font-sans uppercase tracking-tighter bg-black text-white hover:bg-gray-800 transition-colors px-4 py-1">REGISTER</Link>
+          <span className="font-mono font-bold text-xl border-2 border-black px-2 py-1">INCIDENsly 𝒘ebApp</span>
         </div>
       </header>
 
@@ -78,13 +68,14 @@ export default function Landing() {
             <div className="absolute inset-0 stippled-bg pointer-events-none"></div>
             <div className="relative z-10">
               <div className="mb-4 inline-block">
-                <span className="font-label text-xs uppercase border border-black px-2 py-0.5 bg-white">MÓDULO DE ACCESO GLOBAL</span>
+                <span className="font-label text-xs uppercase border border-black px-2 py-0.5 bg-white">GESTIÓN DE INCIDENCIAS</span>
               </div>
               <h1 className="font-sans font-bold text-6xl md:text-8xl leading-none tracking-tighter mb-8">
-                BIENVENIDO AL SISTEMA
+                INCIDENsly 𝒘ebApp
               </h1>
               <p className="font-sans text-xl max-w-xl mb-12 text-on-surface-variant leading-relaxed">
-                Optimización técnica para la gestión crítica de infraestructuras. El software INCIDENSly webApp proporciona una interfaz de baja latencia para el seguimiento, resolución y documentación de eventos operativos en tiempo real.
+                Sistema profesional de gestión y seguimiento de incidencias.
+                Organiza, asigna y resuelve problemas de manera eficiente.
               </p>
               <div className="flex flex-wrap gap-4">
                 <Link to="/login" className="bg-primary text-on-primary px-10 py-4 font-sans font-bold text-xl flex items-center gap-3 hover:bg-neutral-800 transition-colors">
@@ -107,42 +98,38 @@ export default function Landing() {
               </div>
               <div className="space-y-6">
                 {/* Feature 1 */}
-                <div className="border-2 border-black p-4 bg-surface">
+                <div className="border-1 border-black p-4 bg-surface">
                   <div className="flex gap-4 items-center">
                     <span className="material-symbols-outlined text-4xl">folder_managed</span>
                     <div>
-                      <h3 className="font-sans font-bold text-sm uppercase">Gestión de incidencias</h3>
-                      <p className="font-label text-xs text-on-surface-variant">Trazabilidad completa de tickets críticos y operativos.</p>
+                      <h3 className="font-sans font-bold text-sm uppercase">Gestión para las incidencias</h3>
                     </div>
                   </div>
                 </div>
                 {/* Feature 2 */}
-                <div className="border-2 border-black p-4 bg-surface">
+                <div className="border-1 border-black p-4 bg-surface">
                   <div className="flex gap-4 items-center">
                     <span className="material-symbols-outlined text-4xl">assignment_ind</span>
                     <div>
-                      <h3 className="font-sans font-bold text-sm uppercase">Asignación de tareas</h3>
-                      <p className="font-label text-xs text-on-surface-variant">Distribución inteligente de recursos técnicos disponibles.</p>
+                      <h3 className="font-sans font-bold text-sm uppercase">Asignación por prioridad</h3>
                     </div>
                   </div>
                 </div>
                 {/* Feature 3 */}
-                <div className="border-2 border-black p-4 bg-surface">
+                <div className="border-1 border-black p-4 bg-surface">
                   <div className="flex gap-4 items-center">
                     <span className="material-symbols-outlined text-4xl">priority_high</span>
                     <div>
-                      <h3 className="font-sans font-bold text-sm uppercase">Priorización automática</h3>
-                      <p className="font-label text-xs text-on-surface-variant">Algoritmos de severidad basados en impacto de red.</p>
+                      <h3 className="font-sans font-bold text-sm uppercase">Clasificacion por estado</h3>
                     </div>
                   </div>
                 </div>
                 {/* Feature 4 */}
-                <div className="border-2 border-black p-4 bg-surface">
+                <div className="border-1 border-black p-4 bg-surface">
                   <div className="flex gap-4 items-center">
                     <span className="material-symbols-outlined text-4xl">analytics</span>
                     <div>
                       <h3 className="font-sans font-bold text-sm uppercase">Reportes y estadísticas</h3>
-                      <p className="font-label text-xs text-on-surface-variant">Exportación de datos brutos y visualización técnica.</p>
                     </div>
                   </div>
                 </div>
@@ -174,10 +161,10 @@ export default function Landing() {
                 <img alt="Terminal background" className="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCELeUUNzQxeZ4i1fBsCwTcRfGSI6z3C8YC3E1NcNTKNGvsPfAA3p-x3e9qOKfIcIhsO5Pzv652gp3h563ubZapb9pawnGYQS2EeqCXxlw0RHn07RwDAjcgTOjJ83u13-87aNOCM9OzbUdTgEf631WU4cAg3QFjB-Y9rTuJGFjnLyLGHrd8t00FQau4Ix_5hNragXxvq77ZduMimARZJAEFwHJZ7CnoiIhjvCPQ1dFqYE1UQ8-gIDhK6hBFCvxoaN8aH54xvfRPTm8" />
               </div>
               <div className="z-10 text-center">
-                <p className="font-label text-xs mb-4">MÓDULO DE VISUALIZACIÓN DE INTERFAZ</p>
-                <h2 className="font-sans font-bold text-3xl mb-2">PRECISIÓN ANALÍTICA</h2>
+                <p className="font-label text-xs mb-4">Aplicacion web para la gestion de incidencias</p>
+                <h2 className="font-sans font-bold text-3xl mb-2">INCIDENsly 𝒘ebApp</h2>
                 <div className="w-24 h-1 bg-white mx-auto mb-6"></div>
-                <p className="font-label text-sm max-w-md mx-auto px-4">Interfáz optimizada para pantallas industriales y entornos de alto contraste.</p>
+                <p className="font-label text-sm max-w-md mx-auto px-4">Asignacion de incidencias por estado y urgencia, creacion de tags y comentarios para interacción entre usuarios.</p>
               </div>
             </div>
           </div>
@@ -191,15 +178,10 @@ export default function Landing() {
       ============================================================ */}
       <footer className="flex flex-col md:flex-row justify-between items-center px-6 py-8 w-full border-t-2 border-black bg-surface-container">
         <div className="mb-4 md:mb-0">
-          <span className="font-mono text-xs uppercase tracking-widest text-black">© 1984-2024 SYSTEM_CORE INCIDENT_MGMT. ALL RIGHTS RESERVED.</span>
-        </div>
-        <div className="flex gap-8">
-          <a className="font-mono text-xs uppercase tracking-widest text-gray-500 hover:text-black transition-colors underline" href="#">TERMINAL</a>
-          <a className="font-mono text-xs uppercase tracking-widest text-gray-500 hover:text-black transition-colors underline" href="#">PRIVACY</a>
-          <a className="font-mono text-xs uppercase tracking-widest text-gray-500 hover:text-black transition-colors underline" href="#">SITEMAP</a>
+          <span className="font-mono text-xs uppercase tracking-widest text-black">© 𝓁.2077</span>
         </div>
         <div className="mt-4 md:mt-0 font-label text-[10px]">
-          INCIDENSly_v1.0.4_STABLE_BUILD
+          INCIDENsly 𝒘ebApp v._STABLE_BUILD
         </div>
       </footer>
     </div>
