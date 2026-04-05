@@ -439,6 +439,7 @@ export default function MyIncidences() {
           onDelete={handleDelete}
           onClose={() => setShowDetailModal(false)}
           showCommentForm={false}
+          isOwner={true}
         />
       </Modal>
 
