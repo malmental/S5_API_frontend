@@ -166,7 +166,7 @@ export default function Admin() {
                 
                 {/* Mensaje principal */}
                 <p className="font-mono text-sm text-gray-700 mb-4">
-                  INCIDENsly webapp te invita a que solicites el permiso necesario.
+                  INCIDENsly 𝒘ebApp te invita a que solicites el permiso necesario.
                 </p>
               </div>
             </div>
