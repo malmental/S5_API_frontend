@@ -44,7 +44,6 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import api from '../services/api';
-import TopNavBar from '../components/layout/TopNavBar';
 import SideNavBar from '../components/layout/SideNavBar';
 import Modal from '../components/ui/Modal';
 import IncidenceForm from '../components/incidences/IncidenceForm';
@@ -223,24 +222,17 @@ export default function MyIncidences() {
     <div className="flex flex-col min-h-screen bg-surface">
       
       {/* ============================================================
-          SECTION 1: TOP NAV BAR
-          Top navigation bar
-          Component: src/components/layout/TopNavBar.jsx
-       ============================================================ */}
-      <TopNavBar user={user} onLogout={handleLogout} />
-      
-      {/* ============================================================
-          SECTION 2: SIDE NAV BAR
+          SECTION 1: SIDE NAV BAR
           Side navigation bar
           Component: src/components/layout/SideNavBar.jsx
        ============================================================ */}
       <SideNavBar />
       
       {/* ============================================================
-          SECTION 3: MAIN CONTENT
+          SECTION 2: MAIN CONTENT
           Main area with incidence list
        ============================================================ */}
-      <main className="ml-64 pt-14 min-h-screen relative">
+      <main className="ml-64 pt-0 min-h-screen relative">
         {/* Background pattern */}
         <div className="absolute inset-0 stippled-bg"></div>
         <div className="relative p-8 max-w-6xl">
@@ -258,7 +250,7 @@ export default function MyIncidences() {
             </div>
             <button 
               onClick={() => setShowCreateModal(true)}
-              className="font-sans font-bold uppercase tracking-wider bg-primary text-on-primary px-6 py-3 hover:bg-neutral-800 transition-colors border-2 border-black"
+              className="font-sans font-bold uppercase tracking-wider bg-primary text-on-primary px-6 py-3 hover:bg-neutral-800 transition-colors"
             >
               + NEW INCIDENCE
             </button>
