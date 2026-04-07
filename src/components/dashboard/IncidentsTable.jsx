@@ -1,28 +1,28 @@
 /**
  * ============================================================
- * COMPONENTE: IncidentsTable (Tabla de Incidencias)
+ * COMPONENT: IncidentsTable (Incidents Table)
  * ============================================================
- * Descripción: 
- *   Componente de tabla interactiva que muestra incidencias con
- *   paginación. Los filtros vienen del componente padre (Dashboard).
+ * Description: 
+ *   Interactive table component that shows incidences with
+ *   pagination. Filters come from parent component (Dashboard).
  * 
- * Ubicación: src/components/dashboard/IncidentsTable.jsx
+ * Location: src/components/dashboard/IncidentsTable.jsx
  * 
  * Props:
- *   - incidences: Array de incidencias ya filtradas (desde padre)
- *   - loading: Booleano que indica estado de carga
- *   - onRowClick: Función callback al hacer click en una fila (opcional)
+ *   - incidences: Array of already filtered incidences (from parent)
+ *   - loading: Boolean indicating loading state
+ *   - onRowClick: Callback function on row click (optional)
  * 
- * Características:
- *   1. Tabla con columnas: ID, Título, Prioridad, Estado, Tags
- *   2. Estados visuales para prioridad y estado
- *   3. Paginación funcional (client-side)
- *   4. Click en fila para ver detalles (si onRowClick proveído)
+ * Characteristics:
+ *   1. Table with columns: ID, Title, Priority, Status, Tags
+ *   2. Visual states for priority and status
+ *   3. Functional pagination (client-side)
+ *   4. Row click to view details (if onRowClick provided)
  * 
- * Notas técnicas:
- *   - Los filtros vienen del padre (Dashboard)
- *   - Paginación: client-side con 10 items por página
- *   - Los tags deben venir en la respuesta de la API
+ * Technical notes:
+ *   - Filters come from parent (Dashboard)
+ *   - Pagination: client-side with 10 items per page
+ *   - Tags must come in the API response
  * ============================================================
  */
 
@@ -39,7 +39,7 @@ export default function IncidentsTable({
 
   // ============================================================
   // HELPER: getPriorityClass
-  // Retorna clase CSS según prioridad
+  // Returns CSS class by priority
   // ============================================================
   const getPriorityClass = (priority) => {
     if (priority === 'high' || priority === 'ALTA' || priority === 'alta') {
@@ -53,7 +53,7 @@ export default function IncidentsTable({
 
   // ============================================================
   // HELPER: getStatusClass
-  // Retorna clase CSS según estado
+  // Returns CSS class by status
   // ============================================================
   const getStatusClass = (status) => {
     if (status === 'open' || status === 'ABIERTA') {
@@ -66,7 +66,7 @@ export default function IncidentsTable({
   };
 
   // ============================================================
-  // HANDLER: Cambiar página
+  // HANDLER: Change page
   // ============================================================
   const goToPage = (page) => {
     if (page >= 1 && page <= totalPages && onPageChange) {
@@ -77,11 +77,11 @@ export default function IncidentsTable({
   return (
     <div>
       {/* ============================================================
-          DATA TABLE (Tabla de datos) - Estilo S4
+          DATA TABLE - S4 Style
        ============================================================ */}
       <section className="bg-white">
         
-        {/* ENCABEZADO */}
+        {/* HEADER */}
         <div className="grid grid-cols-12 gap-4 px-6 py-4 bg-surface-dim border-b-2 border-black text-xs uppercase tracking-wide font-semibold">
           <div className="col-span-1">ID</div>
           <div className="col-span-4">Title</div>
@@ -90,14 +90,14 @@ export default function IncidentsTable({
           <div className="col-span-3 text-center">Status</div>
         </div>
 
-        {/* FILAS DE DATOS */}
+        {/* DATA ROWS */}
         {loading ? (
           <div className="px-6 py-8 text-center">
-            <p className="font-mono text-sm">CARGANDO DATOS...</p>
+            <p className="font-mono text-sm">LOADING DATA...</p>
           </div>
         ) : incidences.length === 0 ? (
           <div className="px-6 py-8 text-center">
-            <p className="font-mono text-sm text-gray-500">NO HAY INCIDENCIAS REGISTRADAS</p>
+            <p className="font-mono text-sm text-gray-500">NO INCIDENCES REGISTERED</p>
           </div>
         ) : (
           incidences.map((incidence, index) => (
@@ -111,9 +111,9 @@ export default function IncidentsTable({
                 INC-{String(incidence.id).padStart(3, '0')}
               </div>
               
-              {/* Título con descripción */}
+              {/* Title with description */}
               <div className="col-span-4">
-                <div className="font-medium">{incidence.title || 'Sin título'}</div>
+                <div className="font-medium">{incidence.title || 'Untitled'}</div>
                 <div className="text-xs text-gray-500 truncate">{incidence.description?.slice(0, 50) || ''}</div>
               </div>
               
@@ -152,17 +152,17 @@ export default function IncidentsTable({
       </section>
 
       {/* ============================================================
-          PAGINATION (Paginación) - Estilo S4
+          PAGINATION - S4 Style
        ============================================================ */}
       {incidences.length > 0 && (
         <div className="px-6 py-4 bg-surface-dim border-t-2 border-black">
           <div className="flex items-center justify-between">
             {/* Info */}
             <div className="text-xs text-gray-600">
-              Mostrando página {currentPage} de {totalPages}
+              Showing page {currentPage} of {totalPages}
             </div>
             
-            {/* Botones */}
+            {/* Buttons */}
             <div className="flex gap-2">
               <button 
                 onClick={() => goToPage(1)}

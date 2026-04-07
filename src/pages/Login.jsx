@@ -1,40 +1,40 @@
 /**
  * ============================================================
- * PÁGINA: Login (Página de Autenticación)
+ * PAGE: Login (Authentication Page)
  * ============================================================
- * Descripción: 
- *   Formulario de inicio de sesión para usuarios existentes.
- *   Utiliza el contexto de autenticación para validar credenciales.
+ * Description: 
+ *   Sign-in form for existing users.
+ *   Uses the authentication context to validate credentials.
  * 
- * Ubicación: src/pages/Login.jsx
+ * Location: src/pages/Login.jsx
  * 
  * Routing:
- *   - Accesible desde /login
- *   - Redirige a /dashboard si ya está logueado
- *   - Link a /register para nuevos usuarios
+ *   - Accessible from /login
+ *   - Redirects to /dashboard if already logged in
+ *   - Link to /register for new users
  * 
- * Estados del formulario:
- *   1. idle - Formulario en reposo
- *   2. loading - En proceso de autenticación
- *   3. error - Credenciales inválidas
+ * Form states:
+ *   1. idle - Form at rest
+ *   2. loading - Authentication in progress
+ *   3. error - Invalid credentials
  * 
- * Integración:
- *   - Usa useAuth() hook del contexto
- *   - Llama a login(email, password) del AuthContext
- *   - Navega a /dashboard tras login exitoso
+ * Integration:
+ *   - Uses useAuth() hook from context
+ *   - Calls login(email, password) from AuthContext
+ *   - Navigates to /dashboard after successful login
  * 
- * Campos:
- *   - email: Correo electrónico del usuario
- *   - password: Contraseña
+ * Fields:
+ *   - email: User's email address
+ *   - password: Password
  * 
- * Manejo de errores:
- *   - Muestra mensaje de error del backend
- *   - Fallback genérico si no hay respuesta específica
+ * Error handling:
+ *   - Shows error message from backend
+ *   - Generic fallback if no specific response
  * 
- * Notas técnicas:
- *   - Requiere AuthProvider en App.jsx
- *   - El token se guarda en localStorage automáticamente
- *   - El focus en inputs cambia el borde a 4px
+ * Technical notes:
+ *   - Requires AuthProvider in App.jsx
+ *   - Token is saved to localStorage automatically
+ *   - Input focus changes border to 4px
  * ============================================================
  */
 
@@ -44,21 +44,21 @@ import { useNavigate, Link } from 'react-router-dom';
 
 export default function Login() {
   // ============================================================
-  // ESTADOS DEL COMPONENTE
+  // COMPONENT STATES
   // ============================================================
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   
-  // Hooks de autenticación y navegación
+  // Authentication and navigation hooks
   const { login } = useAuth();
   const navigate = useNavigate();
 
   // ============================================================
   // HANDLER: handleSubmit
-  // Descripción: Maneja el envío del formulario de login
-  // Flujo: Valida → Llama API → Guarda token → Redirige
+  // Description: Handles login form submission
+  // Flow: Validate → Call API → Save token → Redirect
   // ============================================================
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -70,7 +70,7 @@ export default function Login() {
       navigate('/dashboard');
     } catch (err) {
       console.error('Login error:', err);
-      // Extraer mensaje de error de la respuesta o usar fallback
+      // Extract error message from response or use fallback
       const message = err.response?.data?.message || 
                       err.response?.data?.error ||
                       'Invalid credentials. Please try again.';
@@ -82,14 +82,14 @@ export default function Login() {
 
   return (
     /* ============================================================
-        CONTENEDOR PRINCIPAL
-        Layout: Flex column | Min-height: 100vh | Fondo: surface
+        MAIN CONTAINER
+        Layout: Flex column | Min-height: 100vh | Background: surface
        ============================================================ */
     <div className="flex flex-col min-h-screen bg-surface">
       
       {/* ============================================================
-          SECCIÓN 1: HEADER
-          Descripción: Barra superior con logo y botón de registro
+          SECTION 1: HEADER
+          Description: Top bar with logo and register button
        ============================================================ */}
       <header className="flex justify-between items-center px-6 h-16 w-full border-b-2 border-black bg-surface">
         <div className="flex items-center gap-4">
@@ -98,9 +98,9 @@ export default function Login() {
       </header>
 
       {/* ============================================================
-          SECCIÓN 2: FORMULARIO DE LOGIN
-          Descripción: Área central con formulario de autenticación
-          Layout: Centrado con max-width 512px
+          SECTION 2: LOGIN FORM
+          Description: Central area with authentication form
+          Layout: Centered with max-width 512px
        ============================================================ */}
       <main className="flex-grow flex items-center justify-center p-8 relative">
         {/* Background pattern */}
@@ -108,17 +108,17 @@ export default function Login() {
         
         <div className="relative w-full max-w-md">
           
-          {/* Badge y título */}
+          {/* Badge and title */}
           <div className="mb-6">
-            <span className="font-label text-xs uppercase border border-black px-2 py-0.5 bg-white">MÓDULO DE AUTENTICACIÓN</span>
+            <span className="font-label text-xs uppercase border border-black px-2 py-0.5 bg-white">AUTHENTICATION MODULE</span>
           </div>
           
-          <h1 className="font-sans font-bold text-4xl mb-2">INICIAR SESIÓN</h1>
-          <p className="font-label text-sm text-on-surface-variant mb-8">Introduzca sus credenciales.</p>
+          <h1 className="font-sans font-bold text-4xl mb-2">SIGN IN</h1>
+          <p className="font-label text-sm text-on-surface-variant mb-8">Enter your credentials.</p>
 
-          {/* Formulario */}
+          {/* Form */}
           <form onSubmit={handleSubmit} className="p-6 bg-white">
-            {/* Mensaje de error */}
+            {/* Error message */}
             {error && (
               <div className="mb-4 p-3 bg-error-container border border-error text-error text-sm font-label">
                 ERROR: {error}
@@ -126,10 +126,10 @@ export default function Login() {
             )}
 
             <div className="space-y-6">
-              {/* Campo: Email */}
+              {/* Field: Email */}
               <div>
                 <label htmlFor="email" className="block font-label text-xs uppercase mb-2">
-                  Email / Usuario
+                  Email / Username
                 </label>
                 <input
                   type="email"
@@ -142,10 +142,10 @@ export default function Login() {
                 />
               </div>
 
-              {/* Campo: Password */}
+              {/* Field: Password */}
               <div>
                 <label htmlFor="password" className="block font-label text-xs uppercase mb-2">
-                  Contraseña
+                  Password
                 </label>
                 <input
                   type="password"
@@ -158,23 +158,23 @@ export default function Login() {
                 />
               </div>
 
-              {/* Botón de submit */}
+              {/* Submit button */}
               <button
                 type="submit"
                 disabled={loading}
                 className="w-full py-3 bg-primary text-on-primary font-sans font-bold uppercase tracking-wider hover:bg-neutral-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
-                {loading ? 'AUTENTICANDO...' : 'ACCEDER'}
+                {loading ? 'AUTHENTICATING...' : 'LOGIN'}
               </button>
             </div>
           </form>
 
-          {/* Link a registro */}
+          {/* Link to registration */}
           <div className="mt-6 text-center">
             <p className="font-label text-xs text-on-surface-variant">
-              ¿Sin acceso?{' '}
+              No account?{' '}
               <Link to="/register" className="text-primary hover:underline font-bold">
-                SOLICITAR REGISTRO
+                REQUEST REGISTRATION
               </Link>
             </p>
           </div>
@@ -182,8 +182,8 @@ export default function Login() {
       </main>
 
       {/* ============================================================
-          SECCIÓN 3: FOOTER
-          Descripción: Pie de página con versión y timestamp
+          SECTION 3: FOOTER
+          Description: Footer with version and timestamp
        ============================================================ */}
       <footer className="flex justify-between items-center px-6 py-4 w-full border-t-2 border-black bg-surface-dim">
         <div className="mb-4 md:mb-0">

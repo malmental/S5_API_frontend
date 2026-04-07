@@ -1,32 +1,32 @@
 /**
  * ============================================================
- * COMPONENTE: IncidenceForm (Formulario de Incidencia)
+ * COMPONENT: IncidenceForm (Incidence Form)
  * ============================================================
- * Descripción: 
- *   Formulario para crear o editar una incidencia.
- *   Incluye campos para título, descripción, prioridad y etiquetas.
+ * Description: 
+ *   Form to create or edit an incidence.
+ *   Includes fields for title, description, priority and tags.
  * 
- * Ubicación: src/components/incidences/IncidenceForm.jsx
+ * Location: src/components/incidences/IncidenceForm.jsx
  * 
  * Props:
- *   - initialData: Datos iniciales (para edición)
- *   - onSubmit: Función callback al enviar
- *   - onCancel: Función callback al cancelar
- *   - loading: Estado de carga
- *   - isEdit: Booleano si es edición (cambia texto del botón)
+ *   - initialData: Initial data (for editing)
+ *   - onSubmit: Callback function on submit
+ *   - onCancel: Callback function on cancel
+ *   - loading: Loading state
+ *   - isEdit: Boolean if editing (changes button text)
  * 
- * Campos del formulario:
- *   - title: Título de la incidencia (requerido)
- *   - description: Descripción detallada (requerido)
- *   - priority: Prioridad (low, medium, high)
- *   - status: Estado (open, in_progress, closed)
- *   - tags: Etiquetas separadas por coma
+ * Form fields:
+ *   - title: Incidence title (required)
+ *   - description: Detailed description (required)
+ *   - priority: Priority (low, medium, high)
+ *   - status: Status (open, in_progress, closed)
+ *   - tags: Comma-separated tags
  * 
- * Notas técnicas:
- *   - Usa estados controlados con useState
- *   - Validación básica de campos requeridos
- *   - Los campos priority y status solo visibles en edición
- *   - Estilo con bordes negros 2px
+ * Technical notes:
+ *   - Uses controlled states with useState
+ *   - Basic required field validation
+ *   - Priority and status fields only visible in edit mode
+ *   - Style with 2px black borders
  * ============================================================
  */
 
@@ -34,7 +34,7 @@ import { useState, useEffect } from 'react';
 
 export default function IncidenceForm({ initialData = null, onSubmit, onCancel, loading = false, isEdit = false }) {
   // ============================================================
-  // ESTADOS DEL FORMULARIO
+  // FORM STATES
   // ============================================================
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -44,7 +44,7 @@ export default function IncidenceForm({ initialData = null, onSubmit, onCancel, 
   const [errors, setErrors] = useState({});
 
   // ============================================================
-  // EFECTO: Cargar datos iniciales (para edición)
+  // EFFECT: Load initial data (for editing)
   // ============================================================
   useEffect(() => {
     if (initialData) {
@@ -57,15 +57,15 @@ export default function IncidenceForm({ initialData = null, onSubmit, onCancel, 
   }, [initialData]);
 
   // ============================================================
-  // HANDLER: Validación y envío
+  // HANDLER: Validation and submit
   // ============================================================
   const handleSubmit = (e) => {
     e.preventDefault();
     
-    // Validación básica
+    // Basic validation
     const newErrors = {};
-    if (!title.trim()) newErrors.title = 'El título es requerido';
-    if (!description.trim()) newErrors.description = 'La descripción es requerida';
+    if (!title.trim()) newErrors.title = 'Title is required';
+    if (!description.trim()) newErrors.description = 'Description is required';
     
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -84,19 +84,19 @@ export default function IncidenceForm({ initialData = null, onSubmit, onCancel, 
 
   return (
     /* ============================================================
-        FORMULARIO
-        Layout: Vertical con espacios
+        FORM
+        Layout: Vertical with spacing
        ============================================================ */
     <form onSubmit={handleSubmit} className="space-y-6">
       
       {/* ============================================================
-          CAMPO: Título
-          Etiqueta + Input
-          Validación: Required
+          FIELD: Title
+          Label + Input
+          Validation: Required
        ============================================================ */}
       <div>
         <label htmlFor="title" className="block font-mono text-xs uppercase mb-2">
-          Título *
+          Title *
         </label>
         <input
           type="text"
@@ -104,7 +104,7 @@ export default function IncidenceForm({ initialData = null, onSubmit, onCancel, 
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           className={`w-full px-4 py-3 ${errors.title ? 'border-error' : 'border-black'} bg-surface focus:outline-none focus:border-1 focus:border-primary transition-all font-mono text-sm`}
-          placeholder="TÍTULO DE LA INCIDENCIA"
+          placeholder="INCIDENCE TITLE"
         />
         {errors.title && (
           <p className="font-mono text-xs text-error mt-1">{errors.title}</p>
@@ -112,12 +112,12 @@ export default function IncidenceForm({ initialData = null, onSubmit, onCancel, 
       </div>
 
       {/* ============================================================
-          CAMPO: Descripción
-          Textarea multilínea
+          FIELD: Description
+          Multiline textarea
        ============================================================ */}
       <div>
         <label htmlFor="description" className="block font-mono text-xs uppercase mb-2">
-          Descripción *
+          Description *
         </label>
         <textarea
           id="description"
@@ -125,7 +125,7 @@ export default function IncidenceForm({ initialData = null, onSubmit, onCancel, 
           onChange={(e) => setDescription(e.target.value)}
           rows={5}
           className={`w-full px-4 py-3 ${errors.description ? 'border-error' : 'border-black'} bg-surface focus:outline-none focus:border-1 focus:border-primary transition-all font-mono text-sm resize-none`}
-          placeholder="DESCRIPCIÓN DETALLADA DE LA INCIDENCIA..."
+          placeholder="DETAILED INCIDENCE DESCRIPTION..."
         />
         {errors.description && (
           <p className="font-mono text-xs text-error mt-1">{errors.description}</p>
@@ -133,13 +133,13 @@ export default function IncidenceForm({ initialData = null, onSubmit, onCancel, 
       </div>
 
       {/* ============================================================
-          FILA: Prioridad y Estado
+          ROW: Priority and Status
        ============================================================ */}
       <div className="grid grid-cols-2 gap-4">
-          {/* Prioridad */}
+          {/* Priority */}
           <div>
             <label htmlFor="priority" className="block font-mono text-xs uppercase mb-2">
-              Prioridad
+              Priority
             </label>
             <select
               id="priority"
@@ -147,16 +147,16 @@ export default function IncidenceForm({ initialData = null, onSubmit, onCancel, 
               onChange={(e) => setPriority(e.target.value)}
               className="w-full px-4 py-3 bg-surface focus:outline-none focus:border-1 focus:border-primary transition-all font-mono text-sm"
             >
-              <option value="high">ALTA</option>
-              <option value="medium">MEDIA</option>
-              <option value="low">BAJA</option>
+              <option value="high">HIGH</option>
+              <option value="medium">MEDIUM</option>
+              <option value="low">LOW</option>
             </select>
           </div>
 
-          {/* Estado */}
+          {/* Status */}
           <div>
             <label htmlFor="status" className="block font-mono text-xs uppercase mb-2">
-              Estado
+              Status
             </label>
             <select
               id="status"
@@ -164,20 +164,20 @@ export default function IncidenceForm({ initialData = null, onSubmit, onCancel, 
               onChange={(e) => setStatus(e.target.value)}
               className="w-full px-4 py-3 bg-surface focus:outline-none focus:border-1 focus:border-primary transition-all font-mono text-sm"
             >
-              <option value="open">ABIERTA</option>
-              <option value="in_progress">EN PROCESO</option>
-              <option value="closed">CERRADA</option>
+              <option value="open">OPEN</option>
+              <option value="in_progress">IN PROGRESS</option>
+              <option value="closed">CLOSED</option>
             </select>
           </div>
         </div>
 
       {/* ============================================================
-          CAMPO: Etiquetas
-          Input de texto con ejemplo
+          FIELD: Tags
+          Text input with example
        ============================================================ */}
       <div>
         <label htmlFor="tags" className="block font-mono text-xs uppercase mb-2">
-          Etiquetas
+          Tags
         </label>
         <input
           type="text"
@@ -185,16 +185,16 @@ export default function IncidenceForm({ initialData = null, onSubmit, onCancel, 
           value={tags}
           onChange={(e) => setTags(e.target.value)}
           className="w-full px-4 py-3 bg-surface focus:outline-none focus:border-1 focus:border-primary transition-all font-mono text-sm"
-          placeholder="server, urgent, backend (separadas por coma)"
+          placeholder="server, urgent, backend (comma separated)"
         />
         <p className="font-mono text-[10px] text-gray-500 mt-1">
-          Separe las etiquetas con comas
+          Separate tags with commas
         </p>
       </div>
 
       {/* ============================================================
-          BOTONES DE ACCIÓN
-          Cancelar + Enviar
+          ACTION BUTTONS
+          Cancel + Submit
        ============================================================ */}
       <div className="flex justify-end gap-4 pt-4 border-t-2 border-gray-200">
         <button
@@ -202,14 +202,14 @@ export default function IncidenceForm({ initialData = null, onSubmit, onCancel, 
           onClick={onCancel}
           className="px-6 py-3 border-2 border-black font-sans font-bold uppercase text-sm hover:bg-gray-100 transition-colors"
         >
-          Cancelar
+          Cancel
         </button>
         <button
           type="submit"
           disabled={loading}
           className="px-6 py-3 bg-primary text-on-primary font-sans font-bold uppercase text-sm hover:bg-neutral-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
-          {loading ? 'PROCESANDO...' : isEdit ? 'ACTUALIZAR' : 'CREAR INCIDENCIA'}
+          {loading ? 'PROCESSING...' : isEdit ? 'UPDATE' : 'CREATE INCIDENCE'}
         </button>
       </div>
     </form>

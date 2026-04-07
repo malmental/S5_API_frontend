@@ -1,31 +1,31 @@
 /**
  * ============================================================
- * COMPONENTE: Modal (Ventana Flotante)
+ * COMPONENT: Modal (Floating Window)
  * ============================================================
- * Descripción: 
- *   Componente reutilizable de modal para ventanas flotantes.
- *   Se usa para crear/editar incidencias y ver detalles.
+ * Description: 
+ *   Reusable modal component for floating windows.
+ *   Used to create/edit incidences and view details.
  * 
- * Ubicación: src/components/ui/Modal.jsx
+ * Location: src/components/ui/Modal.jsx
  * 
  * Props:
- *   - isOpen: Booleano que controla visibilidad
- *   - onClose: Función para cerrar el modal
- *   - title: Título del modal
- *   - children: Contenido del modal
- *   - size: Tamaño ('sm', 'md', 'lg')
+ *   - isOpen: Boolean that controls visibility
+ *   - onClose: Function to close modal
+ *   - title: Modal title
+ *   - children: Modal content
+ *   - size: Size ('sm', 'md', 'lg')
  * 
- * Características:
- *   - Fondo overlay con click para cerrar
- *   - Animación de entrada/salida
- *   - Diseño con bordes negros (estilo Tactile Data-Sheet)
- *   - Header con título y botón de cerrar
- *   - Scroll si el contenido es largo
+ * Characteristics:
+ *   - Overlay background with click to close
+ *   - Entry/exit animation
+ *   - Design with black borders (Tactile Data-Sheet style)
+ *   - Header with title and close button
+ *   - Scroll if content is long
  * 
- * Notas técnicas:
- *   - Usa position fixed para overlayer
- *   - z-index alto para estar sobre todo
- *   - El closeOnOverlayClick permite cerrar al hacer click fuera
+ * Technical notes:
+ *   - Uses position fixed for overlay
+ *   - High z-index to be above everything
+ *   - closeOnOverlayClick allows closing by clicking outside
  * ============================================================
  */
 
@@ -33,8 +33,8 @@ import { useEffect } from 'react';
 
 export default function Modal({ isOpen, onClose, title, children, size = 'md', closeOnOverlayClick = true }) {
   // ============================================================
-  // EFECTO: Cerrar con ESC
-  // Descripción: Cierra el modal al presionar Escape
+  // EFFECT: Close with ESC
+  // Description: Closes modal when Escape is pressed
   // ============================================================
   useEffect(() => {
     const handleEscape = (e) => {
@@ -47,7 +47,7 @@ export default function Modal({ isOpen, onClose, title, children, size = 'md', c
   }, [isOpen, onClose]);
 
   // ============================================================
-  // EFECTO: Bloquear scroll del body cuando está abierto
+  // EFFECT: Block body scroll when open
   // ============================================================
   useEffect(() => {
     if (isOpen) {
@@ -63,7 +63,7 @@ export default function Modal({ isOpen, onClose, title, children, size = 'md', c
   if (!isOpen) return null;
 
   // ============================================================
-  // DEFINICIÓN DE TAMAÑOS
+  // SIZE DEFINITIONS
   // ============================================================
   const sizeClasses = {
     sm: 'max-w-md',
@@ -75,8 +75,8 @@ export default function Modal({ isOpen, onClose, title, children, size = 'md', c
   return (
     /* ============================================================
         OVERLAY
-        Fondo oscuro semitransparente
-        Click para cerrar (configurable)
+        Semi-transparent dark background
+        Click to close (configurable)
        ============================================================ */
     <div 
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
@@ -85,8 +85,8 @@ export default function Modal({ isOpen, onClose, title, children, size = 'md', c
     >
       {/* ============================================================
           MODAL CONTAINER
-          Fondo blanco
-          Animación de escala
+          White background
+          Scale animation
          ============================================================ */}
       <div 
         className={`w-full ${sizeClasses[size]} bg-white shadow-none relative`}
@@ -95,7 +95,7 @@ export default function Modal({ isOpen, onClose, title, children, size = 'md', c
       >
         {/* ============================================================
             MODAL HEADER
-            Título + Botón de cerrar
+            Title + Close button
          ============================================================ */}
         <div className="flex justify-between items-center px-6 py-4 border-b-2 border-black bg-surface-container">
           <h2 className="font-sans font-bold text-lg uppercase">{title}</h2>
@@ -109,7 +109,7 @@ export default function Modal({ isOpen, onClose, title, children, size = 'md', c
 
         {/* ============================================================
             MODAL CONTENT
-            Contenido scrolleable
+            Scrollable content
          ============================================================ */}
         <div className="p-6 max-h-[70vh] overflow-y-auto">
           {children}
@@ -117,7 +117,7 @@ export default function Modal({ isOpen, onClose, title, children, size = 'md', c
       </div>
 
       {/* ============================================================
-          ESTILOS DE ANIMACIÓN (inline)
+          ANIMATION STYLES (inline)
          ============================================================ */}
       <style>{`
         @keyframes modalIn {

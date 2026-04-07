@@ -1,37 +1,37 @@
 /**
  * ============================================================
- * PÁGINA: Register (Página de Registro)
+ * PAGE: Register (Registration Page)
  * ============================================================
- * Descripción: 
- *   Formulario para registro de nuevos usuarios.
- *   Requiere validación de coincidencia de contraseñas.
+ * Description: 
+ *   Registration form for new users.
+ *   Requires password match validation.
  * 
- * Ubicación: src/pages/Register.jsx
+ * Location: src/pages/Register.jsx
  * 
  * Routing:
- *   - Accesible desde /register
- *   - Redirige a /dashboard si ya está logueado
- *   - Link a /login para usuarios existentes
+ *   - Accessible from /register
+ *   - Redirects to /dashboard if already logged in
+ *   - Link to /login for existing users
  * 
- * Campos del formulario:
- *   - name: Nombre completo del usuario
- *   - email: Correo electrónico
- *   - password: Contraseña
- *   - passwordConfirmation: Confirmación de contraseña
+ * Form fields:
+ *   - name: Full name of the user
+ *   - email: Email address
+ *   - password: Password
+ *   - passwordConfirmation: Password confirmation
  * 
- * Validaciones:
- *   1. Client-side: Las contraseñas deben coincidir
- *   2. Server-side: Email único, requisitos de contraseña
+ * Validations:
+ *   1. Client-side: Passwords must match
+ *   2. Server-side: Unique email, password requirements
  * 
- * Integración:
- *   - Usa useAuth() hook del contexto
- *   - Llama a register(name, email, password, confirmation)
- *   - Navega a /dashboard tras registro exitoso
+ * Integration:
+ *   - Uses useAuth() hook from context
+ *   - Calls register(name, email, password, confirmation)
+ *   - Navigates to /dashboard after successful registration
  * 
- * Notas técnicas:
- *   - Requiere campo password_confirmation para Laravel
- *   - La validación de contraseña se hace client-side primero
- *   - Muestra errores de validación del backend si existen
+ * Technical notes:
+ *   - Requires password_confirmation field for Laravel
+ *   - Password validation is done client-side first
+ *   - Shows backend validation errors if any
  * ============================================================
  */
 
@@ -41,7 +41,7 @@ import { useNavigate, Link } from 'react-router-dom';
 
 export default function Register() {
   // ============================================================
-  // ESTADOS DEL COMPONENTE
+  // COMPONENT STATES
   // ============================================================
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -55,18 +55,18 @@ export default function Register() {
 
   // ============================================================
   // HANDLER: handleSubmit
-  // Descripción: Maneja el envío del formulario de registro
-  // Validaciones: Coincidencia de contraseñas antes de enviar
-  // Flujo: Valida → Llama API → Guarda token → Redirige
+  // Description: Handles registration form submission
+  // Validations: Password match before sending
+  // Flow: Validate → Call API → Save token → Redirect
   // ============================================================
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError('');
 
-    // Validación client-side de contraseñas
+    // Client-side password validation
     if (password !== passwordConfirmation) {
-      setError('Las contraseñas no coinciden');
+      setError('Passwords do not match');
       setLoading(false);
       return;
     }
@@ -75,10 +75,10 @@ export default function Register() {
       await register(name, email, password, passwordConfirmation);
       navigate('/dashboard');
     } catch (err) {
-      // Extraer mensaje de error - puede venir de diferentes rutas
+      // Extract error message - can come from different paths
       const message = err.response?.data?.message || 
                       err.response?.data?.errors?.password?.[0] || 
-                      'Error en el registro. Inténtelo de nuevo.';
+                      'Registration error. Please try again.';
       setError(message);
     } finally {
       setLoading(false);
@@ -87,14 +87,14 @@ export default function Register() {
 
   return (
     /* ============================================================
-        CONTENEDOR PRINCIPAL
-        Layout: Flex column | Min-height: 100vh | Fondo: surface
+        MAIN CONTAINER
+        Layout: Flex column | Min-height: 100vh | Background: surface
        ============================================================ */
     <div className="flex flex-col min-h-screen bg-surface">
       
       {/* ============================================================
-          SECCIÓN 1: HEADER
-          Descripción: Barra superior con logo y botón de login
+          SECTION 1: HEADER
+          Description: Top bar with logo and login button
        ============================================================ */}
       <header className="flex justify-between items-center px-6 h-16 w-full border-b-2 border-black bg-surface">
         <div className="flex items-center gap-4">
@@ -103,9 +103,9 @@ export default function Register() {
       </header>
 
       {/* ============================================================
-          SECCIÓN 2: FORMULARIO DE REGISTRO
-          Descripción: Área central con formulario de creación de cuenta
-          Layout: Centrado con max-width 512px
+          SECTION 2: REGISTRATION FORM
+          Description: Central area with account creation form
+          Layout: Centered with max-width 512px
        ============================================================ */}
       <main className="flex-grow flex items-center justify-center p-8 relative">
         {/* Background pattern */}
@@ -113,17 +113,17 @@ export default function Register() {
         
         <div className="relative w-full max-w-md">
           
-          {/* Badge y título */}
+          {/* Badge and title */}
           <div className="mb-6">
-            <span className="font-label text-xs uppercase border border-black px-2 py-0.5 bg-white">MÓDULO DE REGISTRO</span>
+            <span className="font-label text-xs uppercase border border-black px-2 py-0.5 bg-white">REGISTRATION MODULE</span>
           </div>
           
-          <h1 className="font-sans font-bold text-4xl mb-2">CREAR CUENTA</h1>
-          <p className="font-label text-sm text-on-surface-variant mb-8">Complete todos los campos</p>
+          <h1 className="font-sans font-bold text-4xl mb-2">CREATE ACCOUNT</h1>
+          <p className="font-label text-sm text-on-surface-variant mb-8">Fill in all fields</p>
 
-          {/* Formulario */}
+          {/* Form */}
           <form onSubmit={handleSubmit} className="p-6 bg-white">
-            {/* Mensaje de error */}
+            {/* Error message */}
             {error && (
               <div className="mb-4 p-3 bg-error-container border border-error text-error text-sm font-label">
                 ERROR: {error}
@@ -131,10 +131,10 @@ export default function Register() {
             )}
 
             <div className="space-y-6">
-              {/* Campo: Nombre */}
+              {/* Field: Name */}
               <div>
                 <label htmlFor="name" className="block font-label text-xs uppercase mb-2">
-                  Nombre completo
+                  Full name
                 </label>
                 <input
                   type="text"
@@ -142,12 +142,12 @@ export default function Register() {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   className="w-full px-4 py-3 bg-surface focus:outline-none focus:border-1 focus:border-primary transition-all font-mono text-sm"
-                  placeholder="NOMBRE APELLIDO"
+                  placeholder="FIRSTNAME LASTNAME"
                   required
                 />
               </div>
 
-              {/* Campo: Email */}
+              {/* Field: Email */}
               <div>
                 <label htmlFor="email" className="block font-label text-xs uppercase mb-2">
                   Email
@@ -163,10 +163,10 @@ export default function Register() {
                 />
               </div>
 
-              {/* Campo: Contraseña */}
+              {/* Field: Password */}
               <div>
                 <label htmlFor="password" className="block font-label text-xs uppercase mb-2">
-                  Contraseña
+                  Password
                 </label>
                 <input
                   type="password"
@@ -179,10 +179,10 @@ export default function Register() {
                 />
               </div>
 
-              {/* Campo: Confirmar contraseña */}
+              {/* Field: Confirm password */}
               <div>
                 <label htmlFor="passwordConfirmation" className="block font-label text-xs uppercase mb-2">
-                  Confirmar contraseña
+                  Confirm password
                 </label>
                 <input
                   type="password"
@@ -195,23 +195,23 @@ export default function Register() {
                 />
               </div>
 
-              {/* Botón de submit */}
+              {/* Submit button */}
               <button
                 type="submit"
                 disabled={loading}
                 className="w-full py-3 bg-primary text-on-primary font-sans font-bold uppercase tracking-wider hover:bg-neutral-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
-                {loading ? 'PROCESANDO...' : 'REGISTRARSE'}
+                {loading ? 'PROCESSING...' : 'REGISTER'}
               </button>
             </div>
           </form>
 
-          {/* Link a login */}
+          {/* Link to login */}
           <div className="mt-6 text-center">
             <p className="font-label text-xs text-on-surface-variant">
-              ¿Ya tiene cuenta?{' '}
+              Already have an account?{' '}
               <Link to="/login" className="text-primary hover:underline font-bold">
-                INICIAR SESIÓN
+                SIGN IN
               </Link>
             </p>
           </div>
@@ -219,8 +219,8 @@ export default function Register() {
       </main>
 
       {/* ============================================================
-          SECCIÓN 3: FOOTER
-          Descripción: Pie de página con versión y timestamp
+          SECTION 3: FOOTER
+          Description: Footer with version and timestamp
        ============================================================ */}
       <footer className="flex justify-between items-center px-6 py-4 w-full border-t-2 border-black bg-surface-dim">
         <div className="mb-4 md:mb-0">

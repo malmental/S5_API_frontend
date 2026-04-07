@@ -1,33 +1,33 @@
 /**
  * ============================================================
- * PÁGINA: Dashboard (Panel Principal)
+ * PAGE: Dashboard (Main Panel)
  * ============================================================
- * Descripción: 
- *   Página principal del dashboard que muestra una visión general
- *   de todas las incidencias del sistema. Incluye filtros por
- *   estado/prioridad, búsqueda por tags, y detalles al hacer click.
+ * Description: 
+ *   Main dashboard page that shows an overview of all system
+ *   incidences. Includes filters by status/priority, tag search,
+ *   and click-to-view details.
  * 
- * Ubicación: src/pages/Dashboard.jsx
+ * Location: src/pages/Dashboard.jsx
  * 
  * Routing:
- *   - Accesible desde /dashboard
- *   - Requiere autenticación (protegida)
+ *   - Accessible from /dashboard
+ *   - Requires authentication (protected)
  * 
- * Características:
- *   1. Filtros: Critical, Open, In Process, Closed (clickables)
- *   2. Buscador: Filtra por tags de las incidencias
- *   3. IncidentsTable: Tabla con incidencias filtradas
- *   4. Click en fila abre modal de detalles
+ * Features:
+ *   1. Filters: High, Open, In Progress, Resolved (clickable)
+ *   2. Search: Filters incidences by tags
+ *   3. IncidentsTable: Table with filtered incidences
+ *   4. Row click opens detail modal
  * 
- * Estados de filtro:
- *   - filter: null (todas) | 'critical' | 'open' | 'in_progress' | 'closed'
- *   - searchTag: string para buscar en tags
+ * Filter states:
+ *   - filter: null (all) | 'high' | 'open' | 'in_progress' | 'resolved'
+ *   - searchTag: string to search in tags
  * 
- * Componentes utilizados:
+ * Components used:
  *   - TopNavBar, SideNavBar, Footer (layout)
- *   - IncidentsTable (tabla interactiva)
- *   - CreateIncidentFAB (botón flotante)
- *   - Modal, IncidenceDetail (ui para ver detalles)
+ *   - IncidentsTable (interactive table)
+ *   - CreateIncidentFAB (floating button)
+ *   - Modal, IncidenceDetail (detail ui)
  * ============================================================
  */
 
@@ -43,22 +43,22 @@ import IncidenceDetail from '../components/incidences/IncidenceDetail';
 
 export default function Dashboard() {
   // ============================================================
-  // ESTADOS DEL COMPONENTE
+  // COMPONENT STATES
   // ============================================================
   const { user, logout } = useAuth();
   const [incidences, setIncidences] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   
-  // Filtros
+  // Filters
   const [activeFilter, setActiveFilter] = useState(null);
   const [searchTag, setSearchTag] = useState('');
   
-  // Paginación
+  // Pagination
   const [currentPage, setCurrentPage] = useState(1);
   const [meta, setMeta] = useState({ current_page: 1, last_page: 1, per_page: 10, total: 0 });
 
-  // Estadísticas del dashboard
+  // Dashboard statistics
   const [statsData, setStatsData] = useState({
     total: 0,
     high: 0,
@@ -67,13 +67,13 @@ export default function Dashboard() {
     resolved: 0,
   });
   
-  // Modal: Ver detalles de incidencia
+  // Modal: View incidence details
   const [selectedIncidence, setSelectedIncidence] = useState(null);
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [loadingDetail, setLoadingDetail] = useState(false);
 
   // ============================================================
-  // EFECTO: Cargar estadísticas del dashboard
+  // EFFECT: Load dashboard statistics
   // ============================================================
   useEffect(() => {
     const fetchStats = async () => {
@@ -94,14 +94,14 @@ export default function Dashboard() {
   }, []);
 
   // ============================================================
-  // EFECTO: Resetear página cuando cambia el filtro
+  // EFFECT: Reset page when filter changes
   // ============================================================
   useEffect(() => {
     setCurrentPage(1);
   }, [activeFilter]);
 
   // ============================================================
-  // EFECTO: Cargar incidencias al iniciar y cuando cambia la página
+  // EFFECT: Load incidences on mount and when page changes
   // ============================================================
   useEffect(() => {
     setLoading(true);
@@ -147,7 +147,7 @@ export default function Dashboard() {
 
   // ============================================================
   // HANDLER: handleRowClick
-  // Descripción: Abre modal con detalles al hacer click en fila
+  // Description: Opens modal with details when clicking a row
   // ============================================================
   const handleRowClick = async (incidence) => {
     setLoadingDetail(true);
@@ -166,7 +166,7 @@ export default function Dashboard() {
 
   // ============================================================
   // HANDLER: handleCommentAdded
-  // Descripción: Actualiza selectedIncidence cuando se añade comentario
+  // Description: Updates selectedIncidence when a comment is added
   // ============================================================
   const handleCommentAdded = (updatedIncidence) => {
     setSelectedIncidence(updatedIncidence);
@@ -177,7 +177,7 @@ export default function Dashboard() {
 
   // ============================================================
   // HANDLER: handleCommentDeleted
-  // Descripción: Actualiza selectedIncidence cuando se elimina comentario
+  // Description: Updates selectedIncidence when a comment is deleted
   // ============================================================
   const handleCommentDeleted = (updatedIncidence) => {
     setSelectedIncidence(updatedIncidence);
@@ -188,7 +188,7 @@ export default function Dashboard() {
 
   // ============================================================
   // HANDLER: handlePageChange
-  // Descripción: Cambia la página de la paginación
+  // Description: Changes the pagination page
   // ============================================================
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -215,21 +215,21 @@ export default function Dashboard() {
         <div className="relative p-8 max-w-6xl">
           
           {/* ============================================================
-              HEADER: Título + Subtítulo
-           ============================================================ */}
+               HEADER: Title + Subtitle
+            ============================================================ */}
           <div className="mb-8">
-            <span className="font-label text-xs uppercase border border-black px-2 py-0.5 bg-white">MÓDULO DE DASHBOARD</span>
-            <h1 className="font-sans font-bold text-4xl mt-2">DASHBOARD PRINCIPAL</h1>
-            <p className="font-label text-sm text-on-surface-variant mt-1">Resumen de incidencias del sistema</p>
+            <span className="font-label text-xs uppercase border border-black px-2 py-0.5 bg-white">DASHBOARD MODULE</span>
+            <h1 className="font-sans font-bold text-4xl mt-2">MAIN DASHBOARD</h1>
+            <p className="font-label text-sm text-on-surface-variant mt-1">System incidents summary</p>
           </div>
 
           {/* ============================================================
-              SECCIÓN: FILTER BUTTONS (Botones de filtro) - Estilo S4
-              Estilo: Compacto, border-2 border-black, números grandes
-           ============================================================ */}
+               SECTION: FILTER BUTTONS - S4 Style
+               Style: Compact, border-2 border-black, large numbers
+            ============================================================ */}
            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 mb-6">
-              {/* Botón: HIGH */}
-              <button 
+              {/* Button: HIGH */}
+              <button
                 onClick={() => setActiveFilter(activeFilter === 'high' ? null : 'high')}
                 className={`block text-center p-6 border-2 border-black transition-colors ${
                   activeFilter === 'high' 
@@ -242,7 +242,7 @@ export default function Dashboard() {
                 <div className="text-xs">High priority incidents</div>
               </button>
 
-              {/* Botón: OPEN */}
+              {/* Button: OPEN */}
               <button 
                 onClick={() => setActiveFilter(activeFilter === 'open' ? null : 'open')}
                 className={`block text-center p-6 border-2 border-black transition-colors ${
@@ -256,7 +256,7 @@ export default function Dashboard() {
                 <div className="text-xs">Open incidents</div>
               </button>
 
-              {/* Botón: IN PROGRESS */}
+              {/* Button: IN PROGRESS */}
               <button 
                 onClick={() => setActiveFilter(activeFilter === 'in_progress' ? null : 'in_progress')}
                 className={`block text-center p-6 border-2 border-black transition-colors ${
@@ -270,7 +270,7 @@ export default function Dashboard() {
                 <div className="text-xs">In progress incidents</div>
               </button>
 
-              {/* Botón: RESOLVED */}
+              {/* Button: RESOLVED */}
               <button 
                 onClick={() => setActiveFilter(activeFilter === 'resolved' ? null : 'resolved')}
                 className={`block text-center p-6 border-2 border-black transition-colors ${
@@ -285,7 +285,7 @@ export default function Dashboard() {
               </button>
             </div>
 
-          {/* SEARCH BAR - Buscar por tags - Estilo S4 */}
+          {/* SEARCH BAR - Search by tags - S4 Style */}
           <div className="mb-6 bg-white p-4">
             <div className="flex gap-4 items-center">
               <input 
@@ -293,7 +293,7 @@ export default function Dashboard() {
                 value={searchTag}
                 onChange={(e) => setSearchTag(e.target.value)}
                 className="border-2 border-black p-2 text-xs flex-1" 
-                placeholder="Buscar por hashtag..."
+                placeholder="Search by hashtag..."
               />
               <button className="px-16 py-2 border-2 border-black bg-black text-white text-xs uppercase">
                 Search
@@ -301,7 +301,7 @@ export default function Dashboard() {
             </div>
           </div>
 
-          {/* INCIDENTS TABLE - Pasar incidencias filtradas */}
+          {/* INCIDENTS TABLE - Pass filtered incidences */}
           <IncidentsTable 
             incidences={incidences} 
             loading={loading}
@@ -313,11 +313,11 @@ export default function Dashboard() {
         </div>
       </main>
 
-      {/* MODAL: DETALLES DE INCIDENCIA */}
+      {/* MODAL: INCIDENCE DETAILS */}
       <Modal
         isOpen={showDetailModal}
         onClose={() => setShowDetailModal(false)}
-        title="DETALLES DE INCIDENCIA"
+        title="INCIDENCE DETAILS"
         size="lg"
       >
         <IncidenceDetail
