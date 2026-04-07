@@ -1,42 +1,42 @@
 /**
  * ============================================================
- * CONTEXTO: AuthContext (Gestión de Autenticación)
+ * CONTEXT: AuthContext (Authentication Management)
  * ============================================================
- * Descripción: 
- *   Proveedor de contexto React que gestiona el estado de 
- *   autenticación de la aplicación. Maneja login, logout, registro
- *   y verificación de sesión de usuario.
+ * Description: 
+ *   React context provider that manages the 
+ *   authentication state of the application. Handles login,
+ *   logout, registration and user session verification.
  * 
- * Ubicación: src/context/AuthContext.jsx
+ * Location: src/context/AuthContext.jsx
  * 
- * ARQUITECTURA:
- *   - AuthContext: Context API de React para compartir estado
- *   - AuthProvider: Componente proveedor que envuelve la app
- *   - useAuth: Hook personalizado para acceder al contexto
+ * ARCHITECTURE:
+ *   - AuthContext: React Context API to share state
+ *   - AuthProvider: Provider component that wraps the app
+ *   - useAuth: Custom hook to access the context
  * 
- * ESTADOS GESTIONADOS:
- *   - user: Objeto con datos del usuario (null si no autenticado)
- *   - loading: Booleano que indica si está verificando la sesión
- *   - login: Función para iniciar sesión
- *   - logout: Función para cerrar sesión
- *   - register: Función para registrar nuevo usuario
+ * MANAGED STATES:
+ *   - user: Object with user data (null if not authenticated)
+ *   - loading: Boolean indicating if verifying session
+ *   - login: Function to sign in
+ *   - logout: Function to sign out
+ *   - register: Function to register new user
  * 
- * INTEGRACIÓN CON API:
- *   - Login: POST /api/v1/login → guarda token en localStorage
- *   - Register: POST /api/v1/register → guarda token en localStorage
- *   - Logout: POST /api/v1/logout → limpia localStorage
- *   - Verificación: GET /api/v1/me → obtiene datos del usuario
+ * API INTEGRATION:
+ *   - Login: POST /api/v1/login → saves token to localStorage
+ *   - Register: POST /api/v1/register → saves token to localStorage
+ *   - Logout: POST /api/v1/logout → clears localStorage
+ *   - Verification: GET /api/v1/me → gets user data
  * 
- * PERSISTENCIA:
- *   - Token guardado en localStorage ('token')
- *   - Al iniciar la app, se verifica el token con /me
- *   - Si el token es inválido, se limpia y user queda null
+ * PERSISTENCE:
+ *   - Token saved in localStorage ('token')
+ *   - On app start, token is verified with /me
+ *   - If token is invalid, it's cleared and user is null
  * 
- * Notas técnicas:
- *   - Debe envolver toda la aplicación (en App.jsx)
- *   - Usa interceptores de Axiols para añadir token automáticamente
- *   - La verificación de sesión es asíncrona (estado loading)
- *   - Soporta tokens en formato 'token' o 'access_token'
+ * Technical notes:
+ *   - Must wrap entire application (in App.jsx)
+ *   - Uses Axios interceptors to add token automatically
+ *   - Session verification is async (loading state)
+ *   - Supports tokens in 'token' or 'access_token' format
  * ============================================================
  */
 
@@ -45,68 +45,68 @@ import api from '../services/api';
 
 /**
  * ============================================================
- * CONTEXTO: AuthContext
- * Crea un contexto inicial con valor null
- * Se accede mediante useAuth hook
+ * CONTEXT: AuthContext
+ * Creates a context with initial null value
+ * Accessed via useAuth hook
  * ============================================================
  */
 const AuthContext = createContext(null);
 
 /**
  * ============================================================
- * COMPONENTE: AuthProvider
- * Proveedor de autenticación que envuelve la aplicación
- * Maneja el ciclo de vida completo de la sesión
+ * COMPONENT: AuthProvider
+ * Authentication provider that wraps the application
+ * Handles complete session lifecycle
  * ============================================================
  */
 export function AuthProvider({ children }) {
   // ============================================================
-  // ESTADOS DEL PROVEEDOR
+  // PROVIDER STATES
   // ============================================================
-  const [user, setUser] = useState(null);           // Datos del usuario autenticado
-  const [loading, setLoading] = useState(true);    // Estado de carga inicial
+  const [user, setUser] = useState(null);           // Authenticated user data
+  const [loading, setLoading] = useState(true);    // Initial loading state
 
   // ============================================================
-  // EFECTO: Verificación de sesión al iniciar
-  // Descripción: Comprueba si existe token en localStorage
-  // y verifica su validez con el endpoint /me
+  // EFFECT: Session verification on start
+  // Description: Checks if token exists in localStorage
+  // and verifies its validity with /me endpoint
   // ============================================================
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
-      // Hay token guardado - verificar con el backend
+      // Token saved - verify with backend
       api.get('/me')
         .then(({ data }) => setUser(data.data))
         .catch(() => {
-          // Token inválido o expirado - limpiar
+          // Token invalid or expired - clear
           localStorage.removeItem('token');
         })
         .finally(() => setLoading(false));
     } else {
-      // No hay token - cargar sin sesión
+      // No token - load without session
       setLoading(false);
     }
   }, []);
 
   // ============================================================
-  // FUNCIÓN: login
-  // Descripción: Inicia sesión con email y contraseña
-  // Flujo: 
-  //   1. POST /login con credenciales
-  //   2. Extrae token de la respuesta
-  //   3. Guarda token en localStorage
-  //   4. Obtiene datos del usuario con /me
-  //   5. Actualiza el estado user
+  // FUNCTION: login
+  // Description: Signs in with email and password
+  // Flow: 
+  //   1. POST /login with credentials
+  //   2. Extracts token from response
+  //   3. Saves token to localStorage
+  //   4. Gets user data with /me
+  //   5. Updates user state
   // 
-  // Retorna: userData del usuario autenticado
-  // Lanza error si no recibe token
+  // Returns: userData of authenticated user
+  // Throws error if no token received
   // ============================================================
   const login = async (email, password) => {
     console.log('Login attempt:', { email });
     const response = await api.post('/login', { email, password });
     console.log('Login response:', response.data);
     
-    // Soporta diferentes formatos de respuesta (token o access_token)
+    // Supports different response formats (token or access_token)
     const token = response.data.token || response.data.access_token;
     if (!token) {
       throw new Error('No token received');
@@ -120,12 +120,12 @@ export function AuthProvider({ children }) {
   };
 
   // ============================================================
-  // FUNCIÓN: logout
-  // Descripción: Cierra la sesión del usuario
-  // Flujo:
-  //   1. POST /logout al backend (opcional - limpia token server-side)
-  //   2. Elimina token de localStorage
-  //   3. Actualiza estado user a null
+  // FUNCTION: logout
+  // Description: Signs out the user
+  // Flow:
+  //   1. POST /logout to backend (optional - clears token server-side)
+  //   2. Removes token from localStorage
+  //   3. Updates user state to null
   // ============================================================
   const logout = async () => {
     await api.post('/logout');
@@ -134,21 +134,21 @@ export function AuthProvider({ children }) {
   };
 
   // ============================================================
-  // FUNCIÓN: register
-  // Descripción: Registra un nuevo usuario
-  // Parámetros:
-  //   - name: Nombre completo
-  //   - email: Correo electrónico
-  //   - password: Contraseña
-  //   - passwordConfirmation: Confirmación de contraseña
+  // FUNCTION: register
+  // Description: Registers a new user
+  // Parameters:
+  //   - name: Full name
+  //   - email: Email address
+  //   - password: Password
+  //   - passwordConfirmation: Password confirmation
   // 
-  // Flujo:
-  //   1. POST /register con todos los datos
-  //   2. Extrae y guarda token en localStorage
-  //   3. Obtiene datos del usuario
-  //   4. Actualiza el estado user
+  // Flow:
+  //   1. POST /register with all data
+  //   2. Extracts and saves token to localStorage
+  //   3. Gets user data
+  //   4. Updates user state
   // 
-  // Retorna: userData del nuevo usuario
+  // Returns: userData of new user
   // ============================================================
   const register = async (name, email, password, passwordConfirmation) => {
     console.log('Register attempt:', { name, email });
@@ -173,8 +173,8 @@ export function AuthProvider({ children }) {
   };
 
   // ============================================================
-  // RENDER: Proveedor de contexto
-  // Expone: user, login, logout, register, loading
+  // RENDER: Context provider
+  // Exposes: user, login, logout, register, loading
   // ============================================================
   return (
     <AuthContext.Provider value={{ user, login, logout, register, loading }}>
@@ -186,15 +186,15 @@ export function AuthProvider({ children }) {
 /**
  * ============================================================
  * HOOK: useAuth
- * Descripción: Hook personalizado para acceder al contexto
- * de autenticación desde cualquier componente.
+ * Description: Custom hook to access the authentication
+ * context from any component.
  * 
- * Uso:
+ * Usage:
  *   const { user, login, logout } = useAuth();
  * 
- * Restricciones:
- *   - Debe usarse dentro de AuthProvider
- *   - Lanza error si se usa fuera del proveedor
+ * Restrictions:
+ *   - Must be used within AuthProvider
+ *   - Throws error if used outside provider
  * ============================================================
  */
 export function useAuth() {

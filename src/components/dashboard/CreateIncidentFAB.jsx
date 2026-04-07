@@ -1,38 +1,38 @@
 /**
  * ============================================================
- * COMPONENTE: CreateIncidentFAB (Botón Flotante de Crear Incidencia)
+ * COMPONENT: CreateIncidentFAB (Floating Create Incident Button)
  * ============================================================
- * Descripción: 
- *   Botón flotante (Floating Action Button) para crear nuevas incidencias.
- *   Sigue el patrón Material Design de FAB con adaptaciones al estilo
- *   "Tactile Data-Sheet" (sin sombras, bordes técnicos).
+ * Description: 
+ *   Floating Action Button (FAB) to create new incidences.
+ *   Follows Material Design FAB pattern with adaptations to the
+ *   "Tactile Data-Sheet" style (no shadows, technical borders).
  * 
- * Ubicación: src/components/dashboard/CreateIncidentFAB.jsx
+ * Location: src/components/dashboard/CreateIncidentFAB.jsx
  * 
  * Props:
- *   - onClick: Función callback ejecutada al hacer click
+ *   - onClick: Callback function executed on click
  * 
- * Características:
+ * Characteristics:
  *   - Position: fixed bottom-right
- *   - Estilo: Círculo con borde de "recorte" visual
- *   - Icono: + (add) de Material Symbols
- *   - Efectos: hover (scale), active (press)
+ *   - Style: Circle with "cutout" visual border
+ *   - Icon: + (add) from Material Symbols
+ *   - Effects: hover (scale), active (press)
  * 
- * Notas técnicas:
- *   - El "borde blanco" es un trick visual para simular doble borde
- *   - La shadow usa box-shadow en lugar de drop-shadow
- *   - El tamaño es w-14 h-14 (56px) siguiendo estándar
- *   - El onClick actualmente solo hace console.log en Dashboard
+ * Technical notes:
+ *   - The "white border" is a visual trick to simulate double border
+ *   - Shadow uses box-shadow instead of drop-shadow
+ *   - Size is w-14 h-14 (56px) following standard
+ *   - onClick currently only does console.log in Dashboard
  * ============================================================
  */
 
 export default function CreateIncidentFAB({ onClick }) {
   return (
     /* ============================================================
-        ESTRUCTURA: Floating Action Button
-        Posición: Fixed bottom-right (bottom-8, right-8 = 2rem)
-        Efecto: Scale en hover (1.05), press en active (0.95)
-        Icono: Material Symbols "add"
+        STRUCTURE: Floating Action Button
+        Position: Fixed bottom-right (bottom-8, right-8 = 2rem)
+        Effect: Scale on hover (1.05), press on active (0.95)
+        Icon: Material Symbols "add"
        ============================================================ */
     <div className="fixed bottom-8 right-8">
       <button 

@@ -1,34 +1,34 @@
 /**
  * ============================================================
- * COMPONENTE: SideNavBar (Barra Lateral de Navegación)
+ * COMPONENT: SideNavBar (Side Navigation Bar)
  * ============================================================
- * Descripción: 
- *   Barra lateral fija que contiene el menú de operaciones principal.
- *   Incluye enlaces a Dashboard, My Incidences, Admin Area y logout.
- *   Cumple con el patrón "Navigation Rail" del sistema.
+ * Description: 
+ *   Fixed sidebar containing the main operations menu.
+ *   Includes links to Dashboard, My Incidences, Admin Area and logout.
+ *   Follows the "Navigation Rail" pattern of the system.
  * 
- * Ubicación: src/components/layout/SideNavBar.jsx
+ * Location: src/components/layout/SideNavBar.jsx
  * 
- * Características:
- *   - Position: fixed (permanece al hacer scroll)
- *   - Ancho: w-64 (256px)
- *   - Altura: Calculada para llenar el espacio restante (100vh - topbar)
- *   - Fondo: surface-container (para diferenciación tonal)
- *   - Dividida en dos secciones: navegación principal + footer links
+ * Characteristics:
+ *   - Position: fixed (remains on scroll)
+ *   - Width: w-64 (256px)
+ *   - Height: Calculated to fill remaining space (100vh - topbar)
+ *   - Background: surface-container (for tonal differentiation)
+ *   - Divided into two sections: main navigation + footer links
  * 
- * Elementos del menú:
- *   1. Header: "OPERATIONS" con versión
- *   2. Navegación principal: Dashboard, My Incidences, Admin Area
- *   3. Links inferiores: Logout
+ * Menu elements:
+ *   1. Header: "OPERATIONS" with version
+ *   2. Main navigation: Dashboard, My Incidences, Admin Area
+ *   3. Bottom links: Logout
  * 
- * Estados:
- *   - activeClass: Fondo negro para el item activo
- *   - inactiveClass: Gris para items inactivos con hover
+ * States:
+ *   - activeClass: Black background for active item
+ *   - inactiveClass: Gray for inactive items with hover
  * 
- * Notas técnicas:
- *   - El item activo se detecta mediante useLocation
- *   - El botón Admin Area lleva a /admin
- *   - Logout usa la función del AuthContext
+ * Technical notes:
+ *   - Active item is detected using useLocation
+ *   - Admin Area button goes to /admin
+ *   - Logout uses AuthContext function
  * ============================================================
  */
 
@@ -52,28 +52,28 @@ export default function SideNavBar() {
 
   return (
     /* ============================================================
-        ESTRUCTURA: Fixed Sidebar
-        Posición: Fixed left | Arriba: top-14 (debajo de TopNavBar)
-        Ancho: w-64 (256px) | Alto: calc(100vh - 56px)
-        Borde derecho: 2px black | Fondo: surface-container
-        Font: IBM Plex Mono para estética técnica
+        STRUCTURE: Fixed Sidebar
+        Position: Fixed left | Top: top-14 (below TopNavBar)
+        Width: w-64 (256px) | Height: calc(100vh - 56px)
+        Right border: 2px black | Background: surface-container
+        Font: IBM Plex Mono for technical aesthetic
        ============================================================ */
     <aside className="fixed left-0 top-14 h-[calc(100vh-3.5rem)] w-64 border-r-2 border-black bg-surface-container flex flex-col justify-between font-mono text-xs">
       
       {/* ============================================================
-          SECCIÓN 1: NAVEGACIÓN PRINCIPAL
-          Header: OPERATIONS + versión del sistema
+          SECTION 1: MAIN NAVIGATION
+          Header: OPERATIONS + system version
           Links: Dashboard, Incidents, Reports, Logs
        ============================================================ */}
       <div>
-        {/* Header con branding */}
+        {/* Header with branding */}
         <div className="p-6 border-b-2 border-black">
           <h2 className="font-sans font-black text-lg tracking-tighter">OPERATIONS</h2>
-          {/* NOTA: Versión hardcodeada - podría venir de config/constante */}
+          {/* NOTE: Hardcoded version - could come from config/constant */}
           <p className="text-[10px] text-gray-500 mt-1">V 2.0.48</p>
         </div>
         
-        {/* Menú de navegación */}
+        {/* Navigation menu */}
         <nav className="mt-4">
           <Link to="/dashboard" className={`flex items-center px-4 py-3 border-b border-gray-300 transition-all duration-75 ${isActive('/dashboard') ? activeClass : inactiveClass}`}>
             <span className="material-symbols-outlined mr-3">dashboard</span>
@@ -93,8 +93,8 @@ export default function SideNavBar() {
       </div>
 
       {/* ============================================================
-          SECCIÓN 2: FOOTER LINKS
-          Botón de logout
+          SECTION 2: FOOTER LINKS
+          Logout button
        ============================================================ */}
       <div className="mb-4">
         <button 

@@ -1,36 +1,36 @@
 /**
  * ============================================================
- * COMPONENTE: Footer (Pie de Página)
+ * COMPONENT: Footer (Footer)
  * ============================================================
- * Descripción: 
- *   Pie de página fijo en la parte inferior del dashboard.
- *   Muestra la versión de la aplicación y timestamp UTC.
+ * Description: 
+ *   Fixed footer at the bottom of the dashboard.
+ *   Shows application version and UTC timestamp.
  * 
- * Ubicación: src/components/layout/Footer.jsx
+ * Location: src/components/layout/Footer.jsx
  * 
- * Características:
- *   - Position: fixed bottom (permanece al hacer scroll)
- *   - Ancho: Calculado para no interferir con sidebar (left-64)
- *   - Borde superior: 2px black
+ * Characteristics:
+ *   - Position: fixed bottom (remains on scroll)
+ *   - Width: Calculated not to interfere with sidebar (left-64)
+ *   - Top border: 2px black
  * 
- * Contenido:
- *   1. Versión de la app (hardcodeada)
- *   2. Timestamp UTC en tiempo real
+ * Content:
+ *   1. App version (hardcoded)
+ *   2. Real-time UTC timestamp
  * 
- * Notas técnicas:
- *   - El ancho usa calc(100% - 16rem) para excluir el sidebar
- *   - El timestamp se actualiza en cada render
- *   - El color de fondo es surface para consistencia
+ * Technical notes:
+ *   - Width uses calc(100% - 16rem) to exclude sidebar
+ *   - Timestamp updates on each render
+ *   - Background color is surface for consistency
  * ============================================================
  */
 
 export default function Footer() {
   return (
     /* ============================================================
-        ESTRUCTURA: Fixed Footer
-        Posición: Fixed bottom | Izquierda: left-64 (sidebar width)
-        Ancho: calc(100% - 16rem) | Borde superior: 2px black
-        z-index: 40 (debajo de FAB)
+        STRUCTURE: Fixed Footer
+        Position: Fixed bottom | Left: left-64 (sidebar width)
+        Width: calc(100% - 16rem) | Top border: 2px black
+        z-index: 40 (below FAB)
        ============================================================ */
     <footer className="fixed bottom-0 right-0 left-64 flex justify-between items-center px-6 py-3 w-[calc(100%-16rem)] bg-surface border-t-2 border-black z-40">
       <div className="font-mono text-[10px]">

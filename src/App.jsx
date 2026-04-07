@@ -1,41 +1,41 @@
 /**
  * ============================================================
- * APP.JSX - Configuración Principal de Rutas
+ * APP.JSX - Main Route Configuration
  * ============================================================
- * Descripción: 
- *   Componente raíz de la aplicación que configura el enrutamiento,
- *   el contexto de autenticación y las rutas protegidas/públicas.
+ * Description: 
+ *   Root component of the application that configures routing,
+ *   authentication context and protected/public routes.
  * 
- * Ubicación: src/App.jsx
+ * Location: src/App.jsx
  * 
- * ARQUITECTURA:
- *   1. AuthProvider - Proveedor de contexto de autenticación
- *   2. BrowserRouter - Enrutador de React Router
- *   3. AppRoutes - Definición de todas las rutas
- *   4. ProtectedRoute - Componente de orden superior para rutas privadas
- *   5. PublicRoute - Componente de orden público para rutas públicas
+ * ARCHITECTURE:
+ *   1. AuthProvider - Authentication context provider
+ *   2. BrowserRouter - React Router router
+ *   3. AppRoutes - All route definitions
+ *   4. ProtectedRoute - Higher-order component for private routes
+ *   5. PublicRoute - Higher-order component for public routes
  * 
- * RUTAS DEFINIDAS:
- *   - "/" (GET)     → Landing (pública, redirige si logueado)
- *   - "/login"      → Login (pública, redirige si logueado)
- *   - "/register"   → Register (pública, redirige si logueado)
- *   - "/dashboard"  → Dashboard (protegida, requiere auth)
- *   - "*"           → Catch-all redirige a "/"
+ * DEFINED ROUTES:
+ *   - "/" (GET)     → Landing (public, redirects if logged in)
+ *   - "/login"      → Login (public, redirects if logged in)
+ *   - "/register"   → Register (public, redirects if logged in)
+ *   - "/dashboard"  → Dashboard (protected, requires auth)
+ *   - "*"           → Catch-all redirects to "/"
  * 
- * FLUJO DE AUTENTICACIÓN:
- *   1. AuthProvider carga token de localStorage al iniciar
- *   2. Verifica token con endpoint /me del backend
- *   3. Si token válido → user tiene datos
- *   4. Si token inválido → user es null
- *   5. ProtectedRoute redirige a "/" si user es null
- *   6. PublicRoute redirige a "/dashboard" si user existe
+ * AUTHENTICATION FLOW:
+ *   1. AuthProvider loads token from localStorage on init
+ *   2. Verifies token with backend /me endpoint
+ *   3. If token valid → user has data
+ *   4. If token invalid → user is null
+ *   5. ProtectedRoute redirects to "/" if user is null
+ *   6. PublicRoute redirects to "/dashboard" if user exists
  * 
- * Notas técnicas:
- *   - El estado "loading" muestra pantalla de carga mientras
- *     se verifica el token en el backend
- *   - El componente AuthContext debe envolver toda la app
- *   - Las rutas se evaluan en orden - la primera que hace match gana
- *   - La ruta "*" captura todas las URLs no definidas
+ * Technical notes:
+ *   - The "loading" state shows loading screen while
+ *     token is verified with backend
+ *   - AuthContext component must wrap entire app
+ *   - Routes are evaluated in order - first match wins
+ *   - The "*" route captures all undefined URLs
  * ============================================================
  */
 
@@ -51,18 +51,18 @@ import NotFound from './pages/NotFound';
 
 /**
  * ============================================================
- * COMPONENTE: ProtectedRoute (Ruta Protegida)
+ * COMPONENT: ProtectedRoute (Protected Route)
  * ============================================================
- * Descripción: 
- *   Componente de orden superior que protege rutas privadas.
- *   Solo permite acceso si el usuario está autenticado.
+ * Description: 
+ *   Higher-order component that protects private routes.
+ *   Only allows access if user is authenticated.
  * 
- * Lógica:
- *   1. Si está cargando (loading=true) → muestra spinner
- *   2. Si hay usuario (user existe) → muestra children
- *   3. Si no hay usuario → redirige a "/"
+ * Logic:
+ *   1. If loading (loading=true) → shows spinner
+ *   2. If user exists (user exists) → shows children
+ *   3. If no user → redirects to "/"
  * 
- * Uso típico: Dashboard, páginas de usuario autenticado
+ * Typical usage: Dashboard, authenticated user pages
  * ============================================================
  */
 function ProtectedRoute({ children }) {
@@ -81,18 +81,18 @@ function ProtectedRoute({ children }) {
 
 /**
  * ============================================================
- * COMPONENTE: PublicRoute (Ruta Pública)
+ * COMPONENT: PublicRoute (Public Route)
  * ============================================================
- * Descripción: 
- *   Componente de orden superior para rutas públicas.
- *   Redirige a /dashboard si el usuario ya está logueado.
+ * Description: 
+ *   Higher-order component for public routes.
+ *   Redirects to /dashboard if user is already logged in.
  * 
- * Lógica:
- *   1. Si está cargando (loading=true) → muestra spinner
- *   2. Si hay usuario (user existe) → redirige a /dashboard
- *   3. Si no hay usuario → muestra children (página pública)
+ * Logic:
+ *   1. If loading (loading=true) → shows spinner
+ *   2. If user exists (user exists) → redirects to /dashboard
+ *   3. If no user → shows children (public page)
  * 
- * Uso típico: Landing, Login, Register
+ * Typical usage: Landing, Login, Register
  * ============================================================
  */
 function PublicRoute({ children }) {
@@ -111,27 +111,27 @@ function PublicRoute({ children }) {
 
 /**
  * ============================================================
- * COMPONENTE: AppRoutes
+ * COMPONENT: AppRoutes
  * ============================================================
- * Descripción: 
- *   Define todas las rutas de la aplicación.
- *   Usa los componentes ProtectedRoute y PublicRoute como wrappers.
+ * Description: 
+ *   Defines all routes of the application.
+ *   Uses ProtectedRoute and PublicRoute as wrappers.
  * ============================================================
  */
 function AppRoutes() {
   return (
     <Routes>
-      {/* Rutas públicas - accesibles sin autenticación */}
+      {/* Public routes - accessible without authentication */}
       <Route path="/" element={<PublicRoute><Landing /></PublicRoute>} />
       <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
       <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
       
-      {/* Rutas protegidas - requieren autenticación */}
+      {/* Protected routes - require authentication */}
       <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
       <Route path="/my-incidences" element={<ProtectedRoute><MyIncidences /></ProtectedRoute>} />
       <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
       
-      {/* Catch-all - cualquier ruta no definida */}
+      {/* Catch-all - any undefined route */}
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
@@ -139,15 +139,15 @@ function AppRoutes() {
 
 /**
  * ============================================================
- * COMPONENTE: App (Componente Raíz)
+ * COMPONENT: App (Root Component)
  * ============================================================
- * Descripción: 
- *   Componente principal que envuelve toda la aplicación
- *   con los proveedores necesarios.
+ * Description: 
+ *   Main component that wraps entire application
+ *   with necessary providers.
  * 
- * Providers utilizados:
- *   - AuthProvider: Contexto de autenticación
- *   - BrowserRouter: Enrutamiento
+ * Providers used:
+ *   - AuthProvider: Authentication context
+ *   - BrowserRouter: Routing
  * ============================================================
  */
 function App() {

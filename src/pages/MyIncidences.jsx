@@ -1,42 +1,42 @@
 /**
  * ============================================================
- * PÁGINA: MyIncidences (Mis Incidencias)
+ * PAGE: MyIncidences
  * ============================================================
- * Descripción: 
- *   Página que muestra las incidencias creadas por el usuario logueado.
- *   Incluye botón para crear nueva incidencia (abre modal) y
- *   возможность de ver detalles de cada incidencia.
+ * Description: 
+ *   Page that shows incidences created by the logged-in user.
+ *   Includes button to create new incidence (opens modal) and
+ *   ability to view details of each incidence.
  * 
- * Ubicación: src/pages/MyIncidences.jsx
+ * Location: src/pages/MyIncidences.jsx
  * 
  * Routing:
- *   - Accesible desde /my-incidences
- *   - Requiere autenticación (protegida)
+ *   - Accessible from /my-incidences
+ *   - Requires authentication (protected)
  * 
- * Características:
- *   1. Lista de incidencias del usuario actual
- *   2. Modal para crear nueva incidencia
- *   3. Modal para ver detalles de incidencia
- *   4. Modal para editar incidencia
- *   5. Estados: loading, empty, data
+ * Features:
+ *   1. List of incidences for the current user
+ *   2. Modal to create new incidence
+ *   3. Modal to view incidence details
+ *   4. Modal to edit incidence
+ *   5. States: loading, empty, data
  * 
- * Integración API:
- *   - GET /incidences → Lista todas (filtrar por user_id después)
- *   - POST /incidences → Crear nueva
- *   - GET /incidences/:id → Ver detalles
- *   - PUT /incidences/:id → Actualizar
- *   - DELETE /incidences/:id → Eliminar
+ * API Integration:
+ *   - GET /incidences → List all (filter by user_id later)
+ *   - POST /incidences → Create new
+ *   - GET /incidences/:id → View details
+ *   - PUT /incidences/:id → Update
+ *   - DELETE /incidences/:id → Delete
  * 
- * Componentes utilizados:
+ * Components used:
  *   - TopNavBar, SideNavBar, Footer (layout)
  *   - Modal (ui)
- *   - IncidenceForm (formulario crear/editar)
- *   - IncidenceDetail (vista de detalles)
+ *   - IncidenceForm (create/edit form)
+ *   - IncidenceDetail (details view)
  * 
- * Notas técnicas:
- *   - Por ahora filtra client-side (mejorar a server-side)
- *   - El modal de edición reutiliza IncidenceForm
- *   - La eliminación requiere confirmación
+ * Technical notes:
+ *   - Currently filters client-side (improve to server-side)
+ *   - Edit modal reuses IncidenceForm
+ *   - Deletion requires confirmation
  * ============================================================
  */
 
@@ -52,43 +52,43 @@ import IncidenceDetail from '../components/incidences/IncidenceDetail';
 
 export default function MyIncidences() {
   // ============================================================
-  // ESTADOS DEL COMPONENTE
+  // COMPONENT STATES
   // ============================================================
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   
-  // Datos
+  // Data
   const [incidences, setIncidences] = useState([]);
   const [loading, setLoading] = useState(true);
   
-  // Modal: Crear nueva incidencia
+  // Modal: Create new incidence
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [creating, setCreating] = useState(false);
   
-  // Modal: Ver detalles
+  // Modal: View details
   const [selectedIncidence, setSelectedIncidence] = useState(null);
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [loadingDetail, setLoadingDetail] = useState(false);
   
-  // Modal: Editar incidencia
+  // Modal: Edit incidence
   const [editingIncidence, setEditingIncidence] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
   const [updating, setUpdating] = useState(false);
 
-  // Paginación
+  // Pagination
   const [currentPage, setCurrentPage] = useState(1);
   const [meta, setMeta] = useState({ current_page: 1, last_page: 1, per_page: 15, total: 0 });
 
   // ============================================================
-  // EFECTO: Cargar incidencias al iniciar y cuando cambia la página
+  // EFFECT: Load incidences on mount and when page changes
   // ============================================================
   useEffect(() => {
     fetchIncidences(currentPage);
   }, [currentPage]);
 
   // ============================================================
-  // FUNCIÓN: fetchIncidences
-  // Descripción: Obtiene lista de incidencias del usuario autenticado
+  // FUNCTION: fetchIncidences
+  // Description: Gets list of incidences for the authenticated user
   // ============================================================
   const fetchIncidences = async (page = 1) => {
     try {
@@ -107,7 +107,7 @@ export default function MyIncidences() {
 
   // ============================================================
   // HANDLER: handlePageChange
-  // Descripción: Cambia la página de la paginación
+  // Description: Changes the pagination page
   // ============================================================
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -123,7 +123,7 @@ export default function MyIncidences() {
 
   // ============================================================
   // HANDLER: handleCreate
-  // Descripción: Crear nueva incidencia
+  // Description: Create new incidence
   // ============================================================
   const handleCreate = async (formData) => {
     setCreating(true);
@@ -133,7 +133,7 @@ export default function MyIncidences() {
       setShowCreateModal(false);
     } catch (err) {
       console.error('Error creating incidence:', err);
-      alert('Error al crear incidencia: ' + (err.response?.data?.message || 'Error desconocido'));
+      alert('Error creating incidence: ' + (err.response?.data?.message || 'Unknown error'));
     } finally {
       setCreating(false);
     }
@@ -141,14 +141,14 @@ export default function MyIncidences() {
 
   // ============================================================
   // HANDLER: handleViewDetails
-  // Descripción: Ver detalles de una incidencia
+  // Description: View details of an incidence
   // ============================================================
   const handleViewDetails = async (incidence) => {
     setLoadingDetail(true);
     setSelectedIncidence(incidence);
     setShowDetailModal(true);
     
-    // Cargar datos frescos de la API
+    // Load fresh data from API
     try {
       const { data } = await api.get(`/incidences/${incidence.id}`);
       setSelectedIncidence(data.data || data);
@@ -161,7 +161,7 @@ export default function MyIncidences() {
 
   // ============================================================
   // HANDLER: handleEdit
-  // Descripción: Abrir modal de edición
+  // Description: Open edit modal
   // ============================================================
   const handleEdit = () => {
     setEditingIncidence(selectedIncidence);
@@ -171,7 +171,7 @@ export default function MyIncidences() {
 
   // ============================================================
   // HANDLER: handleUpdate
-  // Descripción: Actualizar incidencia
+  // Description: Update incidence
   // ============================================================
   const handleUpdate = async (formData) => {
     setUpdating(true);
@@ -184,7 +184,7 @@ export default function MyIncidences() {
       setSelectedIncidence(null);
     } catch (err) {
       console.error('Error updating incidence:', err);
-      alert('Error al actualizar incidencia: ' + (err.response?.data?.message || 'Error desconocido'));
+      alert('Error updating incidence: ' + (err.response?.data?.message || 'Unknown error'));
     } finally {
       setUpdating(false);
     }
@@ -192,12 +192,12 @@ export default function MyIncidences() {
 
   // ============================================================
   // HANDLER: handleDelete
-  // Descripción: Eliminar incidencia
+  // Description: Delete incidence
   // ============================================================
   const handleDelete = async () => {
     if (!selectedIncidence) return;
     
-    if (!window.confirm('¿Está seguro de eliminar esta incidencia?')) {
+    if (!window.confirm('Are you sure you want to delete this incidence?')) {
       return;
     }
     
@@ -208,7 +208,7 @@ export default function MyIncidences() {
       setSelectedIncidence(null);
     } catch (err) {
       console.error('Error deleting incidence:', err);
-      alert('Error al eliminar incidencia: ' + (err.response?.data?.message || 'Error desconocido'));
+      alert('Error deleting incidence: ' + (err.response?.data?.message || 'Unknown error'));
     }
   };
 
@@ -217,28 +217,28 @@ export default function MyIncidences() {
   // ============================================================
   return (
     /* ============================================================
-        CONTENEDOR PRINCIPAL
-        Layout: Flex column | Fondo: surface
+        MAIN CONTAINER
+        Layout: Flex column | Background: surface
        ============================================================ */
     <div className="flex flex-col min-h-screen bg-surface">
       
       {/* ============================================================
-          SECCIÓN 1: TOP NAV BAR
-          Barra de navegación superior
-          Componente: src/components/layout/TopNavBar.jsx
+          SECTION 1: TOP NAV BAR
+          Top navigation bar
+          Component: src/components/layout/TopNavBar.jsx
        ============================================================ */}
       <TopNavBar user={user} onLogout={handleLogout} />
       
       {/* ============================================================
-          SECCIÓN 2: SIDE NAV BAR
-          Barra lateral de navegación
-          Componente: src/components/layout/SideNavBar.jsx
+          SECTION 2: SIDE NAV BAR
+          Side navigation bar
+          Component: src/components/layout/SideNavBar.jsx
        ============================================================ */}
       <SideNavBar />
       
       {/* ============================================================
-          SECCIÓN 3: MAIN CONTENT
-          Área principal con lista de incidencias
+          SECTION 3: MAIN CONTENT
+          Main area with incidence list
        ============================================================ */}
       <main className="ml-64 pt-14 min-h-screen relative">
         {/* Background pattern */}
@@ -246,50 +246,50 @@ export default function MyIncidences() {
         <div className="relative p-8 max-w-6xl">
           
           {/* ============================================================
-              HEADER: Título + Botón nuevo
-              Título: "MIS INCIDENCIAS"
-              Botón: "+ NUEVA INCIDENCIA" →abre modal crear
+              HEADER: Title + New button
+              Title: "MY INCIDENCES"
+              Button: "+ NEW INCIDENCE" → opens create modal
            ============================================================ */}
           <div className="flex justify-between items-end mb-8">
             <div>
-              <span className="font-label text-xs uppercase border border-black px-2 py-0.5 bg-white">MÓDULO DE INCIDENCIAS</span>
-              <h1 className="font-sans font-bold text-4xl mt-2">MIS INCIDENCIAS</h1>
-              <p className="font-label text-sm text-on-surface-variant mt-1">Incidencias creadas por usted</p>
+              <span className="font-label text-xs uppercase border border-black px-2 py-0.5 bg-white">INCIDENCES MODULE</span>
+              <h1 className="font-sans font-bold text-4xl mt-2">MY INCIDENCES</h1>
+              <p className="font-label text-sm text-on-surface-variant mt-1">Incidences created by you</p>
             </div>
             <button 
               onClick={() => setShowCreateModal(true)}
               className="font-sans font-bold uppercase tracking-wider bg-primary text-on-primary px-6 py-3 hover:bg-neutral-800 transition-colors border-2 border-black"
             >
-              + NUEVA INCIDENCIA
+              + NEW INCIDENCE
             </button>
           </div>
 
           {/* ============================================================
-              LISTA DE INCIDENCIAS
-              Tabla o mensaje según estado
+              INCIDENCE LIST
+              Table or message based on state
            ============================================================ */}
           {loading ? (
             <div className="border-2 border-black p-8 bg-white text-center">
-              <p className="font-label text-sm">CARGANDO DATOS...</p>
+              <p className="font-label text-sm">LOADING DATA...</p>
             </div>
           ) : incidences.length === 0 ? (
             <div className="p-8 bg-white text-center">
-              <p className="font-label text-sm text-on-surface-variant">NO HA CREADO NINGUNA INCIDENCIA</p>
-              <p className="font-label text-xs text-on-surface-variant mt-2">Haga clic en "+ NUEVA INCIDENCIA" para crear una</p>
+              <p className="font-label text-sm text-on-surface-variant">YOU HAVEN'T CREATED ANY INCIDENCES</p>
+              <p className="font-label text-xs text-on-surface-variant mt-2">Click "+ NEW INCIDENCE" to create one</p>
             </div>
           ) : (
-            /* Lista de incidencias */
+            /* Incidence list */
             <div className="bg-white">
-              {/* Header de la tabla */}
+              {/* Table header */}
               <div className="grid grid-cols-12 border-b-2 border-black bg-surface-container">
                 <div className="col-span-1 px-4 py-3 font-label text-xs uppercase">ID</div>
-                <div className="col-span-5 px-4 py-3 font-label text-xs uppercase">Título</div>
-                <div className="col-span-2 px-4 py-3 font-label text-xs uppercase">Estado</div>
-                <div className="col-span-2 px-4 py-3 font-label text-xs uppercase">Prioridad</div>
-                <div className="col-span-2 px-4 py-3 font-label text-xs uppercase text-right">Fecha</div>
+                <div className="col-span-5 px-4 py-3 font-label text-xs uppercase">Title</div>
+                <div className="col-span-2 px-4 py-3 font-label text-xs uppercase">Status</div>
+                <div className="col-span-2 px-4 py-3 font-label text-xs uppercase">Priority</div>
+                <div className="col-span-2 px-4 py-3 font-label text-xs uppercase text-right">Date</div>
               </div>
               
-              {/* Filas de datos */}
+              {/* Data rows */}
               {incidences.map((incidence, index) => (
                 <div 
                   key={incidence.id}
@@ -328,12 +328,12 @@ export default function MyIncidences() {
             </div>
           )}
 
-          {/* Contador */}
+          {/* Counter */}
           <div className="mt-4 font-label text-xs text-gray-500">
-            MOSTRANDO {incidences.length} DE {meta.total} INCIDENCIAS
+            SHOWING {incidences.length} OF {meta.total} INCIDENCES
           </div>
 
-          {/* Paginación */}
+          {/* Pagination */}
           {meta.last_page > 1 && (
             <div className="mt-6 flex justify-between items-center font-mono text-[10px] uppercase">
               <div className="flex gap-2">
@@ -404,14 +404,14 @@ export default function MyIncidences() {
       </main>
 
       {/* ============================================================
-          MODAL 1: CREAR NUEVA INCIDENCIA
-          Componente: IncidenceForm
-          Título: "CREAR INCIDENCIA"
+          MODAL 1: CREATE NEW INCIDENCE
+          Component: IncidenceForm
+          Title: "CREATE INCIDENCE"
        ============================================================ */}
       <Modal
         isOpen={showCreateModal}
         onClose={() => setShowCreateModal(false)}
-        title="CREAR INCIDENCIA"
+        title="CREATE INCIDENCE"
         size="lg"
       >
         <IncidenceForm
@@ -423,14 +423,14 @@ export default function MyIncidences() {
       </Modal>
 
       {/* ============================================================
-          MODAL 2: VER DETALLES
-          Componente: IncidenceDetail
-          Título: "DETALLES DE INCIDENCIA"
+          MODAL 2: VIEW DETAILS
+          Component: IncidenceDetail
+          Title: "INCIDENCE DETAILS"
        ============================================================ */}
       <Modal
         isOpen={showDetailModal}
         onClose={() => setShowDetailModal(false)}
-        title="DETALLES DE INCIDENCIA"
+        title="INCIDENCE DETAILS"
         size="lg"
       >
         <IncidenceDetail
@@ -444,9 +444,9 @@ export default function MyIncidences() {
       </Modal>
 
       {/* ============================================================
-          MODAL 3: EDITAR INCIDENCIA
-          Componente: IncidenceForm (reutilizado)
-          Título: "EDITAR INCIDENCIA"
+          MODAL 3: EDIT INCIDENCE
+          Component: IncidenceForm (reused)
+          Title: "EDIT INCIDENCE"
        ============================================================ */}
       <Modal
         isOpen={showEditModal}
@@ -454,7 +454,7 @@ export default function MyIncidences() {
           setShowEditModal(false);
           setEditingIncidence(null);
         }}
-        title="EDITAR INCIDENCIA"
+        title="EDIT INCIDENCE"
         size="lg"
       >
         <IncidenceForm
