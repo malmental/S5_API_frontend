@@ -43,7 +43,7 @@ export default function IncidentsTable({
   // ============================================================
   const getPriorityClass = (priority) => {
     if (priority === 'high' || priority === 'ALTA' || priority === 'alta') {
-      return 'border-2 border-black px-2 py-1 text-xs uppercase bg-black text-white';
+      return 'px-2 py-1 text-xs uppercase bg-primary text-white';
     }
     if (priority === 'medium' || priority === 'MEDIA' || priority === 'media') {
       return 'border-2 border-gray-400 px-2 py-1 text-xs uppercase bg-white';

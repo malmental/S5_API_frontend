@@ -306,7 +306,7 @@ export default function MyIncidences() {
                   <div className="col-span-2 px-4 py-4">
                     <span className={`font-mono text-xs px-2 py-1 ${
                       incidence.priority === 'high' 
-                        ? 'bg-primary text-on-primary' 
+                        ? 'bg-primary text-white' 
                         : 'bg-gray-200 text-gray-600'
                     }`}>
                       {incidence.priority?.toUpperCase() || 'MEDIUM'}
@@ -332,14 +332,14 @@ export default function MyIncidences() {
                 <button 
                   onClick={() => handlePageChange(1)}
                   disabled={currentPage === 1}
-                  className="border-2 border-black px-3 py-1 font-bold hover:bg-gray-200 disabled:opacity-30 disabled:cursor-not-allowed"
+                  className="px-3 py-1 font-bold hover:bg-gray-200 disabled:opacity-30 disabled:cursor-not-allowed"
                 >
                   ««
                 </button>
                 <button 
                   onClick={() => handlePageChange(currentPage - 1)}
                   disabled={currentPage === 1}
-                  className="border-2 border-black px-3 py-1 font-bold hover:bg-gray-200 disabled:opacity-30 disabled:cursor-not-allowed"
+                  className="px-3 py-1 font-bold hover:bg-gray-200 disabled:opacity-30 disabled:cursor-not-allowed"
                 >
                   «
                 </button>
@@ -362,7 +362,7 @@ export default function MyIncidences() {
                     <button
                       key={pageNum}
                       onClick={() => handlePageChange(pageNum)}
-                      className={`px-3 py-1 border-2 ${currentPage === pageNum ? 'border-black bg-black text-white' : 'border-gray-300 hover:border-black'}`}
+                      className={`px-3 py-1 ${currentPage === pageNum ? 'bg-primary text-white' : 'border-2 border-gray-300 hover:bg-gray-200'}`}
                     >
                       {pageNum}
                     </button>
@@ -374,14 +374,14 @@ export default function MyIncidences() {
                 <button 
                   onClick={() => handlePageChange(currentPage + 1)}
                   disabled={currentPage === meta.last_page}
-                  className="border-2 border-black px-3 py-1 font-bold hover:bg-gray-200 disabled:opacity-30 disabled:cursor-not-allowed"
+                  className="px-3 py-1 font-bold hover:bg-gray-200 disabled:opacity-30 disabled:cursor-not-allowed"
                 >
                   »
                 </button>
                 <button 
                   onClick={() => handlePageChange(meta.last_page)}
                   disabled={currentPage === meta.last_page}
-                  className="border-2 border-black px-3 py-1 font-bold hover:bg-gray-200 disabled:opacity-30 disabled:cursor-not-allowed"
+                  className="px-3 py-1 font-bold hover:bg-gray-200 disabled:opacity-30 disabled:cursor-not-allowed"
                 >
                   »»
                 </button>
