@@ -103,7 +103,7 @@ export default function IncidenceForm({ initialData = null, onSubmit, onCancel, 
           id="title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className={`w-full px-4 py-3 ${errors.title ? 'border-error' : 'border-black'} bg-surface focus:outline-none focus:border-1 focus:border-primary transition-all font-mono text-sm`}
+          className={`w-full px-4 py-3 ${errors.title ? 'border-error' : 'border-black'} bg-surface font-mono text-sm`}
           placeholder="INCIDENCE TITLE"
         />
         {errors.title && (
@@ -124,7 +124,7 @@ export default function IncidenceForm({ initialData = null, onSubmit, onCancel, 
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           rows={5}
-          className={`w-full px-4 py-3 ${errors.description ? 'border-error' : 'border-black'} bg-surface focus:outline-none focus:border-1 focus:border-primary transition-all font-mono text-sm resize-none`}
+          className={`w-full px-4 py-3 ${errors.description ? 'border-error' : 'border-black'} bg-surface font-mono text-sm resize-none`}
           placeholder="DETAILED INCIDENCE DESCRIPTION..."
         />
         {errors.description && (
@@ -145,7 +145,7 @@ export default function IncidenceForm({ initialData = null, onSubmit, onCancel, 
               id="priority"
               value={priority}
               onChange={(e) => setPriority(e.target.value)}
-              className="w-full px-4 py-3 bg-surface focus:outline-none focus:border-1 focus:border-primary transition-all font-mono text-sm"
+              className="w-full px-4 py-3 bg-surface font-mono text-sm"
             >
               <option value="high">HIGH</option>
               <option value="medium">MEDIUM</option>
@@ -162,7 +162,7 @@ export default function IncidenceForm({ initialData = null, onSubmit, onCancel, 
               id="status"
               value={status}
               onChange={(e) => setStatus(e.target.value)}
-              className="w-full px-4 py-3 bg-surface focus:outline-none focus:border-1 focus:border-primary transition-all font-mono text-sm"
+              className="w-full px-4 py-3 bg-surface font-mono text-sm"
             >
               <option value="open">OPEN</option>
               <option value="in_progress">IN PROGRESS</option>
@@ -184,7 +184,7 @@ export default function IncidenceForm({ initialData = null, onSubmit, onCancel, 
           id="tags"
           value={tags}
           onChange={(e) => setTags(e.target.value)}
-          className="w-full px-4 py-3 bg-surface focus:outline-none focus:border-1 focus:border-primary transition-all font-mono text-sm"
+          className="w-full px-4 py-3 bg-surface font-mono text-sm"
           placeholder="server, urgent, backend (comma separated)"
         />
         <p className="font-mono text-[10px] text-gray-500 mt-1">

@@ -275,7 +275,7 @@ export default function IncidenceDetail({ incidence, onClose, showCommentForm = 
             <button 
               type="submit" 
               disabled={submitting || !commentText.trim()}
-              className="mt-2 px-4 py-2 border-2 border-black bg-black text-white text-xs uppercase hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="mt-2 px-4 py-2 bg-primary text-white text-xs uppercase hover:bg-neutral-800 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {submitting ? 'SENDING...' : 'COMMENT'}
             </button>
@@ -290,7 +290,7 @@ export default function IncidenceDetail({ incidence, onClose, showCommentForm = 
         <div className="pt-4 flex justify-center">
           <button
             onClick={() => onEdit(localIncidence)}
-            className="px-12 py-3 border-2 border-black bg-black text-white font-mono font-bold uppercase text-sm hover:bg-gray-800 transition-colors"
+            className="px-12 py-3 bg-primary text-white font-mono font-bold uppercase text-sm hover:bg-neutral-800 transition-colors"
           >
             EDIT INCIDENCE
           </button>
