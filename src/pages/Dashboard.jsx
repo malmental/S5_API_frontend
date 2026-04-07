@@ -35,7 +35,6 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
-import TopNavBar from '../components/layout/TopNavBar';
 import SideNavBar from '../components/layout/SideNavBar';
 import IncidentsTable from '../components/dashboard/IncidentsTable';
 import Modal from '../components/ui/Modal';
@@ -200,14 +199,11 @@ export default function Dashboard() {
   return (
     <div className="flex flex-col min-h-screen">
       
-      {/* TOP NAV BAR */}
-      <TopNavBar user={user} onLogout={handleLogout} />
-      
       {/* SIDEBAR NAVIGATION */}
       <SideNavBar />
       
       {/* MAIN CONTENT AREA */}
-      <main className="ml-64 pt-14 min-h-screen relative">
+      <main className="ml-64 pt-0 min-h-screen relative">
         {/* Background pattern */}
         <div className="absolute inset-0 stippled-bg"></div>
         
@@ -295,7 +291,7 @@ export default function Dashboard() {
                 className="border-2 border-black p-2 text-xs flex-1" 
                 placeholder="Search by hashtag..."
               />
-              <button className="px-16 py-2 border-2 border-black bg-black text-white text-xs uppercase">
+              <button className="px-16 py-2 bg-primary text-white text-xs uppercase hover:bg-neutral-800 transition-colors">
                 Search
               </button>
             </div>

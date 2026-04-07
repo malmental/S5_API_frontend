@@ -34,7 +34,6 @@
  * Technical notes:
  *   - Requires AuthProvider in App.jsx
  *   - Token is saved to localStorage automatically
- *   - Input focus changes border to 4px
  * ============================================================
  */
 
@@ -93,7 +92,7 @@ export default function Login() {
        ============================================================ */}
       <header className="flex justify-between items-center px-6 h-16 w-full border-b-2 border-black bg-surface">
         <div className="flex items-center gap-4">
-          <Link to="/" className="font-mono font-bold text-xl border-2 border-black px-2 py-1">INCIDENsly 𝒘ebApp</Link>
+          <Link to="/" className="font-mono font-bold text-xl focus:outline-none focus:border-2 focus:border-primary transition-all border-black px-2 py-1">INCIDENsly 𝒘ebApp</Link>
         </div>
       </header>
 
@@ -136,7 +135,7 @@ export default function Login() {
                   id="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-3 bg-surface focus:outline-none focus:border-1 focus:border-primary transition-all font-mono text-sm"
+                  className="w-full px-4 py-3 bg-surface font-mono text-sm"
                   placeholder="user@domain.ext"
                   required
                 />
@@ -152,7 +151,7 @@ export default function Login() {
                   id="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-3 bg-surface focus:outline-none focus:border-1 focus:border-primary transition-all font-mono text-sm"
+                  className="w-full px-4 py-3 bg-surface font-mono text-sm"
                   placeholder="••••••••••••"
                   required
                 />

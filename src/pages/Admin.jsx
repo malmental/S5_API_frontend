@@ -33,7 +33,6 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
-import TopNavBar from '../components/layout/TopNavBar';
 import SideNavBar from '../components/layout/SideNavBar';
 import Modal from '../components/ui/Modal';
 
@@ -109,15 +108,13 @@ export default function Admin() {
   // RENDER
   // ============================================================
   return (
-    <div className="min-h-screen relative">
-      {/* TOP NAV BAR */}
-      <TopNavBar user={user} onLogout={handleLogout} />
+    <div className="flex flex-col min-h-screen">
       
       {/* SIDEBAR NAVIGATION */}
       <SideNavBar />
       
       {/* MAIN CONTENT AREA */}
-      <main className="ml-64 pt-14 min-h-screen relative">
+      <main className="ml-64 pt-0 min-h-screen relative">
         {/* Background pattern */}
         <div className="absolute inset-0 stippled-bg"></div>
         
@@ -294,7 +291,7 @@ export default function Admin() {
               setShowAccessDeniedModal(false);
               navigate('/dashboard');
             }}
-            className="px-6 py-2 border-2 border-black bg-black text-white font-mono text-xs uppercase hover:bg-gray-800 transition-colors"
+            className="px-6 py-3 bg-primary text-white font-mono text-xs uppercase hover:bg-neutral-800 transition-colors"
           >
             RETURN TO DASHBOARD
           </button>
