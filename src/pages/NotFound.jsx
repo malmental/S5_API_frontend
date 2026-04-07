@@ -45,7 +45,7 @@ export default function NotFound() {
         
         {/* Back to home button */}
         <div className="px-6 py-4 border-t-2 border-black bg-surface-dim text-center">
-          <Link to="/" className="inline-block px-6 py-3 border-2 border-black bg-black text-white text-sm uppercase hover:bg-gray-800 transition-colors">
+          <Link to="/" className="inline-block px-6 py-3 bg-primary text-white text-sm uppercase hover:bg-neutral-800 transition-colors">
             Back to home
           </Link>
         </div>
