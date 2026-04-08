@@ -30,6 +30,7 @@ export default function Login() {
   };
 
   return (
+<<<<<<< Updated upstream
     <div className="min-h-screen flex items-center justify-center bg-[#F4F0E6] p-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
@@ -37,6 +38,21 @@ export default function Login() {
             INCIDEN<span className="text-[#4A7C6F]">☆</span>ly
           </h1>
           <p className="text-[#6B6B6B] mt-2 text-sm">Sign in to your account</p>
+=======
+    /* ============================================================
+        MAIN CONTAINER
+        Layout: Flex column | Min-height: 100vh | Background: surface
+       ============================================================ */
+    <div className="flex flex-col min-h-screen bg-surface">
+      
+      {/* ============================================================
+          SECTION 1: HEADER
+          Description: Top bar with logo and register button
+       ============================================================ */}
+      <header className="flex justify-between items-center px-6 h-16 w-full border-b-2 border-black bg-surface">
+        <div className="flex items-center gap-4">
+          <Link to="/" className="font-mono font-bold text-xl border-black px-2 py-1">INCIDENsly 𝒘ebApp</Link>
+>>>>>>> Stashed changes
         </div>
 
         <form onSubmit={handleSubmit} className="bg-[#FAF8F5] border border-[#D4CFC2] rounded-lg p-8 shadow-sm">
