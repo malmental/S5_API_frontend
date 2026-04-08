@@ -177,7 +177,7 @@ export default function Admin() {
                   <div className="col-span-2 text-center">
                     <span className={`px-2 py-1 text-xs uppercase ${
                       u.is_admin 
-                        ? 'border-2 border-black bg-black text-white' 
+                        ? 'bg-primary text-white' 
                         : 'border border-gray-400 bg-white text-gray-600'
                     }`}>
                       {u.is_admin ? 'Admin' : 'User'}
