@@ -48,7 +48,7 @@ export default function Landing() {
        ============================================================ */}
       <header className="flex justify-between items-center px-6 h-16 w-full border-b-2 border-black bg-surface sticky top-0 z-50">
         <div className="flex items-center gap-4">
-          <span className="font-mono font-bold text-xl border-2 border-black px-2 py-1">INCIDENsly 𝒘ebApp</span>
+          <span className="font-mono font-bold text-xl border-black px-2 py-1">INCIDENsly 𝒘ebApp</span>
         </div>
       </header>
 
