@@ -92,7 +92,7 @@ export default function Login() {
        ============================================================ */}
       <header className="flex justify-between items-center px-6 h-16 w-full border-b-2 border-black bg-surface">
         <div className="flex items-center gap-4">
-          <Link to="/" className="font-mono font-bold text-xl focus:outline-none focus:border-2 focus:border-primary transition-all border-black px-2 py-1">INCIDENsly 𝒘ebApp</Link>
+          <Link to="/" className="font-mono font-bold text-xl border-black px-2 py-1">INCIDENsly 𝒘ebApp</Link>
         </div>
       </header>
 
