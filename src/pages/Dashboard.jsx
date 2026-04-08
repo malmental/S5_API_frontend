@@ -39,6 +39,7 @@ import SideNavBar from '../components/layout/SideNavBar';
 import IncidentsTable from '../components/dashboard/IncidentsTable';
 import Modal from '../components/ui/Modal';
 import IncidenceDetail from '../components/incidences/IncidenceDetail';
+import { useMetrics } from '../hooks/useMetrics';
 
 export default function Dashboard() {
   // ============================================================
@@ -57,40 +58,13 @@ export default function Dashboard() {
   const [currentPage, setCurrentPage] = useState(1);
   const [meta, setMeta] = useState({ current_page: 1, last_page: 1, per_page: 10, total: 0 });
 
-  // Dashboard statistics
-  const [statsData, setStatsData] = useState({
-    total: 0,
-    high: 0,
-    open: 0,
-    inProgress: 0,
-    resolved: 0,
-  });
+  // Dashboard statistics (using hook)
+  const { stats: statsData, loading: statsLoading, fetchStats } = useMetrics();
   
   // Modal: View incidence details
   const [selectedIncidence, setSelectedIncidence] = useState(null);
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [loadingDetail, setLoadingDetail] = useState(false);
-
-  // ============================================================
-  // EFFECT: Load dashboard statistics
-  // ============================================================
-  useEffect(() => {
-    const fetchStats = async () => {
-      try {
-        const { data } = await api.get('/metrics');
-        setStatsData({
-          total: data.data.total || 0,
-          high: data.data.by_priority?.high || 0,
-          open: data.data.by_status?.open || 0,
-          inProgress: data.data.by_status?.in_progress || 0,
-          resolved: data.data.by_status?.resolved || 0,
-        });
-      } catch (err) {
-        console.error('Error fetching stats:', err);
-      }
-    };
-    fetchStats();
-  }, []);
 
   // ============================================================
   // EFFECT: Reset page when filter changes
@@ -230,7 +204,7 @@ export default function Dashboard() {
                 className={`block text-center p-6 border-2 border-black transition-colors ${
                   activeFilter === 'high' 
                     ? 'bg-black text-white' 
-                    : 'bg-white hover:bg-surface-dim'
+                    : 'bg-white hover:bg-surface'
                 }`}
               >
                 <div className="text-xs uppercase tracking-wide mb-3">High</div>
@@ -266,18 +240,18 @@ export default function Dashboard() {
                 <div className="text-xs">In progress incidents</div>
               </button>
 
-              {/* Button: RESOLVED */}
+              {/* Button: CLOSED */}
               <button 
-                onClick={() => setActiveFilter(activeFilter === 'resolved' ? null : 'resolved')}
+                onClick={() => setActiveFilter(activeFilter === 'closed' ? null : 'closed')}
                 className={`block text-center p-6 border-2 border-black transition-colors ${
-                  activeFilter === 'resolved' 
+                  activeFilter === 'closed' 
                     ? 'bg-black text-white' 
                     : 'bg-white hover:bg-surface-dim'
                 }`}
               >
-                <div className="text-xs uppercase tracking-wide mb-3">Resolved</div>
-                <div className="text-5xl font-light mb-2">{statsData.resolved}</div>
-                <div className="text-xs">Resolved incidents</div>
+                <div className="text-xs uppercase tracking-wide mb-3">Closed</div>
+                <div className="text-5xl font-light mb-2">{statsData.closed}</div>
+                <div className="text-xs">Closed incidents</div>
               </button>
             </div>
 

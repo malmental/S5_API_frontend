@@ -320,75 +320,44 @@ export default function MyIncidences() {
             </div>
           )}
 
-          {/* Counter */}
-          <div className="mt-4 font-label text-xs text-gray-500">
-            SHOWING {incidences.length} OF {meta.total} INCIDENCES
-          </div>
-
           {/* Pagination */}
-          {meta.last_page > 1 && (
-            <div className="mt-6 flex justify-between items-center font-mono text-[10px] uppercase">
-              <div className="flex gap-2">
-                <button 
-                  onClick={() => handlePageChange(1)}
-                  disabled={currentPage === 1}
-                  className="px-3 py-1 font-bold hover:bg-gray-200 disabled:opacity-30 disabled:cursor-not-allowed"
-                >
-                  ««
-                </button>
-                <button 
-                  onClick={() => handlePageChange(currentPage - 1)}
-                  disabled={currentPage === 1}
-                  className="px-3 py-1 font-bold hover:bg-gray-200 disabled:opacity-30 disabled:cursor-not-allowed"
-                >
-                  «
-                </button>
-              </div>
-              
-              <div className="flex gap-2">
-                {Array.from({ length: Math.min(5, meta.last_page) }, (_, i) => {
-                  let pageNum;
-                  if (meta.last_page <= 5) {
-                    pageNum = i + 1;
-                  } else if (currentPage <= 3) {
-                    pageNum = i + 1;
-                  } else if (currentPage >= meta.last_page - 2) {
-                    pageNum = meta.last_page - 4 + i;
-                  } else {
-                    pageNum = currentPage - 2 + i;
-                  }
-                  
-                  return (
-                    <button
-                      key={pageNum}
-                      onClick={() => handlePageChange(pageNum)}
-                      className={`px-3 py-1 ${currentPage === pageNum ? 'bg-primary text-white' : 'border-2 border-gray-300 hover:bg-gray-200'}`}
-                    >
-                      {pageNum}
-                    </button>
-                  );
-                })}
-              </div>
-
-              <div className="flex gap-2">
-                <button 
-                  onClick={() => handlePageChange(currentPage + 1)}
-                  disabled={currentPage === meta.last_page}
-                  className="px-3 py-1 font-bold hover:bg-gray-200 disabled:opacity-30 disabled:cursor-not-allowed"
-                >
-                  »
-                </button>
-                <button 
-                  onClick={() => handlePageChange(meta.last_page)}
-                  disabled={currentPage === meta.last_page}
-                  className="px-3 py-1 font-bold hover:bg-gray-200 disabled:opacity-30 disabled:cursor-not-allowed"
-                >
-                  »»
-                </button>
-              </div>
-              
-              <div className="text-gray-500">
-                PAGE {currentPage} OF {meta.last_page}
+          {incidences.length > 0 && (
+            <div className="px-6 py-4 bg-surface-dim border-t-2 border-black">
+              <div className="flex items-center justify-between">
+                <div className="text-xs text-gray-600">
+                  Showing page {currentPage} of {meta.last_page}
+                </div>
+                
+                <div className="flex gap-2">
+                  <button 
+                    onClick={() => handlePageChange(1)}
+                    disabled={currentPage === 1}
+                    className="px-3 py-1 border border-black hover:bg-white disabled:opacity-30 disabled:cursor-not-allowed text-xs"
+                  >
+                    ««
+                  </button>
+                  <button 
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    disabled={currentPage === 1}
+                    className="px-3 py-1 border border-black hover:bg-white disabled:opacity-30 disabled:cursor-not-allowed text-xs"
+                  >
+                    «
+                  </button>
+                  <button 
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    disabled={currentPage === meta.last_page}
+                    className="px-3 py-1 border border-black hover:bg-white disabled:opacity-30 disabled:cursor-not-allowed text-xs"
+                  >
+                    »
+                  </button>
+                  <button 
+                    onClick={() => handlePageChange(meta.last_page)}
+                    disabled={currentPage === meta.last_page}
+                    className="px-3 py-1 border border-black hover:bg-white disabled:opacity-30 disabled:cursor-not-allowed text-xs"
+                  >
+                    »»
+                  </button>
+                </div>
               </div>
             </div>
           )}
