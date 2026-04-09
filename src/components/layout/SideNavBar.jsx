@@ -23,12 +23,13 @@
  */
 
 import { useState, useEffect, useRef } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import LogoutModal from '../ui/LogoutModal';
 
 export default function SideNavBar() {
   const location = useLocation();
+  const navigate = useNavigate();
   const { user, logout } = useAuth();
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
@@ -44,7 +45,7 @@ export default function SideNavBar() {
   const handleConfirmLogout = async () => {
     setShowLogoutModal(false);
     await logout();
-    window.location.href = '/login';
+    navigate('/login');
   };
   
   const activeClass = 'bg-primary text-white font-bold';

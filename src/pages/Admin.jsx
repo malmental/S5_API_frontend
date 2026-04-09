@@ -55,7 +55,7 @@ export default function Admin() {
   // ============================================================
   const handleLogout = async () => {
     await logout();
-    window.location.href = '/login';
+    navigate('/login');
   };
 
   // ============================================================
