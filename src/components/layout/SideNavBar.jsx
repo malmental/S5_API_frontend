@@ -42,10 +42,10 @@ export default function SideNavBar() {
     setShowLogoutModal(true);
   };
 
-  const handleConfirmLogout = async () => {
+  const handleConfirmLogout = () => {
     setShowLogoutModal(false);
-    await logout();
-    navigate('/login');
+    logout();
+    window.location.replace('/login');
   };
   
   const activeClass = 'bg-primary text-white font-bold';

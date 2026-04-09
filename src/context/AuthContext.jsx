@@ -128,9 +128,13 @@ export function AuthProvider({ children }) {
   //   3. Updates user state to null
   // ============================================================
   const logout = async () => {
-    await api.post('/logout');
     localStorage.removeItem('token');
     setUser(null);
+    try {
+      await api.post('/logout');
+    } catch (e) {
+      // ignore errors - we log out locally anyway
+    }
   };
 
   // ============================================================
