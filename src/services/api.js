@@ -119,10 +119,6 @@ api.interceptors.response.use(
 
       if (status === 401) {
         localStorage.removeItem('token');
-        const currentPath = window.location.pathname;
-        if (currentPath !== '/login' && currentPath !== '/register') {
-          window.location.href = '/login';
-        }
       }
 
       else if (status === 403) {
