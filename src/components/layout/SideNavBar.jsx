@@ -45,7 +45,7 @@ export default function SideNavBar() {
   const handleConfirmLogout = () => {
     setShowLogoutModal(false);
     logout();
-    window.location.replace('/login');
+    navigate('/login', { replace: true });
   };
   
   const activeClass = 'bg-primary text-white font-bold';
