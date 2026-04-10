@@ -44,8 +44,8 @@ export default function SideNavBar() {
 
   const handleConfirmLogout = () => {
     setShowLogoutModal(false);
-    logout();
     navigate('/login', { replace: true });
+    setTimeout(() => logout(), 0);
   };
   
   const activeClass = 'bg-primary text-white font-bold';
