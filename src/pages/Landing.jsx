@@ -1,51 +1,8 @@
-/**
- * ============================================================
- * PAGE: Landing (Landing Page / Home)
- * ============================================================
- * Description: 
- *   Public entry page to the application. Functions as a
- *   "Landing Page" showing branding, system features
- *   and calls to action for login/register.
- * 
- * Location: src/pages/Landing.jsx
- * 
- * Routing:
- *   - Accessible from "/" (root route)
- *   - Redirects to /dashboard if user is already logged in
- *   - Links to /login and /register
- * 
- * Sections:
- *   1. Header - TopAppBar with logo and navigation
- *   2. Hero - Main welcome with CTA
- *   3. Features - Feature cards
- *   4. Technical Specs - Technical specifications
- *   5. Product Visual - Terminal visual section
- *   6. Footer - Footer
- * 
- * Technical notes:
- *   - Does not require authentication (public)
- *   - External links (RESOURCES, DOCS, STATUS) are placeholders
- *   - Terminal image is from Google CDN (could be localized)
- *   - Timestamp in specs updates on each render
- * ============================================================
- */
-
 import { Link } from 'react-router-dom';
 
 export default function Landing() {
   return (
-    /* ============================================================
-        MAIN CONTAINER
-        Layout: Flex column | Min-height: 100vh | Background: surface
-       ============================================================ */
     <div className="flex flex-col min-h-screen bg-surface">
-      
-      {/* ============================================================
-          SECTION 1: HEADER / TOPAPPBAR
-          Description: Fixed top navigation bar
-          Elements: Logo, Status badge, Nav links, Login/Register CTAs
-          Position: sticky top for scroll effect
-       ============================================================ */}
       <header className="flex justify-between items-center px-6 h-16 w-full border-b-2 border-black bg-surface sticky top-0 z-50">
         <div className="flex items-center gap-4">
           <span className="font-mono font-bold text-xl border-black px-2 py-1">INCIDENsly 𝒘ebApp</span>
@@ -53,17 +10,7 @@ export default function Landing() {
       </header>
 
       <main className="flex-grow flex flex-col">
-        
-        {/* ============================================================
-            SECTION 2: HERO SECTION
-            Description: Main welcome area
-            Layout: Grid 12 columns | Split 7/5
-            Elements: Badge, Large title, Description, CTAs
-            Background: stippled-bg (dot pattern)
-        ============================================================ */}
         <section className="grid grid-cols-12 gap-0 border-b-2 border-black min-h-[716px]">
-          
-          {/* 2.1: LEFT SIDE - Main message */}
           <div className="col-span-12 md:col-span-7 p-8 md:p-16 flex flex-col justify-center border-r-0 md:border-r-2 border-black relative overflow-hidden">
             <div className="absolute inset-0 stippled-bg pointer-events-none"></div>
             <div className="relative z-10">
@@ -89,7 +36,6 @@ export default function Landing() {
             </div>
           </div>
 
-          {/* 2.2: RIGHT SIDE - Features */}
           <div className="col-span-12 md:col-span-5 flex flex-col">
             <div className="p-8 border-b-2 border-black bg-white flex-grow">
               <div className="flex justify-between items-start mb-6">
@@ -97,7 +43,6 @@ export default function Landing() {
                 <span className="font-label text-xs">REF: 084-INC</span>
               </div>
               <div className="space-y-6">
-                {/* Feature 1 */}
                 <div className="border-1 border-black p-4 bg-surface">
                   <div className="flex gap-4 items-center">
                     <span className="material-symbols-outlined text-4xl">folder_managed</span>
@@ -106,7 +51,6 @@ export default function Landing() {
                     </div>
                   </div>
                 </div>
-                {/* Feature 2 */}
                 <div className="border-1 border-black p-4 bg-surface">
                   <div className="flex gap-4 items-center">
                     <span className="material-symbols-outlined text-4xl">assignment_ind</span>
@@ -115,7 +59,6 @@ export default function Landing() {
                     </div>
                   </div>
                 </div>
-                {/* Feature 3 */}
                 <div className="border-1 border-black p-4 bg-surface">
                   <div className="flex gap-4 items-center">
                     <span className="material-symbols-outlined text-4xl">priority_high</span>
@@ -135,8 +78,6 @@ export default function Landing() {
                 </div>
               </div>
             </div>
-            
-            {/* 2.3: SPECS BOX - Technical specifications */}
             <div className="p-8 bg-surface-container flex-grow flex flex-col justify-end">
               <div className="font-label text-[10px] leading-tight opacity-70">
                 <p>SYSTEM LOAD: OPTIMAL</p>
@@ -148,12 +89,6 @@ export default function Landing() {
           </div>
         </section>
 
-        {/* ============================================================
-            SECTION 3: PRODUCT VISUAL
-            Description: Product demo visual section
-            Style: Terminal aesthetic (black background, double border)
-            NOTE: Background image from external CDN
-        ============================================================ */}
         <section className="p-6 md:p-12 border-b-2 border-black bg-surface-container-low">
           <div className="border-2 border-black bg-black p-2">
             <div className="border border-white/20 aspect-video relative flex flex-col items-center justify-center text-white overflow-hidden">
@@ -171,11 +106,6 @@ export default function Landing() {
         </section>
       </main>
 
-      {/* ============================================================
-          SECTION 4: FOOTER
-          Description: Footer with legal links
-          Layout: Flex row (responsive) | Top border: 2px black
-      ============================================================ */}
       <footer className="flex flex-col md:flex-row justify-between items-center px-6 py-8 w-full bg-surface-container">
         <div className="mb-4 md:mb-0">
           <span className="font-mono text-xs uppercase tracking-widest text-black">© 𝓁.2077</span>

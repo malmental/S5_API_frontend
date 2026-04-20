@@ -1,21 +1,3 @@
-/**
- * ============================================================
- * CONTEXT: IncidencesContext
- * ============================================================
- * Global state for incidences to avoid prop drilling and
- * state duplication between Dashboard and MyIncidences.
- * 
- * Features:
- *   - List of incidences
- *   - Loading state
- *   - Pagination meta
- *   - CRUD operations (create, update, delete)
- * 
- * Usage:
- *   const { incidences, refresh } = useIncidences();
- * ============================================================
- */
-
 import { createContext, useContext, useState, useCallback } from 'react';
 import api from '../services/api';
 

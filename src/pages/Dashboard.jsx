@@ -1,36 +1,3 @@
-/**
- * ============================================================
- * PAGE: Dashboard (Main Panel)
- * ============================================================
- * Description: 
- *   Main dashboard page that shows an overview of all system
- *   incidences. Includes filters by status/priority, tag search,
- *   and click-to-view details.
- * 
- * Location: src/pages/Dashboard.jsx
- * 
- * Routing:
- *   - Accessible from /dashboard
- *   - Requires authentication (protected)
- * 
- * Features:
- *   1. Filters: High, Open, In Progress, Resolved (clickable)
- *   2. Search: Filters incidences by tags
- *   3. IncidentsTable: Table with filtered incidences
- *   4. Row click opens detail modal
- * 
- * Filter states:
- *   - filter: null (all) | 'high' | 'open' | 'in_progress' | 'resolved'
- *   - searchTag: string to search in tags
- * 
- * Components used:
- *   - TopNavBar, SideNavBar, Footer (layout)
- *   - IncidentsTable (interactive table)
- *   - CreateIncidentFAB (floating button)
- *   - Modal, IncidenceDetail (detail ui)
- * ============================================================
- */
-
 import { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
@@ -42,40 +9,23 @@ import IncidenceDetail from '../components/incidences/IncidenceDetail';
 import { useMetrics } from '../hooks/useMetrics';
 
 export default function Dashboard() {
-  // ============================================================
-  // COMPONENT STATES
-  // ============================================================
   const { user, logout } = useAuth();
   const [incidences, setIncidences] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  
-  // Filters
   const [activeFilter, setActiveFilter] = useState(null);
   const [searchTag, setSearchTag] = useState('');
-  
-  // Pagination
   const [currentPage, setCurrentPage] = useState(1);
   const [meta, setMeta] = useState({ current_page: 1, last_page: 1, per_page: 10, total: 0 });
-
-  // Dashboard statistics (using hook)
   const { stats: statsData, loading: statsLoading, fetchStats } = useMetrics();
-  
-  // Modal: View incidence details
   const [selectedIncidence, setSelectedIncidence] = useState(null);
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [loadingDetail, setLoadingDetail] = useState(false);
 
-  // ============================================================
-  // EFFECT: Reset page when filter changes
-  // ============================================================
   useEffect(() => {
     setCurrentPage(1);
   }, [activeFilter]);
 
-  // ============================================================
-  // EFFECT: Load incidences on mount and when page changes
-  // ============================================================
   useEffect(() => {
     setLoading(true);
     
@@ -110,18 +60,11 @@ export default function Dashboard() {
       .finally(() => setLoading(false));
   }, [currentPage, activeFilter, searchTag]);
 
-  // ============================================================
-  // HANDLER: handleLogout
-  // ============================================================
   const handleLogout = async () => {
     await logout();
     navigate('/login');
   };
 
-  // ============================================================
-  // HANDLER: handleRowClick
-  // Description: Opens modal with details when clicking a row
-  // ============================================================
   const handleRowClick = async (incidence) => {
     setLoadingDetail(true);
     setSelectedIncidence(incidence);
@@ -137,10 +80,6 @@ export default function Dashboard() {
     }
   };
 
-  // ============================================================
-  // HANDLER: handleCommentAdded
-  // Description: Updates selectedIncidence when a comment is added
-  // ============================================================
   const handleCommentAdded = (updatedIncidence) => {
     setSelectedIncidence(updatedIncidence);
     setIncidences(prev => prev.map(inc => 
@@ -148,10 +87,6 @@ export default function Dashboard() {
     ));
   };
 
-  // ============================================================
-  // HANDLER: handleCommentDeleted
-  // Description: Updates selectedIncidence when a comment is deleted
-  // ============================================================
   const handleCommentDeleted = (updatedIncidence) => {
     setSelectedIncidence(updatedIncidence);
     setIncidences(prev => prev.map(inc => 
@@ -159,46 +94,22 @@ export default function Dashboard() {
     ));
   };
 
-  // ============================================================
-  // HANDLER: handlePageChange
-  // Description: Changes the pagination page
-  // ============================================================
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
 
-  // ============================================================
-  // RENDER
-  // ============================================================
   return (
     <div className="flex flex-col min-h-screen">
-      
-      {/* SIDEBAR NAVIGATION */}
       <SideNavBar />
-      
-      {/* MAIN CONTENT AREA */}
       <main className="ml-64 pt-0 min-h-screen relative">
-        {/* Background pattern */}
         <div className="absolute inset-0 stippled-bg"></div>
-        
-        {/* Content */}
         <div className="relative p-8 max-w-6xl">
-          
-          {/* ============================================================
-               HEADER: Title + Subtitle
-            ============================================================ */}
           <div className="mb-8">
             <span className="font-label text-xs uppercase border border-black px-2 py-0.5 bg-white">DASHBOARD MODULE</span>
             <h1 className="font-sans font-bold text-4xl mt-2">MAIN DASHBOARD</h1>
             <p className="font-label text-sm text-on-surface-variant mt-1">System incidents summary</p>
           </div>
-
-          {/* ============================================================
-               SECTION: FILTER BUTTONS - S4 Style
-               Style: Compact, border-2 border-black, large numbers
-            ============================================================ */}
            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 mb-6">
-              {/* Button: HIGH */}
               <button
                 onClick={() => setActiveFilter(activeFilter === 'high' ? null : 'high')}
                 className={`block text-center p-6 border-2 border-black transition-colors ${
@@ -211,8 +122,6 @@ export default function Dashboard() {
                 <div className="text-5xl font-light mb-2">{statsData.high}</div>
                 <div className="text-xs">High priority incidents</div>
               </button>
-
-              {/* Button: OPEN */}
               <button 
                 onClick={() => setActiveFilter(activeFilter === 'open' ? null : 'open')}
                 className={`block text-center p-6 border-2 border-black transition-colors ${
@@ -225,8 +134,6 @@ export default function Dashboard() {
                 <div className="text-5xl font-light mb-2">{statsData.open}</div>
                 <div className="text-xs">Open incidents</div>
               </button>
-
-              {/* Button: IN PROGRESS */}
               <button 
                 onClick={() => setActiveFilter(activeFilter === 'in_progress' ? null : 'in_progress')}
                 className={`block text-center p-6 border-2 border-black transition-colors ${
@@ -239,8 +146,6 @@ export default function Dashboard() {
                 <div className="text-5xl font-light mb-2">{statsData.inProgress}</div>
                 <div className="text-xs">In progress incidents</div>
               </button>
-
-              {/* Button: CLOSED */}
               <button 
                 onClick={() => setActiveFilter(activeFilter === 'closed' ? null : 'closed')}
                 className={`block text-center p-6 border-2 border-black transition-colors ${
@@ -254,8 +159,6 @@ export default function Dashboard() {
                 <div className="text-xs">Closed incidents</div>
               </button>
             </div>
-
-          {/* SEARCH BAR - Search by tags - S4 Style */}
           <div className="mb-6 bg-white p-4">
             <div className="flex gap-4 items-center">
               <input 
@@ -271,7 +174,6 @@ export default function Dashboard() {
             </div>
           </div>
 
-          {/* INCIDENTS TABLE - Pass filtered incidences */}
           <IncidentsTable 
             incidences={incidences} 
             loading={loading}
@@ -283,7 +185,6 @@ export default function Dashboard() {
         </div>
       </main>
 
-      {/* MODAL: INCIDENCE DETAILS */}
       <Modal
         isOpen={showDetailModal}
         onClose={() => setShowDetailModal(false)}

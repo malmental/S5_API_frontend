@@ -1,34 +1,3 @@
-/**
- * ============================================================
- * PAGE: Admin (Administration Panel)
- * ============================================================
- * Description: 
- *   Administration panel for managing system users.
- *   Only accessible to users with administrator role.
- * 
- * Location: src/pages/Admin.jsx
- * 
- * Routing:
- *   - Accessible from /admin (requires authentication)
- *   - Redirects to / if user is not admin
- * 
- * Features:
- *   1. User list (name, email, role)
- *   2. Delete users (admins only, not themselves)
- *   3. Access denied modal for non-admins
- * 
- * Integration:
- *   - GET /api/v1/users → User list
- *   - DELETE /api/v1/users/{id} → Delete user
- *   - Error handling 403 for non-admin users
- * 
- * Technical notes:
- *   - Requires AuthProvider in App.jsx
- *   - User routes are protected by is_admin middleware
- *   - Current user cannot delete themselves
- * ============================================================
- */
-
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
@@ -38,10 +7,6 @@ import Modal from '../components/ui/Modal';
 
 export default function Admin() {
   const navigate = useNavigate();
-
-  // ============================================================
-  // COMPONENT STATES
-  // ============================================================
   const { user, logout } = useAuth();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -49,19 +14,11 @@ export default function Admin() {
   const [deleting, setDeleting] = useState(null);
   const [showAccessDeniedModal, setShowAccessDeniedModal] = useState(false);
 
-  // ============================================================
-  // HANDLER: handleLogout
-  // Description: Logs out and redirects to login
-  // ============================================================
   const handleLogout = async () => {
     await logout();
     navigate('/login');
   };
 
-  // ============================================================
-  // FUNCTION: fetchUsers
-  // Description: Gets user list from API
-  // ============================================================
   const fetchUsers = async () => {
     try {
       const { data } = await api.get('/users');
@@ -77,17 +34,10 @@ export default function Admin() {
     }
   };
 
-  // ============================================================
-  // EFFECT: Load users on mount
-  // ============================================================
   useEffect(() => {
     fetchUsers();
   }, []);
 
-  // ============================================================
-  // HANDLER: handleDelete
-  // Description: Deletes a user (admins only)
-  // ============================================================
   const handleDelete = async (userId) => {
     if (!window.confirm('Are you sure you want to delete this user?')) {
       return;
@@ -104,50 +54,28 @@ export default function Admin() {
     }
   };
 
-  // ============================================================
-  // RENDER
-  // ============================================================
   return (
     <div className="flex flex-col min-h-screen">
-      
-      {/* SIDEBAR NAVIGATION */}
+
       <SideNavBar />
-      
-      {/* MAIN CONTENT AREA */}
+
       <main className="ml-64 pt-0 min-h-screen relative">
-        {/* Background pattern */}
         <div className="absolute inset-0 stippled-bg"></div>
-        
-        {/* Content */}
         <div className="relative p-8 max-w-6xl">
-          
-          {/* ============================================================
-              HEADER: Title
-           ============================================================ */}
           <div className="mb-8">
             <span className="font-label text-xs uppercase border border-black px-2 py-0.5 bg-white">ADMINISTRATION MODULE</span>
             <h1 className="font-sans font-bold text-4xl mt-2">ADMIN AREA</h1>
             <p className="font-label text-sm text-on-surface-variant mt-1">System user management</p>
           </div>
-
-          {/* ============================================================
-              STATE: Loading
-           ============================================================ */}
           {loading ? (
             <div className="border-2 border-black bg-white p-8 text-center">
               <p className="font-label text-sm">LOADING DATA...</p>
             </div>
           ) : error ? (
-            /* ============================================================
-                STATE: General error
-             ============================================================ */
             <div className="border-2 border-black bg-white p-8 text-center">
               <p className="font-label text-sm text-red-600">{error}</p>
             </div>
           ) : (
-            /* ============================================================
-                TABLE: User list
-             ============================================================ */
             <div className="bg-white">
               {/* Table header */}
               <div className="grid grid-cols-12 gap-4 px-6 py-4 bg-surface-dim border-b-2 border-black text-xs uppercase tracking-wide font-semibold">
@@ -157,23 +85,17 @@ export default function Admin() {
                 <div className="col-span-3 text-center">ACTIONS</div>
               </div>
 
-              {/* User rows */}
               {users.map((u, index) => (
                 <div 
                   key={u.id}
                   className={`grid grid-cols-12 gap-4 px-6 py-4 items-center ${index !== users.length - 1 ? 'border-b border-gray-300' : ''} hover:bg-surface-dim transition-colors`}
                 >
-                  {/* Name */}
                   <div className="col-span-3 font-mono text-sm">
                     {u.name}
                   </div>
-                  
-                  {/* Email */}
                   <div className="col-span-4 font-mono text-xs text-gray-600">
                     {u.email}
                   </div>
-                  
-                  {/* Role */}
                   <div className="col-span-2 text-center">
                     <span className={`px-2 py-1 text-xs uppercase ${
                       u.is_admin 
@@ -183,8 +105,6 @@ export default function Admin() {
                       {u.is_admin ? 'Admin' : 'User'}
                     </span>
                   </div>
-                  
-                  {/* Actions */}
                   <div className="col-span-3 text-center">
                     {u.id !== user?.id ? (
                       /* Delete button (except for self) */
@@ -196,7 +116,6 @@ export default function Admin() {
                         {deleting === u.id ? 'DELETING...' : 'DELETE'}
                       </button>
                     ) : (
-                      /* Current user indicator */
                       <span className="font-mono text-xs text-gray-400">YOU</span>
                     )}
                   </div>
@@ -207,10 +126,6 @@ export default function Admin() {
         </div>
       </main>
 
-      {/* ============================================================
-          MODAL: ACCESS DENIED
-          Shown when a non-admin user tries to access
-       ============================================================ */}
       <Modal
         isOpen={showAccessDeniedModal}
         onClose={() => {
@@ -222,7 +137,6 @@ export default function Admin() {
         closeOnOverlayClick={false}
       >
         <div className="text-center">
-          {/* SVG cog-off-loop icon from docs/SVG */}
           <svg xmlns="http://www.w3.org/2000/svg" width="4em" height="4em" viewBox="0 0 24 24" className="mx-auto mb-4 text-red-600">
             <title>cog-off-loop</title>
             <defs>
@@ -279,13 +193,11 @@ export default function Admin() {
               <animate fill="freeze" attributeName="stroke-dashoffset" begin="1s" dur="0.4s" to="0"/>
             </path>
           </svg>
-          
-          {/* Main message */}
+
           <p className="font-mono text-sm text-gray-700 mb-6">
             INCIDENsly webApp invites you to request the necessary permission.
           </p>
-          
-          {/* Return to Dashboard button */}
+
           <button
             onClick={() => {
               setShowAccessDeniedModal(false);

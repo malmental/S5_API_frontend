@@ -1,41 +1,6 @@
-/**
- * ============================================================
- * COMPONENT: IncidenceForm (Incidence Form)
- * ============================================================
- * Description: 
- *   Form to create or edit an incidence.
- *   Includes fields for title, description, priority and tags.
- * 
- * Location: src/components/incidences/IncidenceForm.jsx
- * 
- * Props:
- *   - initialData: Initial data (for editing)
- *   - onSubmit: Callback function on submit
- *   - onCancel: Callback function on cancel
- *   - loading: Loading state
- *   - isEdit: Boolean if editing (changes button text)
- * 
- * Form fields:
- *   - title: Incidence title (required)
- *   - description: Detailed description (required)
- *   - priority: Priority (low, medium, high)
- *   - status: Status (open, in_progress, closed)
- *   - tags: Comma-separated tags
- * 
- * Technical notes:
- *   - Uses controlled states with useState
- *   - Basic required field validation
- *   - Priority and status fields only visible in edit mode
- *   - Style with 2px black borders
- * ============================================================
- */
-
 import { useState, useEffect } from 'react';
 
 export default function IncidenceForm({ initialData = null, onSubmit, onCancel, loading = false, isEdit = false }) {
-  // ============================================================
-  // FORM STATES
-  // ============================================================
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [priority, setPriority] = useState('medium');
@@ -43,9 +8,6 @@ export default function IncidenceForm({ initialData = null, onSubmit, onCancel, 
   const [tags, setTags] = useState('');
   const [errors, setErrors] = useState({});
 
-  // ============================================================
-  // EFFECT: Load initial data (for editing)
-  // ============================================================
   useEffect(() => {
     if (initialData) {
       setTitle(initialData.title || '');
@@ -56,17 +18,13 @@ export default function IncidenceForm({ initialData = null, onSubmit, onCancel, 
     }
   }, [initialData]);
 
-  // ============================================================
-  // HANDLER: Validation and submit
-  // ============================================================
   const handleSubmit = (e) => {
     e.preventDefault();
-    
-    // Basic validation
+
     const newErrors = {};
     if (!title.trim()) newErrors.title = 'Title is required';
     if (!description.trim()) newErrors.description = 'Description is required';
-    
+
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
@@ -83,17 +41,7 @@ export default function IncidenceForm({ initialData = null, onSubmit, onCancel, 
   };
 
   return (
-    /* ============================================================
-        FORM
-        Layout: Vertical with spacing
-       ============================================================ */
     <form onSubmit={handleSubmit} className="space-y-6">
-      
-      {/* ============================================================
-          FIELD: Title
-          Label + Input
-          Validation: Required
-       ============================================================ */}
       <div>
         <label htmlFor="title" className="block font-mono text-xs uppercase mb-2">
           Title *
@@ -110,11 +58,6 @@ export default function IncidenceForm({ initialData = null, onSubmit, onCancel, 
           <p className="font-mono text-xs text-error mt-1">{errors.title}</p>
         )}
       </div>
-
-      {/* ============================================================
-          FIELD: Description
-          Multiline textarea
-       ============================================================ */}
       <div>
         <label htmlFor="description" className="block font-mono text-xs uppercase mb-2">
           Description *
@@ -131,12 +74,7 @@ export default function IncidenceForm({ initialData = null, onSubmit, onCancel, 
           <p className="font-mono text-xs text-error mt-1">{errors.description}</p>
         )}
       </div>
-
-      {/* ============================================================
-          ROW: Priority and Status
-       ============================================================ */}
       <div className="grid grid-cols-2 gap-4">
-          {/* Priority */}
           <div>
             <label htmlFor="priority" className="block font-mono text-xs uppercase mb-2">
               Priority
@@ -152,8 +90,6 @@ export default function IncidenceForm({ initialData = null, onSubmit, onCancel, 
               <option value="low">LOW</option>
             </select>
           </div>
-
-          {/* Status */}
           <div>
             <label htmlFor="status" className="block font-mono text-xs uppercase mb-2">
               Status
@@ -171,10 +107,6 @@ export default function IncidenceForm({ initialData = null, onSubmit, onCancel, 
           </div>
         </div>
 
-      {/* ============================================================
-          FIELD: Tags
-          Text input with example
-       ============================================================ */}
       <div>
         <label htmlFor="tags" className="block font-mono text-xs uppercase mb-2">
           Tags
@@ -191,11 +123,6 @@ export default function IncidenceForm({ initialData = null, onSubmit, onCancel, 
           Separate tags with commas
         </p>
       </div>
-
-      {/* ============================================================
-          ACTION BUTTONS
-          Cancel + Submit
-       ============================================================ */}
       <div className="flex justify-end gap-4 pt-4 border-t-2 border-gray-200">
         <button
           type="button"

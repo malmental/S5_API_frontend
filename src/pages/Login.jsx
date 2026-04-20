@@ -1,64 +1,14 @@
-/**
- * ============================================================
- * PAGE: Login (Authentication Page)
- * ============================================================
- * Description: 
- *   Sign-in form for existing users.
- *   Uses the authentication context to validate credentials.
- * 
- * Location: src/pages/Login.jsx
- * 
- * Routing:
- *   - Accessible from /login
- *   - Redirects to /dashboard if already logged in
- *   - Link to /register for new users
- * 
- * Form states:
- *   1. idle - Form at rest
- *   2. loading - Authentication in progress
- *   3. error - Invalid credentials
- * 
- * Integration:
- *   - Uses useAuth() hook from context
- *   - Calls login(email, password) from AuthContext
- *   - Navigates to /dashboard after successful login
- * 
- * Fields:
- *   - email: User's email address
- *   - password: Password
- * 
- * Error handling:
- *   - Shows error message from backend
- *   - Generic fallback if no specific response
- * 
- * Technical notes:
- *   - Requires AuthProvider in App.jsx
- *   - Token is saved to localStorage automatically
- * ============================================================
- */
-
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 
 export default function Login() {
-  // ============================================================
-  // COMPONENT STATES
-  // ============================================================
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  
-  // Authentication and navigation hooks
   const { login } = useAuth();
   const navigate = useNavigate();
-
-  // ============================================================
-  // HANDLER: handleSubmit
-  // Description: Handles login form submission
-  // Flow: Validate → Call API → Save token → Redirect
-  // ============================================================
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -80,44 +30,23 @@ export default function Login() {
   };
 
   return (
-    /* ============================================================
-        MAIN CONTAINER
-        Layout: Flex column | Min-height: 100vh | Background: surface
-       ============================================================ */
     <div className="flex flex-col min-h-screen bg-surface">
-      
-      {/* ============================================================
-          SECTION 1: HEADER
-          Description: Top bar with logo and register button
-       ============================================================ */}
       <header className="flex justify-between items-center px-6 h-16 w-full border-b-2 border-black bg-surface">
         <div className="flex items-center gap-4">
           <Link to="/" className="font-mono font-bold text-xl border-black px-2 py-1">INCIDENsly 𝒘ebApp</Link>
         </div>
       </header>
-
-      {/* ============================================================
-          SECTION 2: LOGIN FORM
-          Description: Central area with authentication form
-          Layout: Centered with max-width 512px
-       ============================================================ */}
       <main className="flex-grow flex items-center justify-center p-8 relative">
-        {/* Background pattern */}
         <div className="absolute inset-0 stippled-bg"></div>
-        
         <div className="relative w-full max-w-md">
-          
-          {/* Badge and title */}
           <div className="mb-6">
             <span className="font-label text-xs uppercase border border-black px-2 py-0.5 bg-white">AUTHENTICATION MODULE</span>
           </div>
-          
+
           <h1 className="font-sans font-bold text-4xl mb-2">SIGN IN</h1>
           <p className="font-label text-sm text-on-surface-variant mb-8">Enter your credentials.</p>
 
-          {/* Form */}
           <form onSubmit={handleSubmit} className="p-6 bg-white">
-            {/* Error message */}
             {error && (
               <div className="mb-4 p-3 bg-error-container border border-error text-error text-sm font-label">
                 ERROR: {error}
@@ -125,7 +54,6 @@ export default function Login() {
             )}
 
             <div className="space-y-6">
-              {/* Field: Email */}
               <div>
                 <label htmlFor="email" className="block font-label text-xs uppercase mb-2">
                   Email / Username
@@ -141,7 +69,6 @@ export default function Login() {
                 />
               </div>
 
-              {/* Field: Password */}
               <div>
                 <label htmlFor="password" className="block font-label text-xs uppercase mb-2">
                   Password
@@ -157,7 +84,6 @@ export default function Login() {
                 />
               </div>
 
-              {/* Submit button */}
               <button
                 type="submit"
                 disabled={loading}
@@ -168,7 +94,6 @@ export default function Login() {
             </div>
           </form>
 
-          {/* Link to registration */}
           <div className="mt-6 text-center">
             <p className="font-label text-xs text-on-surface-variant">
               No account?{' '}
@@ -180,10 +105,6 @@ export default function Login() {
         </div>
       </main>
 
-      {/* ============================================================
-          SECTION 3: FOOTER
-          Description: Footer with version and timestamp
-       ============================================================ */}
       <footer className="flex justify-between items-center px-6 py-4 w-full border-t-2 border-black bg-surface-dim">
         <div className="mb-4 md:mb-0">
           <span className="font-mono text-xs uppercase tracking-widest text-black">© 𝓁.2077</span>

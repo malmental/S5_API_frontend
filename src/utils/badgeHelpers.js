@@ -1,13 +1,5 @@
 import { PRIORITIES, STATUSES } from './constants';
 
-/**
- * ============================================================
- * HELPERS: Badge CSS classes for priority and status
- * ============================================================
- * Returns appropriate CSS class strings for badges.
- * Extracted to avoid duplication in IncidentsTable and IncidenceDetail.
- */
-
 export const getPriorityClass = (priority) => {
   if (priority === PRIORITIES.HIGH || priority === 'ALTA' || priority === 'alta') {
     return 'px-2 py-1 text-xs uppercase bg-primary text-white';
