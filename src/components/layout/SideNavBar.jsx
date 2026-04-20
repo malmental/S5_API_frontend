@@ -1,27 +1,3 @@
-/**
- * ============================================================
- * COMPONENT: SideNavBar (Side Navigation Bar)
- * ============================================================
- * Description: 
- *   Fixed sidebar containing the main operations menu.
- *   Includes links to Dashboard, My Incidences, Admin Area and logout.
- *   Follows the "Navigation Rail" pattern of the system.
- * 
- * Location: src/components/layout/SideNavBar.jsx
- * 
- * Menu elements:
- *   1. Header: "INCIDENsly 𝒘ebApp" with version
- *   2. Main navigation: Dashboard, My Incidences, Admin Area
- *   3. Bottom: User dropdown with logout option
- * 
- * Technical notes:
- *   - Active item is detected using useLocation
- *   - Uses useLogout hook for logout logic
- *   - Uses LogoutModal component for confirmation
- *   - Click outside closes the dropdown menu
- * ============================================================
- */
-
 import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
@@ -64,43 +40,27 @@ export default function SideNavBar() {
 
   return (
     <aside className="fixed left-0 top-0 h-screen w-64 border-r-2 border-black bg-surface-container flex flex-col justify-between font-mono text-xs z-40">
-      
-      {/* ============================================================
-          SECTION 1: MAIN NAVIGATION
-          Header: INCIDENsly 𝒘ebApp + system version
-       ============================================================ */}
       <div>
-        {/* Header with branding */}
         <div className="p-6 border-b-2 border-black">
           <h2 className="font-sans font-black text-lg tracking-tighter">INCIDENsly 𝒘ebApp</h2>
           <p className="text-[10px] text-gray-500 mt-1">V 2.0.48</p>
         </div>
-        
-        {/* Navigation menu */}
         <nav className="mt-4">
           <Link to="/dashboard" className={`flex items-center px-4 py-3 border-b border-gray-300 transition-all duration-75 ${isActive('/dashboard') ? activeClass : inactiveClass}`}>
             <span className="material-symbols-outlined mr-3">dashboard</span>
             <span>Dashboard</span>
           </Link>
-          
           <Link to="/my-incidences" className={`flex items-center px-4 py-3 border-b border-gray-300 transition-all duration-75 ${isActive('/my-incidences') ? activeClass : inactiveClass}`}>
             <span className="material-symbols-outlined mr-3">emergency_home</span>
             <span>My Incidences</span>
           </Link>
-          
           <Link to="/admin" className={`flex items-center px-4 py-3 border-b border-gray-300 transition-all duration-75 ${isActive('/admin') ? activeClass : inactiveClass}`}>
             <span className="material-symbols-outlined mr-3">admin_panel_settings</span>
             <span>Admin Area</span>
           </Link>
         </nav>
       </div>
-
-      {/* ============================================================
-          SECTION 2: USER MENU
-          Clickable user info with dropdown logout option
-       ============================================================ */}
       <div className="mb-4" ref={menuRef}>
-        {/* Clickable user name display */}
         <button
           onClick={() => setShowUserMenu(!showUserMenu)}
           className="flex items-center w-full px-4 py-3 border-b border-gray-300 hover:bg-gray-300 transition-colors"
@@ -116,8 +76,6 @@ export default function SideNavBar() {
             expand_more
           </span>
         </button>
-        
-        {/* Dropdown menu */}
         {showUserMenu && (
           <div className="border-b border-gray-300 bg-white shadow-lg">
             <button 
@@ -131,7 +89,6 @@ export default function SideNavBar() {
         )}
       </div>
 
-      {/* Logout Confirmation Modal */}
       <LogoutModal 
         isOpen={showLogoutModal}
         onClose={() => setShowLogoutModal(false)}

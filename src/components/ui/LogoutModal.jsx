@@ -1,17 +1,3 @@
-/**
- * ============================================================
- * COMPONENT: LogoutModal
- * ============================================================
- * Confirmation dialog for logout action.
- * Extracted from SideNavBar to follow Single Responsibility.
- * 
- * Props:
- *   - isOpen: boolean
- *   - onClose: function
- *   - onConfirm: function
- * ============================================================
- */
-
 export default function LogoutModal({ isOpen, onClose, onConfirm }) {
   if (!isOpen) return null;
 
@@ -25,7 +11,6 @@ export default function LogoutModal({ isOpen, onClose, onConfirm }) {
         className="w-full max-w-md bg-white shadow-none relative"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Modal Header */}
         <div className="flex justify-between items-center px-6 py-4 border-b-2 border-black bg-surface-container">
           <h2 className="font-sans font-bold text-lg uppercase">LOGOUT</h2>
           <button 
@@ -36,7 +21,6 @@ export default function LogoutModal({ isOpen, onClose, onConfirm }) {
           </button>
         </div>
 
-        {/* Modal Content */}
         <div className="p-6 text-center">
           <div className="flex justify-center mb-4">
             <svg xmlns="http://www.w3.org/2000/svg" width="6em" height="6em" viewBox="0 0 24 24" className="mx-auto mb-4 text-red-600">

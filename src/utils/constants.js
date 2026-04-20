@@ -1,11 +1,3 @@
-/**
- * ============================================================
- * CONSTANTS: Application constants
- * ============================================================
- * Centralized constants to avoid magic strings throughout
- * the application.
- */
-
 export const PRIORITIES = {
   HIGH: 'high',
   MEDIUM: 'medium',

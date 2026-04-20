@@ -1,14 +1,3 @@
-/**
- * ============================================================
- * HOOK: useMetrics
- * ============================================================
- * Hook to fetch and manage dashboard statistics.
- * 
- * Usage:
- *   const { stats, loading, fetchStats } = useMetrics();
- * ============================================================
- */
-
 import { useState, useEffect, useCallback } from 'react';
 import api from '../services/api';
 

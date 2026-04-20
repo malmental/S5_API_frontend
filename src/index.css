@@ -1,104 +1,43 @@
-/**
- * ============================================================
- * ESTILOS GLOBALES - Tailwind CSS + Theme Custom
- * ============================================================
- * Descripción: 
- *   Archivo de estilos principal que configura Tailwind CSS v4
- *   con el theme "Tactile Data-Sheet" del sistema de diseño.
- * 
- * Ubicación: src/index.css
- * 
- * CONTENIDO:
- *   1. Import de Tailwind CSS
- *   2. Definición de @theme con variables CSS personalizadas
- *   3. Estilos base del body
- *   4. Utility classes personalizadas
- *   5. Estilos para elementos focus
- * 
- * DISEÑO SYSTEM - Variables CSS:
- *   El theme sigue el sistema de diseño "Tactile Data-Sheet" con:
- *   - Paleta monocromática (blanco/negro/grises)
- *   - IBM Plex Sans para UI
- *   - IBM Plex Mono para datos/técnico
- *   - 0px border radius everywhere
- *   - Bordes de 2px para elementos principales
- * 
- * Notas técnicas:
- *   - Usa @import "tailwindcss" de Tailwind v4
- *   - Las variables se definen en @theme block
- *   - Las clases .font-* son utilities personalizadas
- *   - El stippled-bg crea el patrón de puntos para fondos
- * ============================================================
- */
-
-/* ============================================================
-   SECCIÓN 1: IMPORT DE TAILWIND
-   Configuración base de Tailwind CSS v4
-   ============================================================ */
 @import "tailwindcss";
 
-/* ============================================================
-   SECCIÓN 2: THEME CONFIGURATION
-   Definición de variables CSS personalizadas para el sistema
-   ============================================================ */
 @theme {
-  /* --- COLORES: Superficie (Backgrounds) - Vintage Cream --- */
-  --color-surface: #e8e6e3;           /* Fondo principal - cream vintage */
-  --color-surface-dim: #d4d2cf;       /* Superficie atenuada */
-  --color-surface-variant: #d9d7d4;   /* Variante de superficie */
-  --color-surface-container: #d9d7d4; /* Contenedor - nivel 1 */
-  --color-surface-container-high: #cdcbc8;    /* Contenedor - nivel 2 */
-  --color-surface-container-highest: #c1bfbc; /* Contenedor - nivel 3 */
-  --color-surface-container-low: #e8e6e3;      /* Contenedor - nivel 0 */
-  --color-surface-container-lowest: #f2f0ed;   /* Contenedor - más alto - cream claro */
-  
-  /* --- COLORES: Primarios --- */
-  --color-primary: #2c2c2c;           /* Negro "ink" - principal (menos harsh) */
-  --color-on-primary: #f2f0ed;       /* Texto sobre primario */
-  --color-primary-fixed: #5e5e5e;    /* Gris medio */
-  --color-primary-fixed-dim: #474747; /* Gris oscuro */
-  
-  /* --- COLORES: Secundarios --- */
+
+  --color-surface: #e8e6e3;
+  --color-surface-dim: #d4d2cf;
+  --color-surface-variant: #d9d7d4;
+  --color-surface-container: #d9d7d4;
+  --color-surface-container-high: #cdcbc8;
+  --color-surface-container-highest: #c1bfbc;
+  --color-surface-container-low: #e8e6e3;
+  --color-surface-container-lowest: #f2f0ed;
+  --color-primary: #2c2c2c;
+  --color-on-primary: #f2f0ed;
+  --color-primary-fixed: #5e5e5e;
+  --color-primary-fixed-dim: #474747;
   --color-secondary: #5f5e5e;
   --color-secondary-container: #d4d2cf;
   --color-secondary-fixed: #c8c6c6;
-  
-  /* --- COLORES: Terciarios --- */
   --color-tertiary: #3b3b3c;
   --color-tertiary-fixed: #5e5e5e;
-  
-  /* --- COLORES: Bordes y outlines --- */
-  --color-outline: #777777;           /* Borde secundario */
-  --color-outline-variant: #b8b6b3;   /* Borde sutil - más cálido */
-  
-  /* --- COLORES: Texto --- */
-  --color-on-surface: #2c2c2c;       /* Texto principal */
-  --color-on-surface-variant: #4a4a4a; /* Texto secundario */
+  --color-outline: #777777;
+  --color-outline-variant: #b8b6b3;
+  --color-on-surface: #2c2c2c;
+  --color-on-surface-variant: #4a4a4a;
   --color-on-background: #2c2c2c;
-  
-  /* --- COLORES: Error --- */
-  --color-error: #ba1a1a;            /* Rojo error */
-  --color-error-container: #ffdad6;  /* Fondo error */
-  --color-on-error: #ffffff;        /* Texto sobre error */
+  --color-error: #ba1a1a;
+  --color-error-container: #ffdad6;
+  --color-on-error: #ffffff;
   --color-on-error-container: #410002;
-  
-  /* --- COLORES: Inversos (para temas oscuros si se implementa) --- */
   --color-inverse-surface: #2f3131;
   --color-inverse-primary: #c6c6c6;
   --color-inverse-on-surface: #f1f1f1;
 
-  /* --- TIPOGRAFÍA --- */
   --font-family-sans: 'IBM Plex Mono', monospace;
   --font-family-mono: 'IBM Plex Mono', monospace;
-  
-  /* --- BORDES --- */
+
   --radius-none: 0px;
 }
 
-/* ============================================================
-   SECCIÓN 3: ESTILOS BASE DEL BODY
-   Configuración global para el documento
-   ============================================================ */
 body {
   font-family: 'IBM Plex Mono', monospace;
   background-color: var(--color-surface);
@@ -114,12 +53,6 @@ body {
   flex-direction: column;
 }
 
-/* ============================================================
-   SECCIÓN 4: UTILITY CLASSES PERSONALIZADAS
-   Clases de utilidad adicionales para el sistema de diseño
-   ============================================================ */
-
-/* Font: Todas las clases de fuente usan IBM Plex Mono */
 .font-headline,
 .font-body,
 .font-label,
@@ -127,28 +60,17 @@ body {
   font-family: 'IBM Plex Mono', monospace;
 }
 
-/* Background: Patrón de stipple (puntos) para fondos técnicos - Vintage
-   Uso: background con opacidad reducida para crear textura */
 .stippled-bg {
   background-image: radial-gradient(#8b8680 0.5px, transparent 0.5px);
   background-size: 3px 3px;
   opacity: 0.15;
 }
 
-/* ============================================================
-   SECCIÓN 5: ESTILOS DE FOCUS
-   Configuración visual para elementos enfocados
-   Cumple con accesibilidad y el estilo del sistema
-   ============================================================ */
 input:focus, button:focus, select:focus, textarea:focus {
   outline: 2px solid var(--color-primary);
   outline-offset: 0px;
 }
 
-/* ============================================================
-   SECCIÓN 6: RESET DE ENLACES
-   Estilos base para enlaces
-   ============================================================ */
 a {
   text-decoration: none;
 }

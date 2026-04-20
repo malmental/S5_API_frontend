@@ -1,17 +1,3 @@
-/**
- * ============================================================
- * COMPONENT: Pagination
- * ============================================================
- * Reusable pagination component.
- * 
- * Props:
- *   - currentPage: number
- *   - totalPages: number
- *   - onPageChange: function(page)
- *   - variant: 'default' | 'slim' (optional, default is 'default')
- * ============================================================
- */
-
 export default function Pagination({ 
   currentPage, 
   totalPages, 

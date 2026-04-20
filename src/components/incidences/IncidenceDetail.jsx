@@ -1,33 +1,3 @@
-/**
- * ============================================================
- * COMPONENT: IncidenceDetail (Incidence Details)
- * ============================================================
- * Description: 
- *   Component to display the details of an incidence
- *   in a modal. Shows complete information and actions.
- * 
- * Location: src/components/incidences/IncidenceDetail.jsx
- * 
- * Props:
- *   - incidence: Object with incidence data
- *   - onClose: Function to close modal (optional, called after submitting comment)
- * 
- * Information displayed:
- *   - Title and description
- *   - Status and priority (with visual badges)
- *   - Creator user
- *   - Assigned user (if exists)
- *   - Tags
- *   - Creation and update dates
- *   - Comments section
- * 
- * Technical notes:
- *   - Read-only - use IncidenceForm for editing
- *   - Status/priority badges have specific styles
- *   - Shows "Loading..." if incidence is null
- * ============================================================
- */
-
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import api from '../../services/api';
@@ -43,18 +13,11 @@ export default function IncidenceDetail({ incidence, onClose, showCommentForm = 
     setLocalIncidence(incidence);
   }, [incidence]);
 
-  // ============================================================
-  // HELPER: canDeleteComment
-  // Checks if current user can delete a comment
-  // ============================================================
   const canDeleteComment = (comment) => {
     if (!comment || !user) return false;
     return Number(comment.user_id ?? comment.user?.id) === Number(user.id);
   };
 
-  // ============================================================
-  // HANDLER: Delete comment
-  // ============================================================
   const handleDeleteComment = async (commentId) => {
     if (!window.confirm('Are you sure you want to delete this comment?')) return;
 
@@ -74,17 +37,11 @@ export default function IncidenceDetail({ incidence, onClose, showCommentForm = 
     }
   };
 
-  // ============================================================
-  // HELPERS: Format date
-  // ============================================================
   const formatDate = (dateString) => {
     if (!dateString) return 'N/A';
     return new Date(dateString).toISOString().slice(0, 19).replace('T', ' ');
   };
 
-  // ============================================================
-  // HANDLER: Comment submit
-  // ============================================================
   const handleCommentSubmit = async (e) => {
     e.preventDefault();
     if (!commentText.trim() || !localIncidence) return;
@@ -112,7 +69,6 @@ export default function IncidenceDetail({ incidence, onClose, showCommentForm = 
     }
   };
 
-  // If no incidence, show loading
   if (!localIncidence) {
     return (
       <div className="flex items-center justify-center p-8">
@@ -122,15 +78,7 @@ export default function IncidenceDetail({ incidence, onClose, showCommentForm = 
   }
 
   return (
-    /* ============================================================
-        MAIN CONTAINER
-        Vertical stack with sections
-       ============================================================ */
     <div className="space-y-6">
-      
-      {/* ============================================================
-          SECTION 1: TITLE AND DESCRIPTION
-       ============================================================ */}
       <div>
         <h3 className="font-mono font-bold text-xl mb-2">
           {localIncidence.title || 'Untitled'}
@@ -139,11 +87,6 @@ export default function IncidenceDetail({ incidence, onClose, showCommentForm = 
           {localIncidence.description || 'No description'}
         </p>
       </div>
-
-      {/* ============================================================
-          SECTION 2: STATUS AND PRIORITY
-          Visual badges
-       ============================================================ */}
       <div className="flex gap-4">
         <span className={getStatusClass(localIncidence.status)}>
           {localIncidence.status || 'open'}
@@ -152,11 +95,6 @@ export default function IncidenceDetail({ incidence, onClose, showCommentForm = 
           {localIncidence.priority || 'medium'}
         </span>
       </div>
-
-      {/* ============================================================
-          SECTION 3: ADDITIONAL INFO
-          Creator, Dates (below)
-       ============================================================ */}
       <div className="grid grid-cols-2 gap-4 p-4 bg-surface-container-low border border-gray-200">
         {/* First row: Creator, Creation date, Update date */}
         <div>
@@ -173,7 +111,6 @@ export default function IncidenceDetail({ incidence, onClose, showCommentForm = 
           </p>
         </div>
 
-        {/* Second row: empty and last update */}
         <div className="col-span-1"></div>
 
         <div>
@@ -184,10 +121,6 @@ export default function IncidenceDetail({ incidence, onClose, showCommentForm = 
         </div>
       </div>
 
-      {/* ============================================================
-          SECTION 4: TAGS
-          List of associated tags
-       ============================================================ */}
       {localIncidence.tags && localIncidence.tags.length > 0 && (
         <div>
           <p className="font-mono text-xs uppercase text-gray-500 mb-2">Tags</p>
@@ -204,13 +137,8 @@ export default function IncidenceDetail({ incidence, onClose, showCommentForm = 
         </div>
       )}
 
-      {/* ============================================================
-          SECTION 5: COMMENTS
-       ============================================================ */}
       <div className="border-t-2 border-black pt-4">
         <h4 className="font-mono text-xs uppercase font-semibold mb-3">Comments</h4>
-        
-        {/* Comment list */}
         <div className="space-y-3 max-h-48 overflow-y-auto mb-4">
           {localIncidence.comments && localIncidence.comments.length > 0 ? (
             localIncidence.comments.map((comment) => (
@@ -237,7 +165,6 @@ export default function IncidenceDetail({ incidence, onClose, showCommentForm = 
           )}
         </div>
 
-        {/* Form to add comment (only if showCommentForm is true) */}
         {showCommentForm && (
           <form onSubmit={handleCommentSubmit}>
             <textarea
@@ -258,9 +185,6 @@ export default function IncidenceDetail({ incidence, onClose, showCommentForm = 
         )}
       </div>
 
-      {/* ============================================================
-          SECTION 6: EDIT BUTTON (only for owner)
-       ============================================================ */}
       {isOwner && onEdit && (
         <div className="pt-4 flex justify-center">
           <button
