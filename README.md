@@ -2,7 +2,7 @@
 
 A professional incident management system built with React and Tailwind CSS, featuring a  "Tactile Data-Sheet" design aesthetic.
 
-**[View Demo](https://incidenslywebapp.vercel.app)** · **[API Repository](https://github.com/malmental/S5_API_REST)**
+## **[Try me here ! ✌︎](https://incidenslywebapp.vercel.app)**
 
 ---
 
@@ -17,7 +17,9 @@ A professional incident management system built with React and Tailwind CSS, fea
 - [Design System](#design-system)
 - [Authentication](#authentication)
 - [Components](#components)
+- [Dockerization](#dockerization)
 - [Pages](#pages)
+- [Related Projects](#related-projects)
 
 ---
 
@@ -77,7 +79,7 @@ The application communicates with a Laravel REST API backend (`S5_API_REST`) and
 
 - Node.js 18+
 - npm or yarn
-- Backend API running (see [API Repository](https://github.com/malmental/S5_API_REST))
+- Backend API running ([API Repository](https://github.com/malmental/S5_API_REST))
 
 ### Installation
 
@@ -137,7 +139,7 @@ The frontend uses Axios with a pre-configured instance (`src/services/api.js`) t
 
 ### "Tactile Data-Sheet"
 
-A technical, grid-based aesthetic inspired by vintage data processing systems. Emphasizes clarity, precision, and a professional interface.
+A technical, grid-based aesthetic inspired by vintage data processing systems. 
 
 ![dashboard](./docs/images/dashboard.png)
 
@@ -234,6 +236,31 @@ A technical, grid-based aesthetic inspired by vintage data processing systems. E
 | My Incidences | `/my-incidences` | Protected | Personal incidents |
 | Admin | `/admin` | Protected + Admin | User management |
 | Not Found | `*` | Public | 404 fallback |
+
+---
+
+## Dockerization
+
+### Prerequisites
+- Docker Desktop installed and running
+Quick Start
+
+### 1. Build and start the container
+docker-compose up -d --build
+
+### 2. Verify container is running
+docker-compose ps
+
+### 3. Open in browser
+http://localhost:3000
+
+### Stop
+docker-compose down
+
+### View Logs
+docker-compose logs -f
+
+**Note:** The backend API must be running at `http://localhost:8000` for full functionality (login/register).
 
 ---
 
