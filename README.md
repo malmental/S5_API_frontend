@@ -152,7 +152,7 @@ A technical, grid-based aesthetic inspired by vintage data processing systems. E
 | `error` | `#ba1a1a` | Error states |
 | `on-surface` | `#2c2c2c` | Primary text |
 
-![create incidence](./docs/images/create_incidence.png)
+![create incidence](./docs/images/create-incidence.png)
 
 ### Typography
 
@@ -161,7 +161,7 @@ A technical, grid-based aesthetic inspired by vintage data processing systems. E
 - **Body:** `font-mono`
 - **Labels:** `font-label`, uppercase, small
 
-![create incidence](./docs/images/incidence_details.png)
+![edit incidence](./docs/images/edit-incidence.png)
 
 ### Design Elements
 
@@ -241,4 +241,4 @@ A technical, grid-based aesthetic inspired by vintage data processing systems. E
 
 - **[INCIDENsly API](https://github.com/malmental/S5_API_REST)** — Laravel REST API backend
 
-![logo black](./docs/images/logo_black_bg.png)
+![logo black](./docs/images/logo-banner-end.png)
