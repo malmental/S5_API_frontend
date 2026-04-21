@@ -19,6 +19,7 @@ A professional incident management system built with React and Tailwind CSS, fea
 - [Components](#components)
 - [Dockerization](#dockerization)
 - [Pages](#pages)
+- [Future Enhancements](#future-enhancements)
 - [Related Projects](#related-projects)
 
 ---
@@ -261,6 +262,55 @@ docker-compose down
 docker-compose logs -f
 
 **Note:** The backend API must be running at `http://localhost:8000` for full functionality (login/register).
+
+---
+
+## Future Enhancements
+
+These are some few key point we would recommend to implement in the future to make the app more complete and robust:
+
+### User Profile/Edit Profile Section
+   - Edit own user data (name, email, password)
+   - Avatar upload
+   - Profile page with activity history
+
+### Advanced Search & Filters
+   - Search by text, date range, status, priority
+   - Save filter presets
+   - Export to CSV/Excel or any format for persistence docs.
+
+### Comments & Activity Log
+   - Activity timeline
+   - @mention users
+
+### User Management (Admin)
+   - Assign roles or permissions system (admin, no-admin, guest)
+
+### Notifications
+   - In-app notifications for updates
+   - Email notifications for critical incidents
+
+### Dashboard Analytics
+   - Charts or visual graphs for incident trends
+   - KPIs and metrics
+   - Export reports
+
+### Tags & Categories
+   - Categories for incidents
+   - Bulk tagging (at the moment it has a max of 10 tags per incident)
+    - Tag management interface
+
+### File Attachments
+   - Upload screenshots/documents
+   - Image preview
+
+### Mobile Responsive Improvements
+   - Better mobile layout
+   - Touch-friendly actions
+
+### Audit Log (Admin)
+   - Track all changes
+   - Who created/updated/closed incidents
 
 ---
 
