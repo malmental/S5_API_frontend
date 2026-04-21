@@ -96,23 +96,19 @@ export default function IncidenceDetail({ incidence, onClose, showCommentForm = 
         </span>
       </div>
       <div className="grid grid-cols-2 gap-4 p-4 bg-surface-container-low border border-gray-200">
-        {/* First row: Creator, Creation date, Update date */}
         <div>
           <p className="font-mono text-[10px] uppercase text-gray-500">Creator</p>
           <p className="font-mono text-sm">
             {localIncidence.user?.name || 'Unknown user'}
           </p>
         </div>
-
         <div>
           <p className="font-mono text-[10px] uppercase text-gray-500">Created at</p>
           <p className="font-mono text-xs">
             {formatDate(localIncidence.created_at)}
           </p>
         </div>
-
         <div className="col-span-1"></div>
-
         <div>
           <p className="font-mono text-[10px] uppercase text-gray-500">Last updated</p>
           <p className="font-mono text-xs">

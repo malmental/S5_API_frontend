@@ -19,8 +19,6 @@ export default function IncidentsTable({
   return (
     <div>
       <section className="bg-white">
-        
-        {/* HEADER */}
         <div className="grid grid-cols-12 gap-4 px-6 py-4 bg-surface-dim border-b-2 border-black text-xs uppercase tracking-wide font-semibold">
           <div className="col-span-1">ID</div>
           <div className="col-span-4">Title</div>

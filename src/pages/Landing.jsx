@@ -67,7 +67,6 @@ export default function Landing() {
                     </div>
                   </div>
                 </div>
-                {/* Feature 4 */}
                 <div className="border-1 border-black p-4 bg-surface">
                   <div className="flex gap-4 items-center">
                     <span className="material-symbols-outlined text-4xl">analytics</span>

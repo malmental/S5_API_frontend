@@ -49,17 +49,14 @@ export default function Register() {
           <div className="mb-6">
             <span className="font-label text-xs uppercase border border-black px-2 py-0.5 bg-white">REGISTRATION MODULE</span>
           </div>
-          
           <h1 className="font-sans font-bold text-4xl mb-2">CREATE ACCOUNT</h1>
           <p className="font-label text-sm text-on-surface-variant mb-8">Fill in all fields</p>
-
           <form onSubmit={handleSubmit} className="p-6 bg-white">
             {error && (
               <div className="mb-4 p-3 bg-error-container border border-error text-error text-sm font-label">
                 ERROR: {error}
               </div>
             )}
-
             <div className="space-y-6">
               <div>
                 <label htmlFor="name" className="block font-label text-xs uppercase mb-2">
@@ -75,7 +72,6 @@ export default function Register() {
                   required
                 />
               </div>
-
               <div>
                 <label htmlFor="email" className="block font-label text-xs uppercase mb-2">
                   Email
@@ -90,7 +86,6 @@ export default function Register() {
                   required
                 />
               </div>
-
               <div>
                 <label htmlFor="password" className="block font-label text-xs uppercase mb-2">
                   Password
@@ -105,7 +100,6 @@ export default function Register() {
                   required
                 />
               </div>
-
               <div>
                 <label htmlFor="passwordConfirmation" className="block font-label text-xs uppercase mb-2">
                   Confirm password
@@ -120,7 +114,6 @@ export default function Register() {
                   required
                 />
               </div>
-
               <button
                 type="submit"
                 disabled={loading}

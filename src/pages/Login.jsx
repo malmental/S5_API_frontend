@@ -42,17 +42,14 @@ export default function Login() {
           <div className="mb-6">
             <span className="font-label text-xs uppercase border border-black px-2 py-0.5 bg-white">AUTHENTICATION MODULE</span>
           </div>
-
           <h1 className="font-sans font-bold text-4xl mb-2">SIGN IN</h1>
           <p className="font-label text-sm text-on-surface-variant mb-8">Enter your credentials.</p>
-
           <form onSubmit={handleSubmit} className="p-6 bg-white">
             {error && (
               <div className="mb-4 p-3 bg-error-container border border-error text-error text-sm font-label">
                 ERROR: {error}
               </div>
             )}
-
             <div className="space-y-6">
               <div>
                 <label htmlFor="email" className="block font-label text-xs uppercase mb-2">
@@ -68,7 +65,6 @@ export default function Login() {
                   required
                 />
               </div>
-
               <div>
                 <label htmlFor="password" className="block font-label text-xs uppercase mb-2">
                   Password
@@ -83,7 +79,6 @@ export default function Login() {
                   required
                 />
               </div>
-
               <button
                 type="submit"
                 disabled={loading}
@@ -93,7 +88,7 @@ export default function Login() {
               </button>
             </div>
           </form>
-
+          
           <div className="mt-6 text-center">
             <p className="font-label text-xs text-on-surface-variant">
               No account?{' '}

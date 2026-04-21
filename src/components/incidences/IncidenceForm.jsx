@@ -106,7 +106,6 @@ export default function IncidenceForm({ initialData = null, onSubmit, onCancel, 
             </select>
           </div>
         </div>
-
       <div>
         <label htmlFor="tags" className="block font-mono text-xs uppercase mb-2">
           Tags

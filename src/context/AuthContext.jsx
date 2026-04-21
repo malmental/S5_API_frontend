@@ -25,8 +25,6 @@ export function AuthProvider({ children }) {
     console.log('Login attempt:', { email });
     const response = await api.post('/login', { email, password });
     console.log('Login response:', response.data);
-    
-    // Supports different response formats (token or access_token)
     const token = response.data.token || response.data.access_token;
     if (!token) {
       throw new Error('No token received');

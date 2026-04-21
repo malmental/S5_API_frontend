@@ -4,16 +4,13 @@ export default function NotFound() {
   return (
     <div className="min-h-screen relative flex items-center justify-center p-4">
       <div className="absolute inset-0 stippled-bg"></div>
-      
       <div className="relative w-full max-w-md">
         <div className="bg-white">
           {/* Title bar */}
           <div className="px-6 py-4 border-b-2 border-black bg-surface-dim">
             <h1 className="text-lg font-semibold uppercase tracking-tight">Error 404</h1>
           </div>
-
           <div className="p-6 text-center">
-            {/* Animated alert SVG */}
             <svg xmlns="http://www.w3.org/2000/svg" width="4em" height="4em" viewBox="0 0 24 24" className="mx-auto mb-4 text-red-600">
               <title>alert-square-twotone</title>
               <g stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2">
@@ -31,9 +28,7 @@ export default function NotFound() {
                 </g>
               </g>
             </svg>
-
             <div className="text-6xl font-bold mb-4">404</div>
-
             <p className="text-gray-700 mb-6">The page you are looking for does not exist or has been moved.</p>
           </div>
         </div>

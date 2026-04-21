@@ -153,7 +153,6 @@ export default function MyIncidences() {
             </div>
           ) : (
             <div className="bg-white">
-              {/* Table header */}
               <div className="grid grid-cols-12 border-b-2 border-black bg-surface-container">
                 <div className="col-span-1 px-4 py-3 font-label text-xs uppercase">ID</div>
                 <div className="col-span-5 px-4 py-3 font-label text-xs uppercase">Title</div>
@@ -161,7 +160,6 @@ export default function MyIncidences() {
                 <div className="col-span-2 px-4 py-3 font-label text-xs uppercase">Priority</div>
                 <div className="col-span-2 px-4 py-3 font-label text-xs uppercase text-right">Date</div>
               </div>
-              
               {incidences.map((incidence, index) => (
                 <div 
                   key={incidence.id}
@@ -206,7 +204,6 @@ export default function MyIncidences() {
                 <div className="text-xs text-gray-600">
                   Showing page {currentPage} of {meta.last_page}
                 </div>
-                
                 <div className="flex gap-2">
                   <button 
                     onClick={() => handlePageChange(1)}
